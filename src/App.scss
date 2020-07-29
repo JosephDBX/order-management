@@ -1,0 +1,143 @@
+// Modal
+
+.modal {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+
+    .backdrop {
+        background-color: rgba($color: #000000, $alpha: 0.5);
+    }
+
+    .view {
+        background-color: rgba($color: #000000, $alpha: 0);
+    }
+}
+
+.modal-open {
+    opacity: 1;
+}
+
+// Frame
+
+.frame::-webkit-scrollbar {
+    -webkit-appearance: none;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.frame::-webkit-scrollbar:vertical {
+    width: 8px;
+}
+
+.frame::-webkit-scrollbar:horizontal {
+    height: 8px;
+}
+
+.frame::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+/* Footer */
+.footer {
+    background-color: #000;
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    row-gap: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.footer-about-us {
+    margin-top: 1rem;
+}
+
+.footer-contacts ul {
+    list-style: none;
+    line-height: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-contacts ul li span {
+    font-weight: 500;
+}
+
+.footer-contacts ul li p {
+    line-height: 1rem;
+}
+
+.footer-contacts_social ul {
+    display: flex;
+    justify-content: space-around;
+}
+
+.footer-copyright {
+    font-size: 0.75rem;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+
+    /* Footer */
+    .footer-contacts_social ul {
+        display: flex;
+        justify-content: center;
+    }
+
+    .footer-contacts_social ul li {
+        margin: 0 1rem;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .footer-contacts__text {
+        display: grid;
+        grid-template-areas: "header header""phones address";
+        column-gap: 2rem;
+    }
+
+    .footer-contacts__text .footer-contacts__text-header {
+        grid-area: header;
+    }
+
+    .footer-contacts__text .footer-contacts__text-phones {
+        grid-area: phones;
+    }
+
+    .footer-contacts__text .footer-contacts__text-phones li {
+        text-align: start;
+    }
+
+    .footer-contacts__text .footer-contacts__text-address {
+        grid-area: address;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+
+    /* Footer */
+    .footer {
+        row-gap: 0.25rem;
+        padding: 0 0.5rem;
+    }
+
+    .footer-contacts_social ul li {
+        margin: 0 0.5rem;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+    /* Footer */
+    .footer-contacts {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+}
