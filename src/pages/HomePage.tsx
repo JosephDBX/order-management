@@ -1,30 +1,25 @@
-import React from "react";
-import {
-  useFirestoreConnect,
-  isLoaded,
-  isEmpty,
-  useFirestore,
-} from "react-redux-firebase";
+import React, { useState } from "react";
+import AreaManagement from "../components/area/AreaManagement";
+import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
+import { IArea } from "../models/IArea";
 import { useSelector } from "react-redux";
-import { IUser } from "../models/IUser";
 
 const HomePage: React.FunctionComponent = () => {
-  const id = "N7evE64CQtREqFS75X09";
-  const firestore = useFirestore().collection("users");
-  useFirestoreConnect([{ collection: "users" }]);
-  const users: IUser[] = useSelector(
-    (state: any) => state.firestore.ordered.users
+  useFirestoreConnect([{ collection: "areas" }]);
+  const areas: IArea[] = useSelector(
+    (state: any) => state.firestore.ordered.areas
   );
-  /*const user: IUser = useSelector(
-    ({ firestore: { data } }: any) => data.users && data.users[id]
-  );*/
-  const addUser = () => {
-    const aux: IUser = {
-      email: "test@gmail.com",
-      state: true,
-    };
-    firestore.doc(id).set(aux, { merge: true }).then(value => console.log(value));
+
+  const [serviceView, setServiceView] = useState(true);
+
+  const setAreaView = () => {
+    setServiceView(true);
   };
+
+  const setProfileView = () => {
+    setServiceView(false);
+  };
+
   return (
     <>
       <div
@@ -45,31 +40,49 @@ const HomePage: React.FunctionComponent = () => {
           Pruebas de laboratorio y ultrasonido a domicilio.
         </p>
       </div>
-      {
-        <div>
-          {!isLoaded(users) ? (
-            <p>Loading...</p>
-          ) : isEmpty(users) ? (
-            <p>Users List is Empty.</p>
+      <div className="mt-4">
+        <h2 className="text-2xl p-2">Nuestros servicos</h2>
+        <hr className="m-2" />
+        <div className="flex flex-col md:flex-row items-center">
+          <p className="font-semibold m-2">
+            Aquí puedes encontrar el examen que estás buscando
+          </p>
+          <button className="btn btn-secondary m-2 mb-4">
+            <span className="material-icons">search</span>Buscar Examen
+          </button>
+        </div>
+        <div className="rounded-sm shadow-md my-2">
+          <div className="flex justify-center bg-blue-600 my-2 rounded-t-sm p-2">
+            <button
+              className={`btn btn-primary shadow-none mx-2 ${
+                serviceView && "border-b-4 border-blue-100 rounded-b-none"
+              }`}
+              onClick={setAreaView}
+            >
+              Areas
+            </button>
+            <button
+              className={`btn btn-primary shadow-none mx-2 ${
+                !serviceView && "border-b-4 border-blue-100 rounded-b-none"
+              }`}
+              onClick={setProfileView}
+            >
+              Perfiles
+            </button>
+          </div>
+          {serviceView ? (
+            <>
+              {!isLoaded(areas) ? (
+                <p className="m-2 text-center">Cargando áreas...</p>
+              ) : (
+                <AreaManagement areas={areas} rol={0} />
+              )}
+            </>
           ) : (
-            <ul>
-              {Object.keys(users).map((key, id) => (
-                <li key={key}>{users[id].email}</li>
-              ))}
-            </ul>
+            <>Profieles</>
           )}
         </div>
-      }
-      {/*<div>
-        {!isLoaded(user) ? (
-          <p>Loading...</p>
-        ) : isEmpty(user) ? (
-          <p>User is Empty.</p>
-        ) : (
-          user.email
-        )}
-      </div>*/}
-      <button onClick={addUser}>Add</button>
+      </div>
     </>
   );
 };

@@ -25,11 +25,7 @@ function App() {
       <ScrollToTop />
       <main className="container mt-20 mx-auto flex-grow">
         <Switch>
-          <Route
-            exact
-            path="/"
-            component={HomePage as React.FunctionComponent}
-          />
+          <Route exact path="/" component={HomePage} />
         </Switch>
       </main>
       <Footer />
@@ -38,3 +34,50 @@ function App() {
 }
 
 export default App;
+
+/**
+ *************** Read All ***************
+useFirestoreConnect([{ collection: "users" }]);
+const users: IUser[] = useSelector(
+  (state: any) => state.firestore.ordered.users
+);
+
+return (
+  <div>
+    {!isLoaded(users) ? (
+      <p>Loading...</p>
+    ) : isEmpty(users) ? (
+      <p>Users List is Empty.</p>
+    ) : (
+      <ul>
+        {Object.keys(users).map((key, id) => (
+          <li key={key}>{users[id].email}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+)
+
+ *************** Read By Id ***************
+const firestore = useFirestore().collection("users");
+
+const user: IUser = useSelector(
+  ({ firestore: { data } }: any) => data.users && data.users[id]
+);
+
+const addUser = () => {
+  firestore.doc(id).set(aux, { merge: true }).then((value) => console.log(value));
+};
+
+return (
+  <div>
+    {!isLoaded(user) ? (
+      <p>Loading...</p>
+    ) : isEmpty(user) ? (
+      <p>User is Empty.</p>
+    ) : (
+      user.email
+    )}
+  </div>
+)
+*/
