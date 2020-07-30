@@ -3,9 +3,11 @@ import AreaManagement from "../components/area/AreaManagement";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import { IArea } from "../models/IArea";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const HomePage: React.FunctionComponent = () => {
   useFirestoreConnect([{ collection: "areas" }]);
+
   const areas: IArea[] = useSelector(
     (state: any) => state.firestore.ordered.areas
   );
@@ -18,6 +20,11 @@ const HomePage: React.FunctionComponent = () => {
 
   const setProfileView = () => {
     setServiceView(false);
+  };
+
+  const history = useHistory();
+  const navigateToSearch = () => {
+    history.push("/search");
   };
 
   return (
@@ -47,7 +54,10 @@ const HomePage: React.FunctionComponent = () => {
           <p className="font-semibold m-2">
             Aquí puedes encontrar el examen que estás buscando
           </p>
-          <button className="btn btn-secondary m-2 mb-4">
+          <button
+            className="btn btn-secondary m-2 mb-4"
+            onClick={navigateToSearch}
+          >
             <span className="material-icons">search</span>Buscar Examen
           </button>
         </div>

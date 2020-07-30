@@ -4,7 +4,6 @@ import GridLayout from "../../layouts/GridLayout";
 import AreaControl from "./AreaControl";
 import { IArea } from "../../models/IArea";
 import { ERol } from "../../models/ERol";
-import SummaryLayout from "../../layouts/SummaryLayout";
 import AreaDetail from "./AreaDetail";
 
 interface IAreaManagementProps {
@@ -22,17 +21,17 @@ const AreaManagement: React.FunctionComponent<IAreaManagementProps> = ({
   const [filterText, setFilterText] = useState("");
 
   const onFilterText = (filter: string) => {
-    setFilterText(filter);
     setList(
-      areas.map((area) => {
-        if (
-          area.id?.includes(filter) ||
-          area.name.toLowerCase().includes(filter.toLowerCase()) ||
-          area.description.toLowerCase().includes(filter.toLowerCase())
+      areas
+        .filter(
+          (area) =>
+            (area.id?.includes(filter) && rol === ERol.Admin) ||
+            area.name.toLowerCase().includes(filter.toLowerCase()) ||
+            area.description.toLowerCase().includes(filter.toLowerCase())
         )
-          return <AreaDetail area={area} rol={rol} key={area.id} />;
-      })
+        .map((area) => <AreaDetail area={area} rol={rol} key={area.id} />)
     );
+    setFilterText(filter);
   };
 
   useEffect(() => {

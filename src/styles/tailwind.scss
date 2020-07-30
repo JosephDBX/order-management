@@ -156,6 +156,10 @@ p {
   @apply flex flex-col;
 }
 
+.input-label {
+  @apply font-semibold text-gray-800 px-1;
+}
+
 .input-hint {
   @apply text-sm text-gray-700 font-semibold px-1;
 }

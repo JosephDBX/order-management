@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { ERol } from "../../models/ERol";
 
 interface IAreaControlProps {
@@ -21,13 +21,15 @@ const AreaControl: React.FunctionComponent<IAreaControlProps> = ({
       <div className="flex flex-col md:flex-row">
         <div className="input-group">
           <input
-            className="input input-primary"
+            className="input input-secondary"
             type="text"
             placeholder="Nombre de área"
             onChange={onInputChange}
             value={filterText}
           />
-          <span className="input-hint">Código, nombre o descripción</span>
+          <span className="input-hint">
+            {rol === ERol.Admin ? "Código, n" : "N"}ombre o descripción
+          </span>
         </div>
         <div className="flex-grow p-4"></div>
         {rol === ERol.Admin && (

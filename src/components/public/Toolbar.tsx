@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 interface IToolbarProps {
   isLogIn?: boolean;
@@ -9,6 +10,11 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
   isLogIn,
   onCloseSession,
 }) => {
+  const history = useHistory();
+  const navigateToSignUp = () => {
+    history.push("/sign-up");
+  };
+
   return (
     <div className="fixed left-0 right-0 top-0 flex items-center bg-blue-600 text-white p-4 rounded-b shadow-lg">
       <div className="flex items-center">
@@ -32,7 +38,10 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
           </>
         ) : (
           <>
-            <button className="btn btn-primary shadow-none mr-2 md:mr-4">
+            <button
+              className="btn btn-primary shadow-none mr-2 md:mr-4"
+              onClick={navigateToSignUp}
+            >
               Registrarse
             </button>
             <button className="btn btn-primary shadow-none">Acceder</button>

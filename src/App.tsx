@@ -8,6 +8,7 @@ import Footer from "./components/public/Footer";
 
 // Pages
 import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -26,6 +27,7 @@ function App() {
       <main className="container mt-20 mx-auto flex-grow">
         <Switch>
           <Route exact path="/" component={HomePage} />
+          <Route exact path="/sign-up" component={SignUpPage} />
         </Switch>
       </main>
       <Footer />
