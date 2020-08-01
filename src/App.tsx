@@ -1,6 +1,16 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Switch, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  useLocation,
+  Redirect,
+} from "react-router-dom";
 import "./App.scss";
+
+import { useSelector } from "react-redux";
+import { isLoaded, isEmpty, useFirebase } from "react-redux-firebase";
+import { IUser } from "./models/IUser";
 
 // Components
 import Toolbar from "./components/public/Toolbar";
@@ -20,17 +30,85 @@ function App() {
 
     return null;
   };
+
+  const firebase = useFirebase();
+
+  // Wait For Auth To Load
+  const auth = useSelector((state: any) => state.firebase.auth);
+  const AuthIsLoaded = ({ children }: any) => {
+    if (!isLoaded(auth))
+      return (
+        <div>
+          <h4 className="m-4">cargando, por favor espere...</h4>
+          <div
+            className="h-48 w-48 mx-auto"
+            style={{
+              background: "url('logo512.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              zoom: 2,
+            }}
+          ></div>
+        </div>
+      );
+    return children;
+  };
+
+  // Add Role Routes
+  const currentUser: IUser = useSelector(
+    (state: any) => state.firebase.profile
+  );
+  const PrivateRoute = () => {
+    return (
+      <>
+        {isLoaded(currentUser) &&
+        !isEmpty(currentUser) &&
+        auth.emailVerified ? (
+          <>
+            {currentUser.roles?.isDeliveryWorker ? <>1</> : null}
+            {currentUser.roles?.isDoctor ? <>2</> : null}
+            {currentUser.roles?.isReceptionist ? <>3</> : null}
+            {currentUser.roles?.isLaboratorist ? <>4</> : null}
+            {currentUser.roles?.isAdmin ? <>5</> : null}
+          </>
+        ) : (
+          <Redirect to="/sign-in" />
+        )}
+      </>
+    );
+  };
+
+  const onCloseSession = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        console.log("Signed Out!!!");
+      })
+      .catch((error) => {
+        console.error("ERROR: ", error.message);
+      });
+  };
+
   return (
     <BrowserRouter>
-      <Toolbar isLogIn={false} onCloseSession={function () {}} />
-      <ScrollToTop />
-      <main className="container mt-20 mx-auto flex-grow">
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/sign-up" component={SignUpPage} />
-        </Switch>
-      </main>
-      <Footer />
+      <AuthIsLoaded>
+        <Toolbar
+          isLogIn={
+            isLoaded(currentUser) && !isEmpty(currentUser) && auth.emailVerified
+          }
+          onCloseSession={onCloseSession}
+        />
+        <ScrollToTop />
+        <main className="container mt-20 mx-auto flex-grow">
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/sign-up" component={SignUpPage} />
+            <PrivateRoute />
+          </Switch>
+        </main>
+        <Footer />
+      </AuthIsLoaded>
     </BrowserRouter>
   );
 }
