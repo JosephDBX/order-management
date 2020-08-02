@@ -1,13 +1,17 @@
 import React from "react";
-import UserCreate from "../components/user/UserCreate";
+import UserCreate from "../../components/user/UserCreate";
 import { useFirebase, useFirestore } from "react-redux-firebase";
-import { IUser } from "../models/IUser";
+import { IUser } from "../../models/IUser";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 const SignUpPage: React.FunctionComponent = () => {
   const firebase = useFirebase();
   const firestore = useFirestore();
+  const history = useHistory();
 
   const onCreateUser = (email: string, password: string) => {
+    toast.info("Procesando... por favor espere...");
     const user: IUser = { email: email, state: true };
 
     firebase
@@ -27,10 +31,22 @@ const SignUpPage: React.FunctionComponent = () => {
         return firebase.auth().signOut();
       })
       .then(() => {
-        console.log("Mail Sent!!!");
+        toast.success(
+          "Se le ha enviado un correo electrónico de verificación, revise su bandeja de entrada y luego inicie sesión."
+        );
+        history.push("/sign-in");
       })
       .catch((error) => {
-        console.error("ERROR: ", error.message);
+        if (
+          error.message ===
+          "The email address is already in use by another account."
+        ) {
+          toast.error(
+            "La dirección de correo electrónico ya está en uso por otra cuenta."
+          );
+        } else {
+          toast.error(error.message);
+        }
       });
   };
 

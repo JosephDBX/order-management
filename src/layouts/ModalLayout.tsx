@@ -7,11 +7,11 @@ enum Type {
 
 interface IModalLayoutProps {
   open: boolean;
-  title: any;
+  title?: any;
   component: any;
   type?: Type;
-  onOpen?: Function;
-  onClose?: Function;
+  onOpen?(): void;
+  onClose(): void;
 }
 
 const ModalLayout: React.FunctionComponent<IModalLayoutProps> = ({
@@ -31,15 +31,12 @@ const ModalLayout: React.FunctionComponent<IModalLayoutProps> = ({
 
   const closeModal = () => {
     setStyle("");
-    if (onClose) onClose();
+    onClose();
   };
 
   const modal = (
     <div className={`modal ${style} z-10 fixed inset-0`}>
-      <div
-        className="backdrop absolute inset-0"
-        onClick={closeModal}
-      ></div>
+      <div className="backdrop absolute inset-0" onClick={closeModal}></div>
       {type === Type.SIDE ? (
         <div className="view w-64 absolute inset-y-0 left-0 shadow-2xl">
           {component}
@@ -49,9 +46,7 @@ const ModalLayout: React.FunctionComponent<IModalLayoutProps> = ({
           <div className="bg-white shadow-2xl rounded-sm">
             <div className="flex justify-between items-start">
               <div className="flex-grow py-1 px-2">
-                <h2 className="text-center text-lg">
-                  {title}
-                </h2>
+                <h2 className="text-center text-lg">{title}</h2>
               </div>
               <button
                 className="m-1 material-icons btn-icon btn-icon-danger p-0"

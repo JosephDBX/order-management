@@ -22,7 +22,6 @@ const UserCreate: React.FunctionComponent<IUserCreateProps> = ({
     event: BaseSyntheticEvent<object, any, any> | undefined
   ) => {
     onCreateUser(data.email, data.password);
-    event?.target.reset();
   };
 
   return (

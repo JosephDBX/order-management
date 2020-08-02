@@ -21,11 +21,19 @@ p {
 // btn
 
 .btn {
-  @apply flex py-1 px-2 uppercase rounded-sm shadow-md font-semibold;
+  @apply flex py-1 px-2 uppercase rounded-sm shadow-md font-semibold text-gray-600 bg-gray-100;
 }
 
 .btn:focus {
   @apply shadow-outline outline-none;
+}
+
+.btn:hover {
+  @apply text-gray-700 bg-gray-200;
+}
+
+.btn:active {
+  @apply text-gray-900 bg-gray-300;
 }
 
 // primary

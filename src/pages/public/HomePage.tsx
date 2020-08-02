@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import AreaManagement from "../components/area/AreaManagement";
+import AreaManagement from "../../components/area/AreaManagement";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
-import { IArea } from "../models/IArea";
+import { IArea } from "../../models/IArea";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -39,11 +39,11 @@ const HomePage: React.FunctionComponent = () => {
           zoom: 2,
         }}
       >
-        <h1 className="text-white opacity-0 md:opacity-100">
+        <h1 className="text-white hidden md:block">
           Laboratorio Clínico Bacteriológico Moncada
         </h1>
-        <h2 className="text-white opacity-100 md:opacity-0">LCBM</h2>
-        <p className="text-white text-xs font-semibold mx-0 md:mx-2">
+        <h2 className="text-white text-center block md:hidden">LCBM</h2>
+        <p className="text-white text-xs text-center md:text-left font-semibold mx-0 md:mx-1">
           Pruebas de laboratorio y ultrasonido a domicilio.
         </p>
       </div>

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import ModalLayout from "../../layouts/ModalLayout";
 
 interface IToolbarProps {
   isLogIn?: boolean;
-  onCloseSession: Function;
+  onCloseSession(): void;
 }
 
 const Toolbar: React.FunctionComponent<IToolbarProps> = ({
@@ -14,16 +15,37 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
   const navigateToSignUp = () => {
     history.push("/sign-up");
   };
+  const navigateToSignIn = () => {
+    history.push("/sign-in");
+  };
+  const navigateToHome = () => {
+    history.push("/");
+  };
+  const [modal, setModal] = useState(false);
+  const onOpenModal = () => {
+    setModal(true);
+  };
+  const onCloseModal = () => {
+    setModal(false);
+  };
 
   return (
     <div className="fixed left-0 right-0 top-0 flex items-center bg-blue-600 text-white p-4 rounded-b shadow-lg">
       <div className="flex items-center">
         {isLogIn && (
-          <button className="material-icons btn btn-primary shadow-none mr-2">
+          <button
+            className="material-icons btn btn-primary shadow-none mr-2"
+            onClick={onOpenModal}
+          >
             <span className="material-icons">menu</span>
           </button>
         )}
-        <button className="btn btn-primary shadow-none text-lg">LCBM</button>
+        <button
+          className="btn btn-primary shadow-none text-lg"
+          onClick={navigateToHome}
+        >
+          LCBM
+        </button>
       </div>
       <div className="flex-grow"></div>
       <div className="flex">
@@ -31,7 +53,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
           <>
             <button
               className="btn btn-primary shadow-none"
-              onClick={() => onCloseSession()}
+              onClick={onCloseSession}
             >
               Cerrar Sesión
             </button>
@@ -44,11 +66,21 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
             >
               Registrarse
             </button>
-            <button className="btn btn-primary shadow-none">Acceder</button>
+            <button
+              className="btn btn-primary shadow-none"
+              onClick={navigateToSignIn}
+            >
+              Acceder
+            </button>
           </>
         )}
       </div>
-      <div></div>
+      <ModalLayout
+        open={modal}
+        component={<div></div>}
+        type={1}
+        onClose={onCloseModal}
+      />
     </div>
   );
 };

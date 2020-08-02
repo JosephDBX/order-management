@@ -15,10 +15,14 @@ import { IUser } from "./models/IUser";
 // Components
 import Toolbar from "./components/public/Toolbar";
 import Footer from "./components/public/Footer";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// Pages
-import HomePage from "./pages/HomePage";
-import SignUpPage from "./pages/SignUpPage";
+// *************** Pages ***************
+// Public Pages
+import HomePage from "./pages/public/HomePage";
+import SignUpPage from "./pages/public/SignUpPage";
+import SignInPage from "./pages/public/SignInPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -83,10 +87,10 @@ function App() {
       .auth()
       .signOut()
       .then(() => {
-        console.log("Signed Out!!!");
+        toast.info("¡Sesión cerrada con éxito!");
       })
       .catch((error) => {
-        console.error("ERROR: ", error.message);
+        toast.error(error.message);
       });
   };
 
@@ -104,11 +108,23 @@ function App() {
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/sign-up" component={SignUpPage} />
+            <Route exact path="/sign-in" component={SignInPage} />
             <PrivateRoute />
           </Switch>
         </main>
         <Footer />
       </AuthIsLoaded>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </BrowserRouter>
   );
 }
