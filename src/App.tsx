@@ -39,8 +39,12 @@ function App() {
 
   // Wait For Auth To Load
   const auth = useSelector((state: any) => state.firebase.auth);
+  const currentUser: IUser = useSelector(
+    (state: any) => state.firebase.profile
+  );
+
   const AuthIsLoaded = ({ children }: any) => {
-    if (!isLoaded(auth))
+    if (!isLoaded(auth) || !isLoaded(currentUser))
       return (
         <div>
           <h4 className="m-4">cargando, por favor espere...</h4>
@@ -57,17 +61,11 @@ function App() {
       );
     return children;
   };
-
   // Add Role Routes
-  const currentUser: IUser = useSelector(
-    (state: any) => state.firebase.profile
-  );
   const PrivateRoute = () => {
     return (
       <>
-        {isLoaded(currentUser) &&
-        !isEmpty(currentUser) &&
-        auth.emailVerified ? (
+        {!isEmpty(currentUser) && auth.emailVerified ? (
           <>
             {currentUser.roles?.isDeliveryWorker ? <>1</> : null}
             {currentUser.roles?.isDoctor ? <>2</> : null}

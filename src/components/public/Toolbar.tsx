@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ModalLayout from "../../layouts/ModalLayout";
+import Sidenav from "./Sidenav";
 
 interface IToolbarProps {
   isLogIn?: boolean;
@@ -77,7 +78,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
       </div>
       <ModalLayout
         open={modal}
-        component={<div></div>}
+        component={<Sidenav onCloseModal={onCloseModal} />}
         type={1}
         onClose={onCloseModal}
       />

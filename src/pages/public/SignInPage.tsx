@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent } from "react";
+import React from "react";
 import CenterLayout from "../../layouts/CenterLayout";
 import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -15,10 +15,7 @@ const SignInPage: React.FunctionComponent = () => {
   const history = useHistory();
   const { register, handleSubmit, watch, errors } = useForm<Inputs>();
 
-  const onSubmit = (
-    data: Inputs,
-    event: BaseSyntheticEvent<object, any, any> | undefined
-  ) => {
+  const onSubmit = (data: Inputs) => {
     let aux = false;
     toast.info("Procesando... por favor espere...");
     firebase
@@ -52,15 +49,25 @@ const SignInPage: React.FunctionComponent = () => {
         }
       })
       .catch((error) => {
-        if (
-          error.message ===
-          "The password is invalid or the user does not have a password."
-        ) {
-          toast.error(
-            "La contraseña no es válida o el usuario no tiene una contraseña."
-          );
-        } else {
-          toast.error(error.message);
+        switch (error.message) {
+          case "There is no user record corresponding to this identifier. The user may have been deleted.":
+            toast.error(
+              "No hay registro de usuario correspondiente a este identificador. El usuario puede haber sido eliminado."
+            );
+            break;
+          case "The password is invalid or the user does not have a password.":
+            toast.error(
+              "La contraseña no es válida o el usuario no tiene una contraseña."
+            );
+            break;
+          case "We have blocked all requests from this device due to unusual activity. Try again later.":
+            toast.error(
+              "Hemos bloqueado todas las solicitudes de este dispositivo debido a una actividad inusual. Intenta nuevamente más tarde."
+            );
+            break;
+          default:
+            toast.error(error.message);
+            break;
         }
       });
   };
