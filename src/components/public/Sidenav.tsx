@@ -18,7 +18,7 @@ const Sidenav: React.FunctionComponent<ISidenavProps> = ({ onCloseModal }) => {
     onCloseModal();
   };
   const navigateToDeliveryWorkerPanel = () => {
-    history.push("/delivery-worker-panel");
+    history.push("/delivery-panel");
     onCloseModal();
   };
   const navigateToReceptionistPanel = () => {

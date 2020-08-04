@@ -12,7 +12,7 @@ const SignUpPage: React.FunctionComponent = () => {
 
   const onCreateUser = (email: string, password: string) => {
     toast.info("Procesando... por favor espere...");
-    const user: IUser = { email: email, state: true };
+    const user: IUser = { email: email };
 
     firebase
       .auth()

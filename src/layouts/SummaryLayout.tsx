@@ -17,7 +17,9 @@ const SummaryLayout: React.FunctionComponent<ISummaryLayoutProps> = ({
 }) => {
   return (
     <div className={`rounded-sm shadow flex flex-col ${bg}`}>
-      <h3 className={`text-center rounded-sm p-2 ${styleTitle}`}>{title}</h3>
+      <h3 className={`text-center rounded-sm p-2 font-code ${styleTitle}`}>
+        {title}
+      </h3>
       <hr className="mx-2" />
       <div className="p-2 flex-grow">{component}</div>
       {!!controls && (

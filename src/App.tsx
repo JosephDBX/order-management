@@ -23,6 +23,8 @@ import "react-toastify/dist/ReactToastify.css";
 import HomePage from "./pages/public/HomePage";
 import SignUpPage from "./pages/public/SignUpPage";
 import SignInPage from "./pages/public/SignInPage";
+import Error404Page from "./pages/public/Error404Page";
+import AdminPanel from "./pages/admin/AdminPanel";
 
 function App() {
   const ScrollToTop = () => {
@@ -47,7 +49,7 @@ function App() {
     if (!isLoaded(auth) || !isLoaded(currentUser))
       return (
         <div>
-          <h4 className="m-4">cargando, por favor espere...</h4>
+          <h4 className="m-4">Cargando, por favor espere...</h4>
           <div
             className="h-48 w-48 mx-auto"
             style={{
@@ -60,24 +62,6 @@ function App() {
         </div>
       );
     return children;
-  };
-  // Add Role Routes
-  const PrivateRoute = () => {
-    return (
-      <>
-        {!isEmpty(currentUser) && auth.emailVerified ? (
-          <>
-            {currentUser.roles?.isDeliveryWorker ? <>1</> : null}
-            {currentUser.roles?.isDoctor ? <>2</> : null}
-            {currentUser.roles?.isReceptionist ? <>3</> : null}
-            {currentUser.roles?.isLaboratorist ? <>4</> : null}
-            {currentUser.roles?.isAdmin ? <>5</> : null}
-          </>
-        ) : (
-          <Redirect to="/sign-in" />
-        )}
-      </>
-    );
   };
 
   const onCloseSession = () => {
@@ -104,10 +88,29 @@ function App() {
         <ScrollToTop />
         <main className="container mt-20 mx-auto flex-grow">
           <Switch>
-            <Route exact path="/" component={HomePage} />
-            <Route exact path="/sign-up" component={SignUpPage} />
-            <Route exact path="/sign-in" component={SignInPage} />
-            <PrivateRoute />
+            {/** public routes */}
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
+            <Route exact path="/home" component={HomePage} />
+            {/** auth routes */}
+            <Route exact path="/sign-up">
+              {!isEmpty(currentUser) ? <Redirect to="/home" /> : <SignUpPage />}
+            </Route>
+            <Route exact path="/sign-in">
+              {!isEmpty(currentUser) ? <Redirect to="/home" /> : <SignInPage />}
+            </Route>
+            {/** user routes */}
+            <Route exact path="/user-panel" component={Error404Page} />
+            {/** delivery worker routes */}
+            <Route exact path="/delivery-panel" component={Error404Page} />
+            {/** receptionist routes */}
+            <Route exact path="/receptionist-panel" component={Error404Page} />
+            {/** laboratorist routes */}
+            <Route exact path="/laboratorist-panel" component={Error404Page} />
+            {/** admin routes */}
+            <Route exact path="/admin-panel" component={AdminPanel} />
+            <Route path="*" component={Error404Page} />
           </Switch>
         </main>
         <Footer />

@@ -4,7 +4,6 @@ export interface IUser extends IBase {
   uid?: string;
   email: string;
   roles?: IRole;
-  state: boolean;
 }
 
 export interface IRole {

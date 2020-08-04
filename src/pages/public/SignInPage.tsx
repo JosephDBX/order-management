@@ -24,10 +24,10 @@ const SignInPage: React.FunctionComponent = () => {
       .then((result) => {
         if (result.user?.emailVerified) {
           toast.success(
-            "⬅️ Inicio de sesión exitoso ¡Presione el botón de menú (☰) para ver sus permisos!",
+            "⬅️ Inicio de sesión exitoso ¡Presione el botón de menú (☰) en la barra de herramientas superior para ver sus permisos!",
             {
               position: "top-left",
-              autoClose: 10000,
+              autoClose: 15000,
             }
           );
           history.push("/");
@@ -69,6 +69,21 @@ const SignInPage: React.FunctionComponent = () => {
             toast.error(error.message);
             break;
         }
+      });
+  };
+
+  const onRestorePassword = () => {
+    toast.info("Procesando... por favor espere...");
+    firebase
+      .auth()
+      .sendPasswordResetEmail(watch("email"))
+      .then(() => {
+        toast.info(
+          "Se le ha enviado un correo electrónico de restablecimiento de contraseña, revise su bandeja de entrada y luego inicie sesión."
+        );
+      })
+      .catch((error) => {
+        toast.error(error.messsage);
       });
   };
 
@@ -158,7 +173,7 @@ const SignInPage: React.FunctionComponent = () => {
           <p className="text-justify leading-8 pt-10 p-2">
             <b>¿Olvidaste tu contraseña?</b> Ingrese su correo electrónico
             arriba y presione{" "}
-            <button className="btn inline-flex">
+            <button className="btn inline-flex" onClick={onRestorePassword}>
               <span className="material-icons">restore</span>Restablecer
               contraseña
             </button>{" "}

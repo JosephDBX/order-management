@@ -21,7 +21,7 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
 
   return (
     <SummaryLayout
-      title={area.name}
+      title={`Código:${area.id}`}
       styleTitle={
         rol === ERol.Public
           ? "bg-blue-600 text-white"
@@ -29,13 +29,21 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
       }
       component={
         <>
-          {rol === ERol.Admin && (
-            <div className="bg-gray-600 mx-auto rounded-full p-1">
-              <p className="text-center text-white font-code">{`Código:${area.id}`}</p>
-            </div>
-          )}
-          <p className="text-center m-2 font-semibold">Descripción</p>
-          <p className="text-justify m-2">{area.description}</p>
+          <div
+            className="w-48 h-48 rounded-full mx-auto shadow-md flex items-center justify-center"
+            style={{
+              background:
+                "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('bg_area.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <h3 className="text-center rounded-sm p-2 text-white text-xl">
+              {area.name}
+            </h3>
+          </div>
+          <p className="text-center m-4 font-semibold">Descripción</p>
+          <p className="text-justify m-4">{area.description}</p>
         </>
       }
       controls={
