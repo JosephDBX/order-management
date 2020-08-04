@@ -4,6 +4,7 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import { IArea } from "../../models/IArea";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { ERol } from "../../models/ERol";
 
 const HomePage: React.FunctionComponent = () => {
   useFirestoreConnect([{ collection: "areas" }]);
@@ -33,7 +34,7 @@ const HomePage: React.FunctionComponent = () => {
         className="h-48 shadow-md rounded-sm bg-auto flex flex-col justify-center md:justify-end p-2 md:p-4"
         style={{
           background:
-            "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('cover.jpg')",
+            "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('/cover.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           zoom: 2,
@@ -85,7 +86,7 @@ const HomePage: React.FunctionComponent = () => {
               {!isLoaded(areas) ? (
                 <p className="m-2 text-center">Cargando áreas...</p>
               ) : (
-                <AreaManagement areas={areas} rol={0} />
+                <AreaManagement areas={areas} rol={ERol.Public} />
               )}
             </>
           ) : (

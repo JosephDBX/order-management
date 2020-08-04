@@ -25,6 +25,8 @@ import SignUpPage from "./pages/public/SignUpPage";
 import SignInPage from "./pages/public/SignInPage";
 import Error404Page from "./pages/public/Error404Page";
 import AdminPanel from "./pages/admin/AdminPanel";
+import { ERol } from "./models/ERol";
+import AdminAreaPage from "./pages/admin/AdminAreaPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -76,6 +78,33 @@ function App() {
       });
   };
 
+  // Redirect
+  const RedirectAdmin = (page: any, rol: ERol) => {
+    if (!isEmpty(currentUser)) {
+      switch (rol) {
+        case ERol.DeliveryWorker: {
+          if (currentUser.roles?.isDeliveryWorker) return page;
+          break;
+        }
+        case ERol.Receptionist: {
+          if (currentUser.roles?.isReceptionist) return page;
+          break;
+        }
+        case ERol.Laboratorist: {
+          if (currentUser.roles?.isLaboratorist) return page;
+          break;
+        }
+        case ERol.Admin: {
+          if (currentUser.roles?.isAdmin) return page;
+          break;
+        }
+      }
+      return <Redirect to="/home" />;
+    } else {
+      return <Redirect to="/sign-in" />;
+    }
+  };
+
   return (
     <BrowserRouter>
       <AuthIsLoaded>
@@ -109,7 +138,12 @@ function App() {
             {/** laboratorist routes */}
             <Route exact path="/laboratorist-panel" component={Error404Page} />
             {/** admin routes */}
-            <Route exact path="/admin-panel" component={AdminPanel} />
+            <Route exact path="/admin-panel">
+              {RedirectAdmin(<AdminPanel />, ERol.Admin)}
+            </Route>
+            <Route exact path="/admin-panel/areas">
+              {RedirectAdmin(<AdminAreaPage />, ERol.Admin)}
+            </Route>
             <Route path="*" component={Error404Page} />
           </Switch>
         </main>

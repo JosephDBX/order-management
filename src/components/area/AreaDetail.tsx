@@ -33,7 +33,7 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
             className="w-48 h-48 rounded-full mx-auto shadow-md flex items-center justify-center"
             style={{
               background:
-                "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('bg_area.jpg')",
+                "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('/bg_area.jpg')",
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}

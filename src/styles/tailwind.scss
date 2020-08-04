@@ -21,7 +21,7 @@ p {
 // btn
 
 .btn {
-  @apply flex justify-center py-1 px-2 uppercase rounded-sm shadow-md font-semibold text-gray-600 bg-gray-100;
+  @apply flex justify-center items-center py-1 px-2 uppercase rounded-sm shadow-md font-semibold text-gray-600 bg-gray-100;
 }
 
 .btn:focus {
