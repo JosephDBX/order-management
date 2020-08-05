@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import CenterLayout from "../../layouts/CenterLayout";
 
@@ -17,10 +17,7 @@ const UserCreate: React.FunctionComponent<IUserCreateProps> = ({
 }) => {
   const { register, handleSubmit, watch, errors } = useForm<Inputs>();
 
-  const onSubmit = (
-    data: Inputs,
-    event: BaseSyntheticEvent<object, any, any> | undefined
-  ) => {
+  const onSubmit = (data: Inputs) => {
     onCreateUser(data.email, data.password);
   };
 

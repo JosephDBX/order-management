@@ -38,6 +38,12 @@
     background-color: rgba(0, 0, 0, .5);
 }
 
+textarea {
+    height: 8rem;
+    min-height: 8rem;
+    max-height: 16rem;
+}
+
 /* Footer */
 .footer {
     background-color: #000;

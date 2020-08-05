@@ -95,11 +95,19 @@ p {
 // btn-icon
 
 .btn-icon {
-  @apply p-1 rounded-full shadow-md border-2;
+  @apply p-1 rounded-full shadow-md border-2 text-gray-100 bg-gray-600;
 }
 
 .btn-icon:focus {
   @apply shadow-outline outline-none;
+}
+
+.btn-icon:hover {
+  @apply text-gray-200 bg-gray-700;
+}
+
+.btn-icon:active {
+  @apply text-gray-300 bg-gray-900;
 }
 
 // primary
@@ -161,7 +169,7 @@ p {
 // input
 
 .input-group {
-  @apply flex flex-col;
+  @apply flex flex-col my-2;
 }
 
 .input-label {

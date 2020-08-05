@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { ERol } from "../../models/ERol";
+import { useHistory } from "react-router-dom";
 
 interface IAreaControlProps {
   rol: ERol;
@@ -15,6 +16,12 @@ const AreaControl: React.FunctionComponent<IAreaControlProps> = ({
     setFilterText(event.target.value);
     onFilterText(event.target.value);
   };
+
+  const history = useHistory();
+  const navigateToCreate = () => {
+    history.push("/admin-panel/areas/create");
+  };
+
   return (
     <div className="m-2">
       <h3 className="m-1 text-center md:text-left">Filtrar área</h3>
@@ -34,7 +41,7 @@ const AreaControl: React.FunctionComponent<IAreaControlProps> = ({
         <div className="flex-grow p-4"></div>
         {rol === ERol.Admin && (
           <div className="flex flex-row md:flex-col justify-center">
-            <button className="btn btn-primary">
+            <button className="btn btn-primary" onClick={navigateToCreate}>
               <span className="material-icons">add_circle</span>Crear Área
             </button>
           </div>

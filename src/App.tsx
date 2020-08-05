@@ -27,6 +27,8 @@ import Error404Page from "./pages/public/Error404Page";
 import AdminPanel from "./pages/admin/AdminPanel";
 import { ERol } from "./models/ERol";
 import AdminAreaPage from "./pages/admin/AdminAreaPage";
+import AdminAreaCreatePage from "./pages/admin/AdminAreaCreatePage";
+import AdminAreaEditPage from "./pages/admin/AdminAreaEditPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -55,7 +57,7 @@ function App() {
           <div
             className="h-48 w-48 mx-auto"
             style={{
-              background: "url('logo512.png')",
+              background: "url('/logo512.png')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               zoom: 2,
@@ -143,6 +145,12 @@ function App() {
             </Route>
             <Route exact path="/admin-panel/areas">
               {RedirectAdmin(<AdminAreaPage />, ERol.Admin)}
+            </Route>
+            <Route exact path="/admin-panel/areas/create">
+              {RedirectAdmin(<AdminAreaCreatePage />, ERol.Admin)}
+            </Route>
+            <Route exact path="/admin-panel/areas/:id/edit">
+              {RedirectAdmin(<AdminAreaEditPage />, ERol.Admin)}
             </Route>
             <Route path="*" component={Error404Page} />
           </Switch>

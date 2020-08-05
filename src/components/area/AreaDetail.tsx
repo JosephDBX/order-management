@@ -18,6 +18,9 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
     if (rol === ERol.Admin) history.push(`/admin-panel/areas/${area.id}`);
     else history.push(`/search/?area=${area.id}`);
   };
+  const navigateToEdit = () => {
+    history.push(`/admin-panel/areas/${area.id}/edit`);
+  };
 
   return (
     <SummaryLayout
@@ -53,7 +56,9 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
           </button>
           {rol === ERol.Admin && (
             <>
-              <button className="btn btn-warning">Editar</button>
+              <button className="btn btn-warning" onClick={navigateToEdit}>
+                Editar
+              </button>
               <button className="btn btn-danger">Borrar</button>
             </>
           )}
