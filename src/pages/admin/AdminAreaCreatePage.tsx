@@ -16,7 +16,7 @@ const AdminAreaCreatePage: React.FunctionComponent = () => {
       .add(area)
       .then((result) => {
         toast.success(`Nueva área de examen creada con id:${result.id}`);
-        history.push("/admin-panel/areas");
+        history.push(`/admin-panel/areas/${result.id}`);
       })
       .catch((error) => {
         toast.error(error.message);

@@ -18,7 +18,11 @@ const AreaCreate: React.FunctionComponent<IAreaCreateProps> = ({
   const { register, handleSubmit, errors } = useForm<Inputs>();
 
   const onSubmit = (data: Inputs) => {
-    const area: IArea = { name: data.name, description: data.description };
+    const area: IArea = {
+      name: data.name,
+      description: data.description,
+      state: true,
+    };
     onCreateArea(area);
   };
 
@@ -52,7 +56,9 @@ const AreaCreate: React.FunctionComponent<IAreaCreateProps> = ({
             </span>
           </div>
           <div
-            className={`input-group ${!!errors.name && "input-group-danger"}`}
+            className={`input-group ${
+              !!errors.description && "input-group-danger"
+            }`}
           >
             <label htmlFor="description" className="input-label">
               Descripción del área

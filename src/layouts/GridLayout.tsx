@@ -20,7 +20,7 @@ const GridLayout: React.FunctionComponent<IGridLayoutProps> = ({
     <>
       {list && list.length > 0 ? (
         <div
-          className={`grid gap-2 grid-cols-1 md:grid-cols-2 ${
+          className={`grid gap-4 grid-cols-1 md:grid-cols-2 ${
             type === Type.MAIN
               ? "lg:grid-cols-2 xl:grid-cols-3"
               : "lg:grid-cols-3 xl:grid-cols-4"

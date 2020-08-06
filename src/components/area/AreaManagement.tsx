@@ -9,14 +9,23 @@ import AreaDetail from "./AreaDetail";
 interface IAreaManagementProps {
   areas: IArea[];
   rol: ERol;
+  onAreaStateChange?(id: string, state: boolean): void;
 }
 
 const AreaManagement: React.FunctionComponent<IAreaManagementProps> = ({
   areas,
   rol,
+  onAreaStateChange,
 }) => {
   const [list, setList] = useState<any[]>(
-    areas.map((area) => <AreaDetail area={area} rol={rol} key={area.id} />)
+    areas.map((area) => (
+      <AreaDetail
+        area={area}
+        rol={rol}
+        onAreaStateChange={onAreaStateChange}
+        key={area.id}
+      />
+    ))
   );
   const [filterText, setFilterText] = useState("");
 
@@ -29,7 +38,14 @@ const AreaManagement: React.FunctionComponent<IAreaManagementProps> = ({
             area.name.toLowerCase().includes(filter.toLowerCase()) ||
             area.description.toLowerCase().includes(filter.toLowerCase())
         )
-        .map((area) => <AreaDetail area={area} rol={rol} key={area.id} />)
+        .map((area) => (
+          <AreaDetail
+            area={area}
+            rol={rol}
+            onAreaStateChange={onAreaStateChange}
+            key={area.id}
+          />
+        ))
     );
     setFilterText(filter);
   };
@@ -41,7 +57,7 @@ const AreaManagement: React.FunctionComponent<IAreaManagementProps> = ({
   return (
     <ManageLayout
       title={`${rol === ERol.Admin ? "Gestionar á" : "Á"}reas de exámenes`}
-      subTitle="Todas nuestras áreas y especializaciones!!!"
+      subTitle="¡Todas nuestras áreas y especializaciones!"
       controls={<AreaControl rol={rol} onFilterText={onFilterText} />}
       list={<GridLayout list={list} defaultText="Aún no hay áreas!!!" />}
     />

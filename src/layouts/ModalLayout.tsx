@@ -55,7 +55,7 @@ const ModalLayout: React.FunctionComponent<IModalLayoutProps> = ({
                 cancel
               </button>
             </div>
-            <hr className="mx-1" />
+            <hr className="mx-2" />
             <div className="p-2">{component}</div>
           </div>
         </div>

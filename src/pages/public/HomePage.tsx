@@ -7,7 +7,9 @@ import { useHistory } from "react-router-dom";
 import { ERol } from "../../models/ERol";
 
 const HomePage: React.FunctionComponent = () => {
-  useFirestoreConnect([{ collection: "areas" }]);
+  useFirestoreConnect([
+    { collection: "areas", where: [["state", "==", true]] },
+  ]);
 
   const areas: IArea[] = useSelector(
     (state: any) => state.firestore.ordered.areas

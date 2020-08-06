@@ -20,7 +20,11 @@ const AreaEdit: React.FunctionComponent<IAreaEditProps> = ({
   const { register, handleSubmit, errors } = useForm<Inputs>();
 
   const onSubmit = (data: Inputs) => {
-    const area: IArea = { name: data.name, description: data.description };
+    const area: IArea = {
+      name: data.name,
+      description: data.description,
+      state: true,
+    };
     onEditArea(area);
   };
 
@@ -55,7 +59,9 @@ const AreaEdit: React.FunctionComponent<IAreaEditProps> = ({
             </span>
           </div>
           <div
-            className={`input-group ${!!errors.name && "input-group-danger"}`}
+            className={`input-group ${
+              !!errors.description && "input-group-danger"
+            }`}
           >
             <label htmlFor="description" className="input-label">
               Descripción del área
