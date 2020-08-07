@@ -5,6 +5,7 @@ import ManageLayout from "../../layouts/ManageLayout";
 import TestControl from "./TestControl";
 import GridLayout from "../../layouts/GridLayout";
 import { IArea } from "../../models/IArea";
+import TestDetail from "./TestDetail";
 
 interface ITestManagementProps {
   area?: IArea;
@@ -19,7 +20,17 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
   rol,
   onTestStateChange,
 }) => {
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<any[]>(
+    tests.map((test) => (
+      <TestDetail
+        test={test}
+        rol={rol}
+        onTestStateChange={onTestStateChange}
+        loadArea={true}
+        key={test.id}
+      />
+    ))
+  );
   const [filterText, setFilterText] = useState("");
 
   const onFilterText = (filter: string) => {
@@ -34,7 +45,14 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
               .includes(filter.toLocaleLowerCase()) ||
             test.description.toLowerCase().includes(filter.toLowerCase())
         )
-        .map((area) => <div key={area.id}></div>)
+        .map((test) => (
+          <TestDetail
+            test={test}
+            rol={rol}
+            onTestStateChange={onTestStateChange}
+            key={test.id}
+          />
+        ))
     );
     setFilterText(filter);
   };
@@ -48,13 +66,15 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
       title={`${rol === ERol.Admin ? "Gestionar e" : "E"}xámenes`}
       subTitle={`¡Todos nuestros exámenes${
         rol === ERol.Admin
-          ? ` del área${area?.name ? ": " + area.name : ""}`
+          ? ` del área${area?.name ? " de " + area.name : ""}`
           : ""
       }!`}
       controls={
         <TestControl rol={rol} onFilterText={onFilterText} idArea={area?.id} />
       }
-      list={<GridLayout list={list} defaultText="Aún no hay exámenes!!!" />}
+      list={
+        <GridLayout list={list} type={1} defaultText="No hay exámenes!!!" />
+      }
     />
   );
 };

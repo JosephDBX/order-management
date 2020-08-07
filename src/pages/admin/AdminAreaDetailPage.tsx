@@ -13,6 +13,7 @@ import AreaDetail from "../../components/area/AreaDetail";
 import { ERol } from "../../models/ERol";
 import TestManagement from "../../components/test/TestManagement";
 import { ITest } from "../../models/ITest";
+import { toast } from "react-toastify";
 
 const AdminAreaDetailPage: React.FunctionComponent = () => {
   const { id } = useParams();
@@ -20,7 +21,7 @@ const AdminAreaDetailPage: React.FunctionComponent = () => {
   const firestore = useFirestore();
   useFirestoreConnect(() => [
     { collection: "areas", doc: id },
-    { collection: "tests" },
+    { collection: "tests", where: [["area", "==", id]] },
   ]);
 
   const currentArea: IArea = useSelector(
@@ -32,6 +33,26 @@ const AdminAreaDetailPage: React.FunctionComponent = () => {
 
   const navigateToAreaManagement = () => {
     history.push("/admin-panel/areas");
+  };
+
+  const onTestStateChange = (idTest: string, state: boolean) => {
+    if (!currentArea.state) {
+      toast.error("¡No puede activar un examen de un área desactivada!");
+    } else {
+      toast.info("Procesando... por favor espere...");
+      firestore
+        .collection("tests")
+        .doc(idTest)
+        .set({ state }, { merge: true })
+        .then(() => {
+          toast.success(
+            `¡El estado del examen: ${
+              tests.find((value) => value.id === idTest)?.name
+            }, ha cambiado!`
+          );
+        })
+        .catch((error) => toast.error(error.message));
+    }
   };
 
   return (
@@ -66,6 +87,7 @@ const AdminAreaDetailPage: React.FunctionComponent = () => {
                   rol={ERol.Admin}
                   tests={tests}
                   area={{ id, ...currentArea }}
+                  onTestStateChange={onTestStateChange}
                 />
               )}
             </>

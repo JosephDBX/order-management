@@ -59,7 +59,7 @@ const AreaManagement: React.FunctionComponent<IAreaManagementProps> = ({
       title={`${rol === ERol.Admin ? "Gestionar á" : "Á"}reas de exámenes`}
       subTitle="¡Todas nuestras áreas y especializaciones!"
       controls={<AreaControl rol={rol} onFilterText={onFilterText} />}
-      list={<GridLayout list={list} defaultText="Aún no hay áreas!!!" />}
+      list={<GridLayout list={list} defaultText="No hay áreas!!!" />}
     />
   );
 };
