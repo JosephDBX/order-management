@@ -31,6 +31,7 @@ import AdminAreaCreatePage from "./pages/admin/AdminAreaCreatePage";
 import AdminAreaEditPage from "./pages/admin/AdminAreaEditPage";
 import AdminAreaDetailPage from "./pages/admin/AdminAreaDetailPage";
 import AdminTestCreatePage from "./pages/admin/AdminTestCreatePage";
+import AdminTestEditPage from "./pages/admin/AdminTestEditPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -159,6 +160,9 @@ function App() {
             </Route>
             <Route exact path="/admin-panel/areas/:id/tests/create">
               {RedirectAdmin(<AdminTestCreatePage />, ERol.Admin)}
+            </Route>
+            <Route exact path="/admin-panel/areas/:idArea/tests/:idTest/edit">
+              {RedirectAdmin(<AdminTestEditPage />, ERol.Admin)}
             </Route>
             <Route path="*" component={Error404Page} />
           </Switch>

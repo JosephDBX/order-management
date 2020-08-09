@@ -1,12 +1,13 @@
 import React from "react";
 import { ITest } from "../../models/ITest";
-import CenterLayout from "../../layouts/CenterLayout";
 import { IArea } from "../../models/IArea";
 import { useForm } from "react-hook-form";
+import CenterLayout from "../../layouts/CenterLayout";
 
-interface ITestCreateProps {
-  area: IArea;
-  onCreateTest(test: ITest): void;
+interface ITestEditProps {
+  currentArea: IArea;
+  currentTest: ITest;
+  onEditTest(test: ITest): void;
 }
 
 type Inputs = {
@@ -16,24 +17,25 @@ type Inputs = {
   description: string;
 };
 
-const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
-  area,
-  onCreateTest,
+const TestEdit: React.FunctionComponent<ITestEditProps> = ({
+  currentArea,
+  currentTest,
+  onEditTest,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>();
 
   const onSubmit = (data: Inputs) => {
     const test: ITest = {
-      area: area.id as string,
+      area: currentArea.id as string,
       ...data,
-      state: area.state,
+      state: currentArea.state,
     };
-    onCreateTest(test);
+    onEditTest(test);
   };
 
   return (
     <CenterLayout
-      title={`Crear nuevo examen para el área de ${area.name}`}
+      title={`Editar examen ${currentTest.name} para el área de ${currentArea.name}`}
       component={
         <form onSubmit={handleSubmit(onSubmit)}>
           <div
@@ -47,6 +49,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
               type="text"
               name="name"
               placeholder="Nombre del examen"
+              defaultValue={currentTest.name}
               ref={register({
                 required: {
                   value: true,
@@ -57,7 +60,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
             <span className="input-hint">
               {!!errors.name
                 ? errors.name.message
-                : "Por favor ingrese el nombre del nuevo examen"}
+                : "Por favor ingrese el nuevo nombre del examen"}
             </span>
           </div>
           <div className="input-group">
@@ -68,6 +71,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
               className="input input-primary"
               name="alternative"
               placeholder="Nombres alternativos del examen"
+              defaultValue={currentTest.alternative}
               ref={register}
             />
             <span className="input-hint">
@@ -86,7 +90,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
               type="number"
               name="cost"
               placeholder="Costo del examen"
-              defaultValue={0}
+              defaultValue={currentTest.cost}
               min={0}
               step={0.01}
               ref={register({
@@ -103,7 +107,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
             <span className="input-hint">
               {!!errors.cost
                 ? errors.cost.message
-                : "Por favor ingrese el costo del nuevo examen en USD$"}
+                : "Por favor ingrese el nuevo costo del examen en USD$"}
             </span>
           </div>
           <div
@@ -118,6 +122,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
               className="input input-primary"
               name="description"
               placeholder="Descripción del examen"
+              defaultValue={currentTest.description}
               ref={register({
                 required: {
                   value: true,
@@ -128,12 +133,12 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
             <span className="input-hint">
               {!!errors.description
                 ? errors.description.message
-                : "Por favor ingrese la descripción del nuevo examen"}
+                : "Por favor ingrese la nueva descripción del examen"}
             </span>
           </div>
           <div className="mx-1 my-4">
-            <button className="btn btn-primary m-auto" type="submit">
-              <span className="material-icons">add_circle</span>Crear Examen
+            <button className="btn btn-warning m-auto" type="submit">
+              <span className="material-icons">update</span>Actualizar Examen
             </button>
           </div>
         </form>
@@ -142,4 +147,4 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
   );
 };
 
-export default TestCreate;
+export default TestEdit;

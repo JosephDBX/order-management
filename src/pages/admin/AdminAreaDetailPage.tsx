@@ -73,26 +73,38 @@ const AdminAreaDetailPage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <MainDetailLayout
-          title={`Gestionar exámenes del área: ${currentArea.name}`}
-          main={
-            <AreaDetail area={{ id, ...currentArea }} rol={ERol.Admin} isMain />
-          }
-          detail={
-            <>
-              {!isLoaded(tests) ? (
-                <p className="m-2 text-center">Cargando exámenes...</p>
-              ) : (
-                <TestManagement
-                  rol={ERol.Admin}
-                  tests={tests}
-                  area={{ id, ...currentArea }}
-                  onTestStateChange={onTestStateChange}
-                />
-              )}
-            </>
-          }
-        />
+        <>
+          <div className="flex justify-start">
+            <button className="btn m-2" onClick={navigateToAreaManagement}>
+              <span className="material-icons">arrow_back</span>Regresar a la
+              gestión de áreas
+            </button>
+          </div>
+          <MainDetailLayout
+            title={`Gestionar exámenes del área: ${currentArea.name}`}
+            main={
+              <AreaDetail
+                area={{ id, ...currentArea }}
+                rol={ERol.Admin}
+                isMain
+              />
+            }
+            detail={
+              <>
+                {!isLoaded(tests) ? (
+                  <p className="m-2 text-center">Cargando exámenes...</p>
+                ) : (
+                  <TestManagement
+                    rol={ERol.Admin}
+                    tests={tests}
+                    area={{ id, ...currentArea }}
+                    onTestStateChange={onTestStateChange}
+                  />
+                )}
+              </>
+            }
+          />
+        </>
       )}
     </>
   );
