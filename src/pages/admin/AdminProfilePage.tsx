@@ -9,11 +9,18 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import ProfileManagement from "../../components/profile/ProfileManagement";
 import { ERol } from "../../models/ERol";
+import { IProfileTest } from "../../models/IProfileTest";
 
 const AdminProfilePage: React.FunctionComponent = () => {
-  useFirestoreConnect([{ collection: "profiles" }]);
+  useFirestoreConnect([
+    { collection: "profiles" },
+    { collection: "profile_tests" },
+  ]);
   const profiles: IProfile[] = useSelector(
     (state: any) => state.firestore.ordered.profiles
+  );
+  const profile_tests: IProfileTest[] = useSelector(
+    (state: any) => state.firestore.ordered.profile_tests
   );
 
   const firestore = useFirestore().collection("profiles");
@@ -34,12 +41,13 @@ const AdminProfilePage: React.FunctionComponent = () => {
 
   return (
     <>
-      {!isLoaded(profiles) ? (
+      {!isLoaded(profiles) || !isLoaded(profile_tests) ? (
         <p className="m-2 text-center">Cargando perfiles...</p>
       ) : (
         <ProfileManagement
           profiles={profiles}
           rol={ERol.Admin}
+          profile_tests={profile_tests}
           onProfileStateChange={onProfileStateChange}
         />
       )}

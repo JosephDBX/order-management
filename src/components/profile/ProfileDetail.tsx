@@ -7,12 +7,12 @@ import ModalLayout from "../../layouts/ModalLayout";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { IProfileTest } from "../../models/IProfileTest";
-import { ITest } from "../../models/ITest";
 
 interface IProfileDetailProps {
   profile: IProfile;
   rol: ERol;
   isMain?: boolean;
+  profile_tests: IProfileTest[];
   onProfileStateChange?(id: string, state: boolean): void;
 }
 
@@ -20,29 +20,24 @@ const ProfileDetail: React.FunctionComponent<IProfileDetailProps> = ({
   profile,
   rol,
   isMain,
+  profile_tests,
   onProfileStateChange,
 }) => {
-  useFirestoreConnect([
-    { collection: "profile_tests", where: ["profile", "==", profile.id] },
-  ]);
-  const profile_tests: IProfileTest[] = useSelector(
-    (state: any) => state.firestore.ordered.profile_tests
-  );
-
   const getActives = () => {
     return profile_tests.filter((value) => value.state).length;
   };
   const getCost = () => {
-    let sum = 0.0;
+    let sum: number = 0.0;
     for (let i = 0; i < profile_tests.length; i++) {
-      if (profile_tests[i].state) sum += profile_tests[i].cost;
+      if (profile_tests[i].state)
+        sum += Number.parseFloat(profile_tests[i].cost.toString());
     }
     return sum;
   };
   const getTotalCost = () => {
-    let sum = 0.0;
+    let sum: number = 0.0;
     for (let i = 0; i < profile_tests.length; i++) {
-      sum += profile_tests[i].cost;
+      sum += Number.parseFloat(profile_tests[i].cost.toString());
     }
     return sum;
   };

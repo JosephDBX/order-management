@@ -5,24 +5,32 @@ import ProfileDetail from "./ProfileDetail";
 import ManageLayout from "../../layouts/ManageLayout";
 import ProfileControl from "./ProfileControl";
 import GridLayout from "../../layouts/GridLayout";
+import { IProfileTest } from "../../models/IProfileTest";
 
 interface IProfileManagementProps {
   profiles: IProfile[];
   rol: ERol;
+  profile_tests: IProfileTest[];
   onProfileStateChange?(id: string, state: boolean): void;
 }
 
 const ProfileManagement: React.FunctionComponent<IProfileManagementProps> = ({
   profiles,
   rol,
+  profile_tests,
   onProfileStateChange,
 }) => {
+  const getCurrentProfileTests = (idProfile: string) => {
+    return profile_tests.filter((pt) => pt.profile === idProfile);
+  };
+
   const [list, setList] = useState<any[]>(
     profiles.map((profile) => (
       <ProfileDetail
         profile={profile}
         rol={rol}
         onProfileStateChange={onProfileStateChange}
+        profile_tests={getCurrentProfileTests(profile.id as string)}
         key={profile.id}
       />
     ))
@@ -44,6 +52,7 @@ const ProfileManagement: React.FunctionComponent<IProfileManagementProps> = ({
             profile={profile}
             rol={rol}
             onProfileStateChange={onProfileStateChange}
+            profile_tests={getCurrentProfileTests(profile.id as string)}
             key={profile.id}
           />
         ))
@@ -53,7 +62,7 @@ const ProfileManagement: React.FunctionComponent<IProfileManagementProps> = ({
 
   useEffect(() => {
     onFilterText(filterText);
-  }, [profiles]);
+  }, [profiles, profile_tests]);
 
   return (
     <ManageLayout

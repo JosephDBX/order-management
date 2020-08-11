@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import ProfileCreate from "../../components/profile/ProfileCreate";
 import { ITest } from "../../models/ITest";
 import { useSelector } from "react-redux";
+import { IProfileTest } from "../../models/IProfileTest";
 
 const AdminProfileCreatePage: React.FunctionComponent = () => {
   useFirestoreConnect([{ collection: "tests" }]);
@@ -24,18 +25,37 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
   };
 
   const firestore = useFirestore();
-  const onCreateProfile = (profile: IProfile) => {
-    toast.info("Procesando... por favor espere...");
-    firestore
-      .collection("profiles")
-      .add(profile)
-      .then((result) => {
-        toast.success(`Nuevo perfil de examen creada con id:${result.id}`);
-        history.push(`/admin-panel/profiles/${result.id}`);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const onCreateProfile = (profile: IProfile, tests: ITest[]) => {
+    if (tests.length > 0) {
+      toast.info("Procesando... por favor espere...");
+      firestore
+        .collection("profiles")
+        .add(profile)
+        .then(async (result) => {
+          toast.success(`Nuevo perfil de examen creada con id:${result.id}`);
+          for (let i = 0; i < tests.length; i++) {
+            const profile_test: IProfileTest = {
+              profile: result.id,
+              test: tests[i].id as string,
+              state: tests[i].state,
+              cost: tests[i].cost,
+            };
+            await firestore
+              .collection("profile_tests")
+              .doc(`${result.id}_${tests[i].id}`)
+              .set(profile_test)
+              .then((pt) =>
+                toast.success(`Examen "${tests[i].name}" agregado al perfil`)
+              );
+          }
+          navigateToProfileManagement();
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    } else {
+      toast.info("Tienes que seleccionar al menos un examen");
+    }
   };
 
   return (

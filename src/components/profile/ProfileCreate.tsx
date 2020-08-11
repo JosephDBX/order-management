@@ -11,7 +11,7 @@ import SelectItemLayout from "../../layouts/SelectItemLayout";
 
 interface IProfileCreateProps {
   tests: ITest[];
-  onCreateProfile(profile: IProfile): void;
+  onCreateProfile(profile: IProfile, tests: ITest[]): void;
 }
 
 type Inputs = {
@@ -31,7 +31,7 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
       ...data,
       state: true,
     };
-    onCreateProfile(profile);
+    onCreateProfile(profile, selected);
   };
 
   const [modal, setModal] = useState(false);
@@ -132,7 +132,7 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
               <textarea
                 className="input input-primary"
                 name="description"
-                placeholder="Descripción del examen"
+                placeholder="Descripción del perfil"
                 ref={register({
                   required: {
                     value: true,

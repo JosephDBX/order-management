@@ -7,11 +7,13 @@ import { useHistory } from "react-router-dom";
 import { ERol } from "../../models/ERol";
 import { IProfile } from "../../models/IProfile";
 import ProfileManagement from "../../components/profile/ProfileManagement";
+import { IProfileTest } from "../../models/IProfileTest";
 
 const HomePage: React.FunctionComponent = () => {
   useFirestoreConnect([
     { collection: "areas", where: [["state", "==", true]] },
     { collection: "profiles", where: [["state", "==", true]] },
+    { collection: "profile_tests" },
   ]);
 
   const areas: IArea[] = useSelector(
@@ -19,6 +21,9 @@ const HomePage: React.FunctionComponent = () => {
   );
   const profiles: IProfile[] = useSelector(
     (state: any) => state.firestore.ordered.profiles
+  );
+  const profile_tests: IProfileTest[] = useSelector(
+    (state: any) => state.firestore.ordered.profile_tests
   );
 
   const [serviceView, setServiceView] = useState(true);
@@ -99,10 +104,14 @@ const HomePage: React.FunctionComponent = () => {
             </>
           ) : (
             <>
-              {!isLoaded(profiles) ? (
+              {!isLoaded(profiles) || !isLoaded(profile_tests) ? (
                 <p className="m-2 text-center">Cargando perfiles...</p>
               ) : (
-                <ProfileManagement profiles={profiles} rol={ERol.Public} />
+                <ProfileManagement
+                  profiles={profiles}
+                  profile_tests={profile_tests}
+                  rol={ERol.Public}
+                />
               )}
             </>
           )}
