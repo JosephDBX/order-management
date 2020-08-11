@@ -17,12 +17,16 @@ const SelectListLayout: React.FunctionComponent<ISelectListLayoutProps> = ({
         <div className="flex-grow py-1 px-2">
           <h3 className="text-center">{title}</h3>
         </div>
-        <button className="btn btn-primary" onClick={() => onAdd()}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => onAdd()}
+        >
           Agregar
         </button>
       </div>
       <hr className="m-1" />
-      <div className="frame">
+      <div className="frame" style={{ maxHeight: "16rem" }}>
         {!!selected && selected.length > 0 ? (
           <>
             {selected}

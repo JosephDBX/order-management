@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface ISelectItemLayoutProps {
   title: string;
@@ -6,6 +7,7 @@ interface ISelectItemLayoutProps {
   removable?: boolean;
   onAdd: Function;
   onRemove: Function;
+  navigateTo: string;
 }
 
 const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
@@ -14,6 +16,7 @@ const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
   removable = false,
   onAdd,
   onRemove,
+  navigateTo,
 }) => {
   return (
     <div className="flex items-center rounded-sm shadow-md p-2">
@@ -21,15 +24,20 @@ const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
         <h4 className="mx-2">{title}</h4>
         <hr className="mx-1" />
         <div className="flex items-center mx-2">
-          <button className="material-icons btn-icon btn-icon-secondary p-0 border-0">
+          <Link
+            to={navigateTo}
+            target="_blank"
+            className="material-icons btn-icon btn-icon-secondary p-0 border-0"
+          >
             pageview
-          </button>
+          </Link>
           <span className="input-hint">{subTitle}</span>
         </div>
       </div>
       <div>
         {removable ? (
           <button
+            type="button"
             className="material-icons btn-icon btn-icon-danger p-0"
             onClick={() => onRemove()}
           >
@@ -37,6 +45,7 @@ const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
           </button>
         ) : (
           <button
+            type="button"
             className="material-icons btn-icon btn-icon-primary p-0"
             onClick={() => onAdd()}
           >

@@ -31,7 +31,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = ({
   };
 
   return (
-    <div className="fixed left-0 right-0 top-0 flex items-center bg-blue-600 text-white p-4 rounded-b shadow-lg">
+    <div className="fixed left-0 right-0 top-0 z-10 flex items-center bg-blue-600 text-white p-4 rounded-b shadow-lg">
       <div className="flex items-center">
         {isLogIn && (
           <button

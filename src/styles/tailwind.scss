@@ -245,7 +245,7 @@ p {
 }
 
 .frame {
-  @apply h-56 overflow-y-auto p-2;
+  @apply overflow-y-auto p-2;
   p {
     @apply text-center my-4 font-semibold;
   }

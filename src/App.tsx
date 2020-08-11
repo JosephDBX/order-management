@@ -32,6 +32,8 @@ import AdminAreaEditPage from "./pages/admin/AdminAreaEditPage";
 import AdminAreaDetailPage from "./pages/admin/AdminAreaDetailPage";
 import AdminTestCreatePage from "./pages/admin/AdminTestCreatePage";
 import AdminTestEditPage from "./pages/admin/AdminTestEditPage";
+import AdminProfilePage from "./pages/admin/AdminProfilePage";
+import AdminProfileCreatePage from "./pages/admin/AdminProfileCreatePage";
 
 function App() {
   const ScrollToTop = () => {
@@ -164,6 +166,12 @@ function App() {
             <Route exact path="/admin-panel/areas/:idArea/tests/:idTest/edit">
               {RedirectAdmin(<AdminTestEditPage />, ERol.Admin)}
             </Route>
+            <Route exact path="/admin-panel/profiles">
+              {RedirectAdmin(<AdminProfilePage />, ERol.Admin)}
+            </Route>
+            <Route exact path="/admin-panel/profiles/create">
+              {RedirectAdmin(<AdminProfileCreatePage />, ERol.Admin)}
+            </Route>
             <Route path="*" component={Error404Page} />
           </Switch>
         </main>
@@ -185,50 +193,3 @@ function App() {
 }
 
 export default App;
-
-/**
- *************** Read All ***************
-useFirestoreConnect([{ collection: "users" }]);
-const users: IUser[] = useSelector(
-  (state: any) => state.firestore.ordered.users
-);
-
-return (
-  <div>
-    {!isLoaded(users) ? (
-      <p>Loading...</p>
-    ) : isEmpty(users) ? (
-      <p>Users List is Empty.</p>
-    ) : (
-      <ul>
-        {Object.keys(users).map((key, id) => (
-          <li key={key}>{users[id].email}</li>
-        ))}
-      </ul>
-    )}
-  </div>
-)
-
- *************** Read By Id ***************
-const firestore = useFirestore().collection("users");
-
-const user: IUser = useSelector(
-  ({ firestore: { data } }: any) => data.users && data.users[id]
-);
-
-const addUser = () => {
-  firestore.doc(id).set(aux, { merge: true }).then((value) => console.log(value));
-};
-
-return (
-  <div>
-    {!isLoaded(user) ? (
-      <p>Loading...</p>
-    ) : isEmpty(user) ? (
-      <p>User is Empty.</p>
-    ) : (
-      user.email
-    )}
-  </div>
-)
-*/

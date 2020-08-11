@@ -30,7 +30,8 @@ const AdminPanel: React.FunctionComponent = () => {
         className="btn btn-warning w-56 h-56 m-4"
         onClick={navigateToProfileManagement}
       >
-        <span className="material-icons">bookmark</span>Gestionar Perfiles
+        <span className="material-icons">collections_bookmark</span>Gestionar
+        Perfiles
       </button>
     </div>
   );

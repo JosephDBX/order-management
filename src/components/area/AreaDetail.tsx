@@ -42,7 +42,7 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
   return (
     <>
       <SummaryLayout
-        title={`Código:${area.id}`}
+        title="Área"
         styleTitle={
           rol === ERol.Public
             ? "bg-blue-600 text-white"
@@ -52,10 +52,23 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
         }
         component={
           <>
+            <div
+              className="w-48 h-48 rounded-full mx-auto shadow-md flex items-center justify-center"
+              style={{
+                background:
+                  "linear-gradient(145deg, #3182CEC0 30%, #319795D0 60%), url('/bg_area.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <h3 className="text-center rounded-sm p-2 text-white text-2xl">
+                {area.name}
+              </h3>
+            </div>
             {rol === ERol.Admin && (
-              <div className="flex justify-end">
+              <div className="flex justify-center my-4">
                 <div
-                  className={`rounded-full my-4 bg-${
+                  className={`rounded-full bg-${
                     area.state ? "teal-600" : "red-600"
                   }`}
                 >
@@ -68,23 +81,11 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
                 </div>
               </div>
             )}
-            <div
-              className="w-48 h-48 rounded-full mx-auto shadow-md flex items-center justify-center"
-              style={{
-                background:
-                  "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('/bg_area.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <h3 className="text-center rounded-sm p-2 text-white text-xl">
-                {area.name}
-              </h3>
-            </div>
             <p className="text-center m-4 font-semibold">Descripción</p>
             <p className="text-justify m-4">{area.description}</p>
           </>
         }
+        code={rol !== ERol.Public ? area.id : ""}
         controls={
           <>
             {!isMain && (
@@ -119,8 +120,8 @@ const AreaDetail: React.FunctionComponent<IAreaDetailProps> = ({
           <>
             <p className="m-2 text-justify pb-2">
               {area.state
-                ? "¡Desactivar el área desactivará todas las pruebas que le pertenecen!"
-                : "Solo se activará el área, ¡recuerde que tendrá que activar cada prueba por separado!"}
+                ? "¡Desactivar el área desactivará todos los exámenes que le pertenecen!"
+                : "Solo se activará el área, ¡recuerde que tendrá que activar cada examen por separado!"}
             </p>
             <hr />
             <div className="flex justify-end">

@@ -42,7 +42,7 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
   return (
     <>
       <SummaryLayout
-        title={`Código:${test.id}`}
+        title="Examen"
         styleTitle={
           rol === ERol.Public
             ? "bg-blue-600 text-white"
@@ -52,10 +52,28 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
         }
         component={
           <>
+            <div
+              className="h-32 p-8 relative rounded-full rounded-tl-none rounded-br-none mx-auto shadow-md flex items-center justify-center"
+              style={{
+                background:
+                  "linear-gradient(145deg, #3182CEB0 30%, #319795C0 60%), url('/bg_test.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <h3 className="text-center rounded-sm p-4 text-white text-2xl">
+                {test.name}
+              </h3>
+              <div className="bg-red-600 rounded-full absolute right-0 top-0">
+                <p className="text-white text-center font-semibold p-2 text-lg">
+                  USD ${test.cost}
+                </p>
+              </div>
+            </div>
             {rol === ERol.Admin && (
-              <div className="flex justify-end">
+              <div className="flex justify-end my-4">
                 <div
-                  className={`rounded-full my-4 bg-${
+                  className={`rounded-full bg-${
                     test.state ? "teal-600" : "red-600"
                   }`}
                 >
@@ -68,19 +86,6 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
                 </div>
               </div>
             )}
-            <div
-              className="h-32 p-8 rounded-full rounded-tr-none rounded-bl-none mx-auto shadow-md flex items-center justify-center"
-              style={{
-                background:
-                  "linear-gradient(145deg, #3182CED0 30%, #319795E0 60%), url('/bg_test.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <h3 className="text-center rounded-sm p-4 text-white text-xl">
-                {test.name}
-              </h3>
-            </div>
             {loadArea && (
               <div className="flex justify-center my-4">
                 <button className="btn" onClick={navigateToArea}>
@@ -91,10 +96,10 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
             {!!test.alternative && (
               <div className="rounded-sm shadow my-4">
                 <h4 className="text-center m-2 text-lg">
-                  Nombres alternativos
+                  Nombres alternativos de examen
                 </h4>
                 <hr className="m-2" />
-                <div className="h-40 frame">
+                <div className="frame" style={{ maxHeight: "8rem" }}>
                   {test.alternative?.split(/\n/).map((subName, index) => (
                     <div className="rounded-sm m-1 shadow-md p-2" key={index}>
                       <h4 className="flex items-center">
@@ -110,6 +115,7 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
             <p className="text-justify m-4">{test.description}</p>
           </>
         }
+        code={rol !== ERol.Public ? test.id : ""}
         controls={
           <>
             {rol === ERol.Admin && (

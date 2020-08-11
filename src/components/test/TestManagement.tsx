@@ -26,7 +26,6 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
         test={test}
         rol={rol}
         onTestStateChange={onTestStateChange}
-        loadArea={true}
         key={test.id}
       />
     ))
