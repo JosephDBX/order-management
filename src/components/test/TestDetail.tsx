@@ -4,31 +4,42 @@ import { ERol } from "../../models/ERol";
 import { useHistory } from "react-router-dom";
 import SummaryLayout from "../../layouts/SummaryLayout";
 import ModalLayout from "../../layouts/ModalLayout";
+import { IProfile } from "../../models/IProfile";
 
 interface ITestDetailProps {
   test: ITest;
   rol: ERol;
-  onTestStateChange?(id: string, state: boolean): void;
   loadArea?: boolean;
+  profile?: IProfile;
+  onTestStateChange?(id: string, state: boolean): void;
+  onRemoveTestToProfile?(profile: IProfile, test: ITest): void;
 }
 //!!(test.area as IArea).name
 const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
   test,
   rol,
-  onTestStateChange,
   loadArea,
+  profile,
+  onTestStateChange,
+  onRemoveTestToProfile,
 }) => {
   const history = useHistory();
   const navigateToArea = () => {
-    if (rol === ERol.Admin) history.push(`/admin-panel/areas/${test.area}`);
-    else history.push(`/search/?area=${test.area}`);
+    if (rol === ERol.Admin)
+      history.push(`/admin-panel/areas/${test.area}?test=${test.id}`);
+    else history.push(`/search/?area=${test.area}&test=${test.id}`);
   };
   const navigateToEdit = () => {
     history.push(`/admin-panel/areas/${test.area}/tests/${test.id}/edit`);
   };
   const onSwitchActive = () => {
     if (onTestStateChange) onTestStateChange(test.id as string, !test.state);
-    setModal(false);
+    onCloseModal();
+  };
+
+  const onRemoveTest = () => {
+    if (onRemoveTestToProfile) onRemoveTestToProfile(profile as IProfile, test);
+    onCloseModal();
   };
 
   const [modal, setModal] = useState(false);
@@ -120,40 +131,65 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
           <>
             {rol === ERol.Admin && (
               <>
-                <button className="btn btn-warning" onClick={navigateToEdit}>
-                  Editar
-                </button>
-                <button
-                  className={`btn btn-${test.state ? "danger" : "primary"}`}
-                  onClick={onOpenModal}
-                >
-                  {test.state ? "Desa" : "A"}ctivar
-                </button>
+                {!!onRemoveTestToProfile ? (
+                  <>
+                    <button className="btn btn-danger" onClick={onOpenModal}>
+                      Remover
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="btn btn-warning"
+                      onClick={navigateToEdit}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className={`btn btn-${test.state ? "danger" : "primary"}`}
+                      onClick={onOpenModal}
+                    >
+                      {test.state ? "Desa" : "A"}ctivar
+                    </button>
+                  </>
+                )}
               </>
             )}
           </>
         }
       />
       <ModalLayout
-        title={`¿Estás realmente seguro de ${
-          test.state ? "des" : ""
-        }activar el examen?`}
+        title={
+          !!profile
+            ? "¿Estás realmente seguro de remover el examen?"
+            : `¿Estás realmente seguro de ${
+                test.state ? "des" : ""
+              }activar el examen?`
+        }
         open={modal}
         component={
           <>
             <p className="m-2 text-justify pb-2">
-              {test.state
+              {!!profile
+                ? `¡El examen ${test.name} se eliminará del perfil ${profile.name}!`
+                : test.state
                 ? "¡Deshabilitar el examen no permitirá a los usuarios verlo, pero será visible en las órdenes ya creados!"
                 : "Solo puede activar el examen si el área que lo contiene está activa!"}
             </p>
             <hr />
             <div className="flex justify-end">
-              <button
-                className={`btn btn-${test.state ? "danger" : "primary"} m-2`}
-                onClick={onSwitchActive}
-              >
-                {test.state ? "Desa" : "A"}ctivar
-              </button>
+              {!!profile ? (
+                <button className="btn btn-danger m-2" onClick={onRemoveTest}>
+                  Remover
+                </button>
+              ) : (
+                <button
+                  className={`btn btn-${test.state ? "danger" : "primary"} m-2`}
+                  onClick={onSwitchActive}
+                >
+                  {test.state ? "Desa" : "A"}ctivar
+                </button>
+              )}
               <button className="btn m-2" onClick={onCloseModal}>
                 Cancelar
               </button>

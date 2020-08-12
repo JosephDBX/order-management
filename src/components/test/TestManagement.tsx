@@ -6,26 +6,41 @@ import TestControl from "./TestControl";
 import GridLayout from "../../layouts/GridLayout";
 import { IArea } from "../../models/IArea";
 import TestDetail from "./TestDetail";
+import { IProfile } from "../../models/IProfile";
 
 interface ITestManagementProps {
   area?: IArea;
+  profile?: IProfile;
   tests: ITest[];
+  selectables?: ITest[];
   rol: ERol;
+  loadArea?: boolean;
   onTestStateChange?(id: string, state: boolean): void;
+  onAddTestToProfile?(profile: IProfile, test: ITest): void;
+  onRemoveTestToProfile?(profile: IProfile, test: ITest): void;
 }
 
 const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
   area,
+  profile,
   tests,
+  selectables,
   rol,
+  loadArea,
   onTestStateChange,
+  onAddTestToProfile,
+  onRemoveTestToProfile,
 }) => {
+  // Selected List
   const [list, setList] = useState<any[]>(
     tests.map((test) => (
       <TestDetail
         test={test}
         rol={rol}
+        profile={profile}
+        loadArea={loadArea}
         onTestStateChange={onTestStateChange}
+        onRemoveTestToProfile={onRemoveTestToProfile}
         key={test.id}
       />
     ))
@@ -48,7 +63,10 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
           <TestDetail
             test={test}
             rol={rol}
+            profile={profile}
+            loadArea={loadArea}
             onTestStateChange={onTestStateChange}
+            onRemoveTestToProfile={onRemoveTestToProfile}
             key={test.id}
           />
         ))
@@ -56,20 +74,52 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
     setFilterText(filter);
   };
 
+  // Selectables List
+  const [selectableList, setSelectableList] = useState<ITest[]>(
+    selectables as ITest[]
+  );
+  const [selectableFilterText, setSelectableFilterText] = useState("");
+
+  const onSelectableFilterText = (filter: string) => {
+    setSelectableList(
+      (selectables as ITest[])?.filter(
+        (test) =>
+          (test.id?.includes(filter) && rol === ERol.Admin) ||
+          test.name.toLowerCase().includes(filter.toLowerCase()) ||
+          test.alternative
+            ?.toLowerCase()
+            .includes(filter.toLocaleLowerCase()) ||
+          test.description.toLowerCase().includes(filter.toLowerCase())
+      )
+    );
+    setSelectableFilterText(filter);
+  };
+
   useEffect(() => {
     onFilterText(filterText);
-  }, [tests]);
+    onSelectableFilterText(selectableFilterText);
+  }, [tests, selectables]);
 
   return (
     <ManageLayout
       title={`${rol === ERol.Admin ? "Gestionar e" : "E"}xámenes`}
       subTitle={`¡Todos nuestros exámenes${
         rol === ERol.Admin
-          ? ` del área${area?.name ? " de " + area.name : ""}`
+          ? !!profile
+            ? ` del perfil${profile?.name ? " de " + profile.name : ""}`
+            : ` del área${area?.name ? " de " + area.name : ""}`
           : ""
       }!`}
       controls={
-        <TestControl rol={rol} onFilterText={onFilterText} idArea={area?.id} />
+        <TestControl
+          rol={rol}
+          onFilterText={onFilterText}
+          onSelectableFilterText={onSelectableFilterText}
+          profile={profile}
+          idArea={area?.id}
+          onAddTestToProfile={onAddTestToProfile}
+          selectables={selectableList}
+        />
       }
       list={
         <GridLayout list={list} type={1} defaultText="No hay exámenes!!!" />

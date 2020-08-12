@@ -4,8 +4,7 @@ import { ERol } from "../../models/ERol";
 import { useHistory } from "react-router-dom";
 import SummaryLayout from "../../layouts/SummaryLayout";
 import ModalLayout from "../../layouts/ModalLayout";
-import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
-import { useSelector } from "react-redux";
+import { isLoaded } from "react-redux-firebase";
 import { IProfileTest } from "../../models/IProfileTest";
 
 interface IProfileDetailProps {
@@ -32,14 +31,14 @@ const ProfileDetail: React.FunctionComponent<IProfileDetailProps> = ({
       if (profile_tests[i].state)
         sum += Number.parseFloat(profile_tests[i].cost.toString());
     }
-    return sum;
+    return sum.toFixed(2);
   };
   const getTotalCost = () => {
     let sum: number = 0.0;
     for (let i = 0; i < profile_tests.length; i++) {
       sum += Number.parseFloat(profile_tests[i].cost.toString());
     }
-    return sum;
+    return sum.toFixed(2);
   };
 
   const history = useHistory();

@@ -14,6 +14,7 @@ import MainDetailLayout from "../../layouts/MainDetailLayout";
 import ProfileDetail from "../../components/profile/ProfileDetail";
 import { ERol } from "../../models/ERol";
 import TestManagement from "../../components/test/TestManagement";
+import { toast } from "react-toastify";
 
 const AdminProfileDetailPage: React.FunctionComponent = () => {
   const { id } = useParams();
@@ -37,6 +38,29 @@ const AdminProfileDetailPage: React.FunctionComponent = () => {
 
   const navigateToProfileManagement = () => {
     history.push("/admin-panel/profiles");
+  };
+
+  const onAddTestToProfile = (profile: IProfile, test: ITest) => {
+    toast.info("Procesando... por favor espere...");
+    const profile_test: IProfileTest = {
+      profile: profile.id as string,
+      test: test.id as string,
+      state: test.state,
+      cost: test.cost,
+    };
+    firestore
+      .collection("profile_tests")
+      .doc(`${profile.id}_${test.id}`)
+      .set(profile_test)
+      .then((pt) => toast.success(`Examen "${test.name}" agregado al perfil`));
+  };
+  const onRemoveTestToProfile = (profile: IProfile, test: ITest) => {
+    toast.info("Procesando... por favor espere...");
+    firestore
+      .collection("profile_tests")
+      .doc(`${profile.id}_${test.id}`)
+      .delete()
+      .then(() => toast.success(`Examen "${test.name}" removido del perfil`));
   };
 
   return (
@@ -81,7 +105,31 @@ const AdminProfileDetailPage: React.FunctionComponent = () => {
                 {!isLoaded(tests) ? (
                   <p className="m-2 text-center">Cargando exámenes...</p>
                 ) : (
-                  <TestManagement rol={ERol.Admin} tests={tests} />
+                  <TestManagement
+                    rol={ERol.Admin}
+                    loadArea
+                    profile={{ id, ...currentProfile }}
+                    tests={tests.filter((t) => {
+                      let aux = false;
+                      profile_tests.forEach((pt) => {
+                        if (pt.test === t.id) {
+                          aux = true;
+                        }
+                      });
+                      return aux;
+                    })}
+                    selectables={tests.filter((t) => {
+                      let aux = true;
+                      profile_tests.forEach((pt) => {
+                        if (pt.test === t.id) {
+                          aux = false;
+                        }
+                      });
+                      return aux;
+                    })}
+                    onAddTestToProfile={onAddTestToProfile}
+                    onRemoveTestToProfile={onRemoveTestToProfile}
+                  />
                 )}
               </>
             }
