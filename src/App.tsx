@@ -36,6 +36,7 @@ import AdminProfilePage from "./pages/admin/AdminProfilePage";
 import AdminProfileCreatePage from "./pages/admin/AdminProfileCreatePage";
 import AdminProfileEditPage from "./pages/admin/AdminProfileEditPage";
 import AdminProfileDetailPage from "./pages/admin/AdminProfileDetailPage";
+import AdminUserPage from "./pages/admin/AdminUserPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -179,6 +180,9 @@ function App() {
             </Route>
             <Route exact path="/admin-panel/profiles/:id/edit">
               {RedirectAdmin(<AdminProfileEditPage />, ERol.Admin)}
+            </Route>
+            <Route exact path="/admin-panel/users">
+              {RedirectAdmin(<AdminUserPage />, ERol.Admin)}
             </Route>
             <Route path="*" component={Error404Page} />
           </Switch>
