@@ -42,43 +42,43 @@ const Sidenav: React.FunctionComponent<ISidenavProps> = ({ onCloseModal }) => {
       <div className="bg-gray-100 h-full">
         <h3 className="text-lg pt-4 text-center">Permisos de usuario</h3>
         <hr className="mx-2" />
-        <div className="mt-4">
+        <div className="my-4">
           <button className="btn w-full p-2 my-2" onClick={navigateToUserPanel}>
             Panel de Usuario
           </button>
+          {currentUser.roles?.isDeliveryWorker ? (
+            <button
+              className="btn w-full p-2 my-2"
+              onClick={navigateToDeliveryWorkerPanel}
+            >
+              Panel de Delivery
+            </button>
+          ) : null}
+          {currentUser.roles?.isReceptionist ? (
+            <button
+              className="btn w-full p-2 my-2"
+              onClick={navigateToReceptionistPanel}
+            >
+              Panel de Recepcionista
+            </button>
+          ) : null}
+          {currentUser.roles?.isLaboratorist ? (
+            <button
+              className="btn w-full p-2 my-2"
+              onClick={navigateToLaboratoristPanel}
+            >
+              Panel de Laboratorista
+            </button>
+          ) : null}
+          {currentUser.roles?.isAdmin ? (
+            <button
+              className="btn w-full p-2 my-2"
+              onClick={navigateToAdminPanel}
+            >
+              Panel de Administrador
+            </button>
+          ) : null}
         </div>
-        {currentUser.roles?.isDeliveryWorker ? (
-          <button
-            className="btn w-full p-2 my-2"
-            onClick={navigateToDeliveryWorkerPanel}
-          >
-            Panel de Delivery
-          </button>
-        ) : null}
-        {currentUser.roles?.isReceptionist ? (
-          <button
-            className="btn w-full p-2 my-2"
-            onClick={navigateToReceptionistPanel}
-          >
-            Panel de Recepcionista
-          </button>
-        ) : null}
-        {currentUser.roles?.isLaboratorist ? (
-          <button
-            className="btn w-full p-2 my-2"
-            onClick={navigateToLaboratoristPanel}
-          >
-            Panel de Laboratorista
-          </button>
-        ) : null}
-        {currentUser.roles?.isAdmin ? (
-          <button
-            className="btn w-full p-2 my-2"
-            onClick={navigateToAdminPanel}
-          >
-            Panel de Administrador
-          </button>
-        ) : null}
       </div>
     </>
   );

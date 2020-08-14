@@ -28,7 +28,7 @@ const SummaryLayout: React.FunctionComponent<ISummaryLayoutProps> = ({
         <>
           <hr className="m-2" />
           <p className="text-center font-code font-semibold p-2">
-            Código:{code}
+            Código: {code}
           </p>
         </>
       )}

@@ -3,6 +3,7 @@ import {
   useFirestoreConnect,
   useFirestore,
   isLoaded,
+  useFirebase,
 } from "react-redux-firebase";
 import { IUser, IRole } from "../../models/IUser";
 import { useSelector } from "react-redux";
@@ -36,6 +37,23 @@ const AdminUserPage: React.FunctionComponent = () => {
       })
       .catch((error) => toast.error(error.message));
   };
+
+  const firebase = useFirebase();
+  const onRestorePassword = (email: string) => {
+    toast.info("Procesando... por favor espere...");
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        toast.success(
+          `Se ha enviado un correo electrónico a "${email}", de restablecimiento de contraseña.`
+        );
+      })
+      .catch((error) => {
+        toast.error(error.messsage);
+      });
+  };
+
   return (
     <>
       {!isLoaded(currentUser) || !isLoaded(users) ? (
@@ -49,6 +67,7 @@ const AdminUserPage: React.FunctionComponent = () => {
               rol={ERol.Admin}
               isMain
               onUserStateChange={onUserStateChange}
+              onRestorePassword={onRestorePassword}
             />
           }
           detail={
@@ -58,6 +77,7 @@ const AdminUserPage: React.FunctionComponent = () => {
                 return currentUser.uid !== u.id;
               })}
               onUserStateChange={onUserStateChange}
+              onRestorePassword={onRestorePassword}
             />
           }
         />

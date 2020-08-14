@@ -10,12 +10,14 @@ interface IUserManagementProps {
   rol: ERol.Admin;
   users: IUser[];
   onUserStateChange?(id: string, roles: IRole): void;
+  onRestorePassword(email: string): void;
 }
 
 const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
   rol,
   users,
   onUserStateChange,
+  onRestorePassword,
 }) => {
   const [list, setList] = useState<any[]>(
     users.map((user) => (
@@ -23,6 +25,7 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
         user={user}
         rol={rol}
         onUserStateChange={onUserStateChange}
+        onRestorePassword={onRestorePassword}
         key={user.id}
       />
     ))
@@ -54,6 +57,7 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
             user={user}
             rol={rol}
             onUserStateChange={onUserStateChange}
+            onRestorePassword={onRestorePassword}
             key={user.id}
           />
         ))
@@ -71,7 +75,9 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
       title={`${rol === ERol.Admin ? "Gestionar u" : "U"}suarios`}
       subTitle="¡Todos nuestros usuarios!"
       controls={<UserControl rol={rol} onFilter={onFilter} />}
-      list={<GridLayout list={list} defaultText="No hay usuarios!!!" />}
+      list={
+        <GridLayout list={list} type={1} defaultText="No hay usuarios!!!" />
+      }
     />
   );
 };
