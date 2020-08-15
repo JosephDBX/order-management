@@ -42,15 +42,15 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
   const onFilter = (ft: string, fr: IRole) => {
     setList(
       users
+        .filter(user => (fr.isDeliveryWorker && user.roles?.isDeliveryWorker) || !fr.isDeliveryWorker)
+        .filter(user => (fr.isDoctor && user.roles?.isDoctor) || !fr.isDoctor)
+        .filter(user => (fr.isReceptionist && user.roles?.isReceptionist) || !fr.isReceptionist)
+        .filter(user => (fr.isLaboratorist && user.roles?.isLaboratorist) || !fr.isLaboratorist)
+        .filter(user => (fr.isAdmin && user.roles?.isAdmin) || !fr.isAdmin)
         .filter(
           (user) =>
             user.id?.includes(ft) ||
-            user.email.toLowerCase().includes(ft.toLowerCase()) ||
-            (fr.isDeliveryWorker && user.roles?.isDeliveryWorker) ||
-            (fr.isDoctor && user.roles?.isDoctor) ||
-            (fr.isReceptionist && user.roles?.isReceptionist) ||
-            (fr.isLaboratorist && user.roles?.isLaboratorist) ||
-            (fr.isAdmin && user.roles?.isAdmin)
+            user.email.toLowerCase().includes(ft.toLowerCase())
         )
         .map((user) => (
           <UserDetail
