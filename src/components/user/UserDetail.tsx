@@ -73,7 +73,9 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
             <h4 className="text-center p-2 text-white frame">{user.email}</h4>
           </div>
           <div className="mt-4">
-            <h4 className="text-center">Accesos de usuario</h4>
+            <h4 className="text-center">
+              {isMain ? "Tus accesos" : "Accesos de usuario"}
+            </h4>
             <hr />
             <div className="flex flex-col">
               {rol === ERol.Admin ? (

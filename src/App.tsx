@@ -37,6 +37,8 @@ import AdminProfileCreatePage from "./pages/admin/AdminProfileCreatePage";
 import AdminProfileEditPage from "./pages/admin/AdminProfileEditPage";
 import AdminProfileDetailPage from "./pages/admin/AdminProfileDetailPage";
 import AdminUserPage from "./pages/admin/AdminUserPage";
+import PatientPanel from "./pages/patient/PatientPanel";
+import PatientCreatePage from "./pages/patient/PatientCreatePage";
 
 function App() {
   const ScrollToTop = () => {
@@ -140,7 +142,20 @@ function App() {
               {!isEmpty(currentUser) ? <Redirect to="/home" /> : <SignInPage />}
             </Route>
             {/** user routes */}
-            <Route exact path="/user-panel" component={Error404Page} />
+            <Route exact path="/user-panel">
+              {isEmpty(currentUser) ? (
+                <Redirect to="/sign-in" />
+              ) : (
+                <PatientPanel />
+              )}
+            </Route>
+            <Route exact path="/user-panel/patients/create">
+              {isEmpty(currentUser) ? (
+                <Redirect to="/sign-in" />
+              ) : (
+                <PatientCreatePage />
+              )}
+            </Route>
             {/** delivery worker routes */}
             <Route exact path="/delivery-panel" component={Error404Page} />
             {/** receptionist routes */}
