@@ -48,7 +48,7 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
                 toast.success(`Examen "${tests[i].name}" agregado al perfil`)
               );
           }
-          navigateToProfileManagement();
+          history.push(`/admin-panel/profiles/${result.id}`);
         })
         .catch((error) => {
           toast.error(error.message);

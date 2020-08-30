@@ -12,11 +12,18 @@ import UserDetail from "../../components/user/UserDetail";
 import { ERol } from "../../models/ERol";
 import { toast } from "react-toastify";
 import PatientManagement from "../../components/patient/PatientManagement";
+import { IUserPatient } from "../../models/IUserPatient";
 
 const PatientPanel: React.FunctionComponent = () => {
-  useFirestoreConnect([{ collection: "patients" }]);
+  useFirestoreConnect([
+    { collection: "patients" },
+    { collection: "user_patients" },
+  ]);
   const patients: IPatient[] = useSelector(
     (state: any) => state.firestore.ordered.patients
+  );
+  const user_patients: IUserPatient[] = useSelector(
+    (state: any) => state.firestore.ordered.user_patients
   );
   const currentUser: IUser = useSelector(
     (state: any) => state.firebase.profile
@@ -40,7 +47,9 @@ const PatientPanel: React.FunctionComponent = () => {
 
   return (
     <>
-      {!isLoaded(currentUser) || !isLoaded(patients) ? (
+      {!isLoaded(currentUser) ||
+      !isLoaded(patients) ||
+      !isLoaded(user_patients) ? (
         <p className="m-2 text-center">Cargando Pacientes...</p>
       ) : (
         <MainDetailLayout
@@ -56,7 +65,12 @@ const PatientPanel: React.FunctionComponent = () => {
           detail={
             <PatientManagement
               rol={currentUser.roles?.isDoctor ? ERol.Doctor : ERol.Public}
-              patients={patients}
+              patients={patients.filter(
+                (patient) =>
+                  user_patients
+                    .filter((up) => up.user === currentUser.uid)
+                    .filter((up) => up.patient === patient.id).length > 0
+              )}
             />
           }
         />

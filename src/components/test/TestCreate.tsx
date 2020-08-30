@@ -40,7 +40,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
             className={`input-group ${!!errors.name && "input-group-danger"}`}
           >
             <label htmlFor="name" className="input-label">
-              Nombre del examen
+              Nombre
             </label>
             <input
               className="input input-primary"
@@ -62,7 +62,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
           </div>
           <div className="input-group">
             <label htmlFor="alternative" className="input-label">
-              Nombres alternativos del examen
+              Nombres alternativos
             </label>
             <textarea
               className="input input-primary"
@@ -112,7 +112,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
             }`}
           >
             <label htmlFor="description" className="input-label">
-              Descripción del examen
+              Descripción
             </label>
             <textarea
               className="input input-primary"

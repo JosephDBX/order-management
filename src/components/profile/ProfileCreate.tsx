@@ -86,7 +86,7 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
               className={`input-group ${!!errors.name && "input-group-danger"}`}
             >
               <label htmlFor="name" className="input-label">
-                Nombre del perfil
+                Nombre
               </label>
               <input
                 className="input input-primary"
@@ -108,7 +108,7 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
             </div>
             <div className="input-group">
               <label htmlFor="alternative" className="input-label">
-                Nombres alternativos del perfil
+                Nombres alternativos
               </label>
               <textarea
                 className="input input-primary"
@@ -127,7 +127,7 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
               }`}
             >
               <label htmlFor="description" className="input-label">
-                Descripción del perfil
+                Descripción
               </label>
               <textarea
                 className="input input-primary"

@@ -35,7 +35,7 @@ const AreaCreate: React.FunctionComponent<IAreaCreateProps> = ({
             className={`input-group ${!!errors.name && "input-group-danger"}`}
           >
             <label htmlFor="name" className="input-label">
-              Nombre del área
+              Nombre
             </label>
             <input
               className="input input-primary"
@@ -61,7 +61,7 @@ const AreaCreate: React.FunctionComponent<IAreaCreateProps> = ({
             }`}
           >
             <label htmlFor="description" className="input-label">
-              Descripción del área
+              Descripción
             </label>
             <textarea
               className="input input-primary"

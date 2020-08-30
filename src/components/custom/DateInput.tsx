@@ -15,6 +15,8 @@ interface IDateInputProps {
   maxDate?: Date;
   minDate?: Date;
   isWeekday?: boolean;
+  name: string;
+  placeholder?: string;
 }
 
 const DateInput: React.FunctionComponent<IDateInputProps> = ({
@@ -26,12 +28,16 @@ const DateInput: React.FunctionComponent<IDateInputProps> = ({
   maxDate,
   minDate,
   isWeekday,
+  name,
+  placeholder,
 }) => {
   moment.locale("es");
 
   const onChange = (date: Date) => {
     setCurrentDate(
-      moment(date).set({ hours: 0, minutes: 0, seconds: 0 }).toDate()
+      moment(date)
+        .set({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0 })
+        .toDate()
     );
   };
 
@@ -45,13 +51,15 @@ const DateInput: React.FunctionComponent<IDateInputProps> = ({
       className={className}
       selected={currentDate}
       onChange={onChange}
-      value={moment(currentDate).format("dddd D MMMM YYYY")}
+      value={moment(currentDate).format("dddd D [de] MMMM [de] YYYY")}
       locale="es"
       showYearDropdown={showYearDropdown}
       showMonthDropdown={showMonthDropdown}
       maxDate={maxDate}
       minDate={minDate}
       filterDate={filterDate}
+      name={name}
+      placeholderText={placeholder}
     />
   );
 };
