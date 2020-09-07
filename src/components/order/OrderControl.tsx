@@ -48,7 +48,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
             <span className="input-hint">Código de la orden</span>
           </div>
           <div className="p-2 mx-auto">
-            <h3 className="text-right">Filtrar por Estado de la Orden</h3>
+            <h3 className="text-right">Estado de la orden</h3>
             <hr className="ml-2 my-2" />
             <div className="input-group flex-row items-center justify-center">
               <select

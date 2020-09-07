@@ -41,6 +41,7 @@ import PatientPanel from "./pages/patient/PatientPanel";
 import PatientCreatePage from "./pages/patient/PatientCreatePage";
 import PatientDetailPage from "./pages/patient/PatientDetailPage";
 import PatientEditPage from "./pages/patient/PatientEditPage";
+import PatientOrderCreatePage from "./pages/patient/PatientOrderCreatePage";
 
 function App() {
   const ScrollToTop = () => {
@@ -170,6 +171,13 @@ function App() {
                 <Redirect to="/sign-in" />
               ) : (
                 <PatientEditPage />
+              )}
+            </Route>
+            <Route exact path="/user-panel/patients/:id/orders/create">
+              {isEmpty(currentUser) ? (
+                <Redirect to="/sign-in" />
+              ) : (
+                <PatientOrderCreatePage />
               )}
             </Route>
             {/** delivery worker routes */}
