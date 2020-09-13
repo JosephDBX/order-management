@@ -7,7 +7,6 @@ export interface IOrder extends IBase {
   delivery?: number;
   subTotal: number;
   discount?: number;
-  paymentType: string; // default "card"
   description?: string;
   result?: string; // document URL
   state: string;

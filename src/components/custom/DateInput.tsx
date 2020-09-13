@@ -17,6 +17,8 @@ interface IDateInputProps {
   isWeekday?: boolean;
   name: string;
   placeholder?: string;
+  includeTimes?: Date[];
+  showTime?: boolean;
 }
 
 const DateInput: React.FunctionComponent<IDateInputProps> = ({
@@ -30,15 +32,13 @@ const DateInput: React.FunctionComponent<IDateInputProps> = ({
   isWeekday,
   name,
   placeholder,
+  includeTimes,
+  showTime,
 }) => {
   moment.locale("es");
 
   const onChange = (date: Date) => {
-    setCurrentDate(
-      moment(date)
-        .set({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0 })
-        .toDate()
-    );
+    setCurrentDate(date);
   };
 
   const filterDate = (date: Date) => {
@@ -51,7 +51,9 @@ const DateInput: React.FunctionComponent<IDateInputProps> = ({
       className={className}
       selected={currentDate}
       onChange={onChange}
-      value={moment(currentDate).format("dddd D [de] MMMM [de] YYYY")}
+      value={moment(currentDate).format(
+        `dddd D/MMMM/YYYY${showTime ? " hh:mm a" : ""}`
+      )}
       locale="es"
       showYearDropdown={showYearDropdown}
       showMonthDropdown={showMonthDropdown}
@@ -60,6 +62,8 @@ const DateInput: React.FunctionComponent<IDateInputProps> = ({
       filterDate={filterDate}
       name={name}
       placeholderText={placeholder}
+      showTimeSelect={showTime}
+      includeTimes={includeTimes}
     />
   );
 };

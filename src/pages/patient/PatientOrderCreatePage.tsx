@@ -26,9 +26,9 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
 
   useFirestoreConnect(() => [
     { collection: "patients", doc: id },
-    { collection: "tests" },
-    { collection: "profiles" },
-    { collection: "profile_tests" },
+    { collection: "tests", where: [["state", "==", true]] },
+    { collection: "profiles", where: [["state", "==", true]] },
+    { collection: "profile_tests", where: [["state", "==", true]] },
   ]);
 
   const currentPatient: IPatient = useSelector(
@@ -64,51 +64,57 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
     tests: ITest[],
     profiles: IProfile[]
   ) => {
-    order.user = currentUser.uid;
-    toast.info("Procesando... por favor espere...");
-    firestore
-      .collection("orders")
-      .add(order)
-      .then(async (result) => {
-        toast.success(`Nueva orden creada con id:${result.id}`);
-        for (let i = 0; i < tests.length; i++) {
-          const order_test: IOrderTest = {
-            order: result.id,
-            test: tests[i].id as string,
-            state: tests[i].state,
-            cost: tests[i].cost,
-          };
-          await firestore
-            .collection("order_tests")
-            .doc(`${result.id}_${tests[i].id}`)
-            .set(order_test)
-            .then(() =>
-              toast.success(`Examen "${tests[i].name}" agregado a la orden`)
-            );
-        }
-        for (let i = 0; i < profiles.length; i++) {
-          const order_profile: IOrderProfile = {
-            order: result.id,
-            profile: profiles[i].id as string,
-            state: profiles[i].state,
-            cost: profile_tests
-              .filter((pt) => pt.profile === profiles[i].id)
-              .map((pt) => pt.cost)
-              .reduce((previous, current) => previous + current),
-          };
-          await firestore
-            .collection("order_profiles")
-            .doc(`${result.id}_${profiles[i].id}`)
-            .set(order_profile)
-            .then(() =>
-              toast.success(`Perfil "${profiles[i].name}" agregado a la orden`)
-            );
-        }
-        history.push(`/user-panel/patients/${id}`);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+    if (tests.length + profiles.length > 0) {
+      order.user = currentUser.uid;
+      toast.info("Procesando... por favor espere...");
+      firestore
+        .collection("orders")
+        .add(order)
+        .then(async (result) => {
+          toast.success(`Nueva orden creada con id:${result.id}`);
+          for (let i = 0; i < tests.length; i++) {
+            const order_test: IOrderTest = {
+              order: result.id,
+              test: tests[i].id as string,
+              state: tests[i].state,
+              cost: tests[i].cost,
+            };
+            await firestore
+              .collection("order_tests")
+              .doc(`${result.id}_${tests[i].id}`)
+              .set(order_test)
+              .then(() =>
+                toast.success(`Examen "${tests[i].name}" agregado a la orden`)
+              );
+          }
+          for (let i = 0; i < profiles.length; i++) {
+            const order_profile: IOrderProfile = {
+              order: result.id,
+              profile: profiles[i].id as string,
+              state: profiles[i].state,
+              cost: profile_tests
+                .filter((pt) => pt.profile === profiles[i].id)
+                .map((pt) => pt.cost)
+                .reduce((previous, current) => previous + current),
+            };
+            await firestore
+              .collection("order_profiles")
+              .doc(`${result.id}_${profiles[i].id}`)
+              .set(order_profile)
+              .then(() =>
+                toast.success(
+                  `Perfil "${profiles[i].name}" agregado a la orden`
+                )
+              );
+          }
+          history.push(`/user-panel/patients/${id}`);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    } else {
+      toast.error("Debe seleccionar al menos un examen o perfil...");
+    }
   };
 
   return (
@@ -143,7 +149,10 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
         <OrderCreate
           patient={{ id, ...currentPatient }}
           tests={tests}
-          profiles={profiles}
+          profiles={profiles.filter(
+            (profile) =>
+              profile_tests.filter((pt) => pt.profile === profile.id).length > 0
+          )}
           profile_tests={profile_tests}
           rol={ERol.Public}
           onCreateOrder={onCreateOrder}

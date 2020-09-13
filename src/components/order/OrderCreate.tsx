@@ -8,6 +8,12 @@ import { useForm } from "react-hook-form";
 import moment from "moment";
 import { ERol } from "../../models/ERol";
 import CenterLayout from "../../layouts/CenterLayout";
+import SelectListLayout from "../../layouts/SelectListLayout";
+import SelectItemLayout from "../../layouts/SelectItemLayout";
+import ModalLayout from "../../layouts/ModalLayout";
+import TestControl from "../test/TestControl";
+import ProfileControl from "../profile/ProfileControl";
+import DateInput from "../custom/DateInput";
 
 interface IOrderCreateProps {
   patient: IPatient;
@@ -22,7 +28,6 @@ type Inputs = {
   delivery?: number;
   subTotal: number;
   discount?: number;
-  paymentType: string; // default "card"
   description?: string;
 };
 
@@ -30,34 +35,60 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
   patient,
   tests,
   profiles,
-  profile_tests,
+  profile_tests = [],
   rol,
   onCreateOrder,
 }) => {
-  const { register, handleSubmit, errors } = useForm<Inputs>();
+  const { register, handleSubmit, errors, watch } = useForm<Inputs>();
 
   const [orderedTo, setOrderedTo] = useState(
-    moment().set({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0 }).toDate()
+    moment()
+      .set({ hours: 5, minutes: 0, seconds: 0, milliseconds: 0 })
+      .add({ days: 1 })
+      .toDate()
   );
 
   const [modalTest, setModalTest] = useState(false);
   const onOpenModalTest = () => {
     setModalTest(true);
+    onFilterTextTest(filterTextTest);
   };
   const onCloseModalTest = () => {
     setModalTest(false);
+    setFilterTextTest("");
   };
 
   const [modalProfile, setModalProfile] = useState(false);
   const onOpenModalProfile = () => {
     setModalProfile(true);
+    onFilterTextProfile(filterTextProfile);
   };
   const onCloseModalProfile = () => {
     setModalProfile(false);
+    setFilterTextProfile("");
   };
 
-  const getSubTotal = (): number => {
-    return 0;
+  const getSubTotal = () => {
+    let sum: number = 0.0;
+    selectedTests.forEach(
+      (st) => (sum += Number.parseFloat(st.cost.toString()))
+    );
+    selectedProfiles.forEach(
+      (sp) => (sum += Number.parseFloat(profileCost(sp)))
+    );
+    return sum.toFixed(2);
+  };
+
+  const getTotal = () => {
+    let sum: number = 0.0;
+    sum += Number.parseFloat(getSubTotal());
+    if (rol === ERol.Receptionist) {
+      sum += Number.parseFloat(watch().delivery?.toString() as string);
+      sum -= Number.parseFloat(watch().discount?.toString() as string);
+    } else {
+      sum += 5;
+    }
+    return sum.toFixed(2);
   };
 
   // Test
@@ -81,7 +112,6 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
 
   const onAddTest = (test: ITest) => {
     setSelectedTests([...selectedTests, test]);
-    onFilterTextTest("");
     setListTest(listTest.filter((l) => l.id !== test.id));
     onCloseModalTest();
   };
@@ -113,7 +143,6 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
 
   const onAddProfile = (profile: IProfile) => {
     setSelectedProfiles([...selectedProfiles, profile]);
-    onFilterTextProfile("");
     setListProfile(listProfile.filter((l) => l.id !== profile.id));
     onCloseModalProfile();
   };
@@ -126,10 +155,9 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
     const order: IOrder = {
       patient: patient.id as string,
       orderedTo: orderedTo.toISOString(),
-      delivery: rol === ERol.Public ? 5 : data.delivery,
-      subTotal: getSubTotal(),
-      discount: rol === ERol.Public ? 0 : data.discount,
-      paymentType: data.paymentType,
+      delivery: rol === ERol.Receptionist ? data.delivery : 5,
+      subTotal: Number.parseFloat(getSubTotal()),
+      discount: rol === ERol.Receptionist ? data.discount : 0,
       description: data.description,
       state: "pending",
     };
@@ -143,122 +171,199 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
     onFilterTextProfile(filterTextProfile);
   }, [profiles]);
 
+  const profileCost = (profile: IProfile) => {
+    let sum: number = 0.0;
+    profile_tests
+      .filter((pt) => pt.profile === profile.id)
+      .map((pt) => pt.cost)
+      .forEach((pt) => (sum += Number.parseFloat(pt.toString())));
+    return sum.toFixed(2);
+  };
+
   return (
     <>
       <CenterLayout
         title={`Crear una nueva orden de examen para el paciente ${patient.name} ${patient.surname}`}
+        subTitle="Asegúrese de que los contactos del paciente estén actualizados. El paciente será contactado un día antes de la visita."
         component={
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div
-              className={`input-group ${!!errors.name && "input-group-danger"}`}
-            >
-              <label htmlFor="name" className="input-label">
-                Nombre
-              </label>
-              <input
-                className="input input-primary"
-                type="text"
-                name="name"
-                placeholder="Nombre del perfil"
-                ref={register({
-                  required: {
-                    value: true,
-                    message: "El nombre del perfil es requerido",
-                  },
-                })}
-              />
-              <span className="input-hint">
-                {!!errors.name
-                  ? errors.name.message
-                  : "Por favor ingrese el nombre del nuevo perfil"}
-              </span>
-            </div>
             <div className="input-group">
-              <label htmlFor="alternative" className="input-label">
-                Nombres alternativos
+              <label htmlFor="orderedTo" className="input-label">
+                Fecha de la visita
               </label>
-              <textarea
-                className="input input-primary"
-                name="alternative"
-                placeholder="Nombres alternativos del perfil"
-                ref={register}
+              <DateInput
+                className="input input-primary w-full text-teal-500"
+                currentDate={orderedTo}
+                setCurrentDate={setOrderedTo}
+                minDate={moment()
+                  .set({ hours: 5, minutes: 0, seconds: 0, milliseconds: 0 })
+                  .add({ days: 1 })
+                  .toDate()}
+                maxDate={moment()
+                  .set({ hours: 9, minutes: 0, seconds: 0, milliseconds: 0 })
+                  .add({ days: 31 })
+                  .toDate()}
+                isWeekday
+                name="orderedTo"
+                placeholder="Fecha de la visita al paciente"
+                showTime
+                includeTimes={[
+                  moment().set({ hours: 5, minutes: 0 }).toDate(),
+                  moment().set({ hours: 5, minutes: 30 }).toDate(),
+                  moment().set({ hours: 6, minutes: 0 }).toDate(),
+                  moment().set({ hours: 6, minutes: 30 }).toDate(),
+                  moment().set({ hours: 7, minutes: 0 }).toDate(),
+                  moment().set({ hours: 7, minutes: 30 }).toDate(),
+                  moment().set({ hours: 8, minutes: 0 }).toDate(),
+                  moment().set({ hours: 8, minutes: 30 }).toDate(),
+                  moment().set({ hours: 9, minutes: 0 }).toDate(),
+                ]}
               />
               <span className="input-hint">
-                Ingrese los nombres alternativos en cada línea "⏎" para su fácil
-                listado posterior
+                Por favor ingrese la fecha de visita al paciente
               </span>
             </div>
+            <div className="my-4">
+              <SelectListLayout
+                title="Agregar exámenes a la orden"
+                onAdd={onOpenModalTest}
+                selected={selectedTests.map((test) => (
+                  <SelectItemLayout
+                    title={test.name}
+                    subTitle={`USD $${test.cost}`}
+                    onAdd={() => onAddTest(test)}
+                    onRemove={() => onRemoveTest(test)}
+                    removable
+                    navigateTo={`/search/?area=${test.area}&test=${test.id}`}
+                    key={test.id}
+                  />
+                ))}
+              />
+            </div>
+            <div className="my-4">
+              <SelectListLayout
+                title="Agregar perfiles a la orden"
+                onAdd={onOpenModalProfile}
+                selected={selectedProfiles.map((profile) => (
+                  <SelectItemLayout
+                    title={profile.name}
+                    subTitle={`USD $${profileCost(profile)}`}
+                    onAdd={() => onAddProfile(profile)}
+                    onRemove={() => onRemoveProfile(profile)}
+                    removable
+                    navigateTo={`/search/?profile=${profile.id}`}
+                    key={profile.id}
+                  />
+                ))}
+              />
+            </div>
+            <hr className="my-4" />
+            <div className="flex flex-col font-semibold">
+              <div className="flex flex-row justify-between text-teal-700">
+                <div>Subtotal</div>
+                <div>USD ${getSubTotal()}</div>
+              </div>
+              {rol === ERol.Receptionist ? (
+                <div>Formulario costo servicio a domicilio</div>
+              ) : (
+                <div className="flex flex-row justify-between text-gray-700">
+                  <div>Costo del servicio a domicilio</div>
+                  <div>USD $5.00</div>
+                </div>
+              )}
+              {rol === ERol.Receptionist ? (
+                <div>Formulario descuento</div>
+              ) : null}
+              <div>
+                <hr />
+              </div>
+              <div className="flex flex-row justify-between text-blue-700 font-bold">
+                <div>Total</div>
+                <div>USD ${getTotal()}</div>
+              </div>
+              <div>
+                <hr />
+              </div>
+            </div>
             <div
-              className={`input-group ${
+              className={`input-group my-8 ${
                 !!errors.description && "input-group-danger"
               }`}
             >
               <label htmlFor="description" className="input-label">
-                Descripción
+                Método de pago y otros datos
               </label>
               <textarea
                 className="input input-primary"
                 name="description"
-                placeholder="Descripción del perfil"
+                placeholder="Método de pago"
                 ref={register({
                   required: {
                     value: true,
-                    message: "La descripción del perfil es requerida",
+                    message: "Método de pago y otros datos es requerido",
                   },
                 })}
               />
               <span className="input-hint">
                 {!!errors.description
                   ? errors.description.message
-                  : "Por favor ingrese la descripción del nuevo perfil"}
+                  : "Por ejemplo: 'Tarjeta' o la 'denominación del billete' y otra información que estime pertinente"}
               </span>
-            </div>
-            <div className="my-8">
-              <SelectListLayout
-                title="Agregar exámenes al perfil"
-                onAdd={onOpenModal}
-                selected={selected.map((test) => (
-                  <SelectItemLayout
-                    title={test.name}
-                    subTitle={`USD $${test.cost}`}
-                    onAdd={() => onAdd(test)}
-                    onRemove={() => onRemove(test)}
-                    removable
-                    navigateTo={`/admin-panel/areas/${test.area}`}
-                    key={test.id}
-                  />
-                ))}
-              />
             </div>
             <div className="mx-1 my-4">
               <button className="btn btn-primary m-auto" type="submit">
-                <span className="material-icons">add_circle</span>Crear Perfil
+                <span className="material-icons">add_circle</span>Crear Orden
               </button>
             </div>
           </form>
         }
       />
       <ModalLayout
-        title="Agregar exámenes al perfil"
-        open={modal}
+        title="Agregar exámenes a la orden"
+        open={modalTest}
         component={
           <>
-            <TestControl rol={ERol.Public} onFilterText={onFilterText} />
+            <TestControl rol={ERol.Public} onFilterText={onFilterTextTest} />
             <div className="frame" style={{ maxHeight: "16rem" }}>
-              {list.map((test) => (
+              {listTest.map((test) => (
                 <SelectItemLayout
                   title={test.name}
                   subTitle={`USD $${test.cost}`}
-                  onAdd={() => onAdd(test)}
-                  onRemove={() => onRemove(test)}
-                  navigateTo={`/admin-panel/areas/${test.area}`}
+                  onAdd={() => onAddTest(test)}
+                  onRemove={() => onRemoveTest(test)}
+                  navigateTo={`/search/?area=${test.area}&test=${test.id}`}
                   key={test.id}
                 />
               ))}
             </div>
           </>
         }
-        onClose={onCloseModal}
+        onClose={onCloseModalTest}
+      />
+      <ModalLayout
+        title="Agregar perfiles a la orden"
+        open={modalProfile}
+        component={
+          <>
+            <ProfileControl
+              rol={ERol.Public}
+              onFilterText={onFilterTextProfile}
+            />
+            <div className="frame" style={{ maxHeight: "16rem" }}>
+              {listProfile.map((profile) => (
+                <SelectItemLayout
+                  title={profile.name}
+                  subTitle={`USD $${profileCost(profile)}`}
+                  onAdd={() => onAddProfile(profile)}
+                  onRemove={() => onRemoveProfile(profile)}
+                  navigateTo={`/search/?profile=${profile.id}`}
+                  key={profile.id}
+                />
+              ))}
+            </div>
+          </>
+        }
+        onClose={onCloseModalProfile}
       />
     </>
   );
