@@ -42,7 +42,7 @@ const AdminTestEditPage: React.FunctionComponent = () => {
       .collection("tests")
       .doc(idTest)
       .set(test, { merge: true })
-      .then((result) => {
+      .then(() => {
         toast.success(`Examen con id:${idTest}, actualizado exitosamente`);
         navigateToCurrentArea();
       })

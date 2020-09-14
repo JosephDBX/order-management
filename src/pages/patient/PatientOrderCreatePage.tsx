@@ -77,7 +77,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
               order: result.id,
               test: tests[i].id as string,
               state: tests[i].state,
-              cost: tests[i].cost,
+              cost: Number.parseFloat(tests[i].cost.toString()),
             };
             await firestore
               .collection("order_tests")
@@ -95,7 +95,11 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
               cost: profile_tests
                 .filter((pt) => pt.profile === profiles[i].id)
                 .map((pt) => pt.cost)
-                .reduce((previous, current) => previous + current),
+                .reduce(
+                  (previous, current) =>
+                    Number.parseFloat(previous.toString()) +
+                    Number.parseFloat(current.toString())
+                ),
             };
             await firestore
               .collection("order_profiles")
@@ -125,7 +129,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
       !isLoaded(currentUser) ||
       !isLoaded(currentPatient) ? (
         <p className="m-2 text-center">Cargando exámenes y perfiles...</p>
-      ) : isEmpty(tests) && isEmpty(profiles) ? (
+      ) : (isEmpty(tests) && isEmpty(profiles)) || isEmpty(currentPatient) ? (
         <div className="flex flex-col justify-center">
           <p className="m-2 text-center font-code">
             ¡No puede crear una orden porque aún no existen exámenes ni
@@ -134,13 +138,13 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
           <button
             className="btn btn-secondary my-4 mx-auto"
             onClick={
-              isEmpty(currentUser)
+              isEmpty(currentPatient)
                 ? navigateToPatientManagement
                 : navigateToPatientOrderManagement
             }
           >
             <span className="material-icons">arrow_back</span>
-            {isEmpty(currentUser)
+            {isEmpty(currentPatient)
               ? "Regresar a la gestión de pacientes"
               : "Regresar a la gestión de ordenes"}
           </button>

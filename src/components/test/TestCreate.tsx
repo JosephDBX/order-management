@@ -26,6 +26,7 @@ const TestCreate: React.FunctionComponent<ITestCreateProps> = ({
     const test: ITest = {
       area: area.id as string,
       ...data,
+      cost: Number.parseFloat(data.cost.toString()),
       state: area.state,
     };
     onCreateTest(test);

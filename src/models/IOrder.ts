@@ -8,6 +8,5 @@ export interface IOrder extends IBase {
   subTotal: number;
   discount?: number;
   description?: string;
-  result?: string; // document URL
   state: string;
 }

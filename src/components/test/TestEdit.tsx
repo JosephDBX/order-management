@@ -28,6 +28,7 @@ const TestEdit: React.FunctionComponent<ITestEditProps> = ({
     const test: ITest = {
       area: currentArea.id as string,
       ...data,
+      cost: Number.parseFloat(data.cost.toString()),
       state: currentArea.state,
     };
     onEditTest(test);

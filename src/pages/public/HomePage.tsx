@@ -13,7 +13,7 @@ const HomePage: React.FunctionComponent = () => {
   useFirestoreConnect([
     { collection: "areas", where: [["state", "==", true]] },
     { collection: "profiles", where: [["state", "==", true]] },
-    { collection: "profile_tests" },
+    { collection: "profile_tests", where: [["state", "==", true]] },
   ]);
 
   const areas: IArea[] = useSelector(
@@ -108,7 +108,11 @@ const HomePage: React.FunctionComponent = () => {
                 <p className="m-2 text-center">Cargando perfiles...</p>
               ) : (
                 <ProfileManagement
-                  profiles={profiles}
+                  profiles={profiles.filter(
+                    (profile) =>
+                      profile_tests.filter((pt) => pt.profile === profile.id)
+                        .length > 0
+                  )}
                   profile_tests={profile_tests}
                   rol={ERol.Public}
                 />

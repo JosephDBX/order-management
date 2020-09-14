@@ -264,7 +264,36 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
                 <div>USD ${getSubTotal()}</div>
               </div>
               {rol === ERol.Receptionist ? (
-                <div>Formulario costo servicio a domicilio</div>
+                <div
+                  className={`input-group ${
+                    !!errors.delivery && "input-group-danger"
+                  }`}
+                >
+                  <label htmlFor="name" className="input-label">
+                    Costo del servicio a domicilio
+                  </label>
+                  <input
+                    className="input input-primary"
+                    type="number"
+                    name="delivery"
+                    placeholder="Servicio a domicilio"
+                    defaultValue={5}
+                    min={0}
+                    step={0.01}
+                    ref={register({
+                      required: {
+                        value: true,
+                        message:
+                          "El costo del servicio a domicilio es requerido",
+                      },
+                    })}
+                  />
+                  <span className="input-hint">
+                    {!!errors.delivery
+                      ? errors.delivery.message
+                      : "Por favor ingrese el costo del servicio a domicilio de la nueva orden"}
+                  </span>
+                </div>
               ) : (
                 <div className="flex flex-row justify-between text-gray-700">
                   <div>Costo del servicio a domicilio</div>
@@ -272,7 +301,25 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
                 </div>
               )}
               {rol === ERol.Receptionist ? (
-                <div>Formulario descuento</div>
+                <div
+                  className={`input-group ${
+                    !!errors.discount && "input-group-danger"
+                  }`}
+                >
+                  <label htmlFor="name" className="input-label">
+                    Descuento
+                  </label>
+                  <input
+                    className="input input-primary"
+                    type="number"
+                    name="discount"
+                    placeholder="Descuento al servicio"
+                    defaultValue={0}
+                    min={0}
+                    step={0.01}
+                  />
+                  <span className="input-hint">Hacer un descuento</span>
+                </div>
               ) : null}
               <div>
                 <hr />

@@ -38,13 +38,13 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
               profile: result.id,
               test: tests[i].id as string,
               state: tests[i].state,
-              cost: tests[i].cost,
+              cost: Number.parseFloat(tests[i].cost.toString()),
             };
             await firestore
               .collection("profile_tests")
               .doc(`${result.id}_${tests[i].id}`)
               .set(profile_test)
-              .then((pt) =>
+              .then(() =>
                 toast.success(`Examen "${tests[i].name}" agregado al perfil`)
               );
           }
