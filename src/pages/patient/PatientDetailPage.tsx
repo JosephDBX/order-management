@@ -9,18 +9,26 @@ import {
 import { IPatient } from "../../models/IPatient";
 import { useSelector } from "react-redux";
 import { IOrder } from "../../models/IOrder";
+import { IOrderTest } from "../../models/IOrderTest";
+import { IOrderProfile } from "../../models/IOrderProfile";
 import MainDetailLayout from "../../layouts/MainDetailLayout";
 import PatientDetail from "../../components/patient/PatientDetail";
 import { ERol } from "../../models/ERol";
 import OrderManagement from "../../components/order/OrderManagement";
+import { ITest } from "../../models/ITest";
+import { IProfile } from "../../models/IProfile";
 
 const PatientDetailPage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
   useFirestoreConnect(() => [
     { collection: "patients", doc: id },
     { collection: "orders", where: [["patient", "==", id]] },
+    { collection: "order_tests" },
+    { collection: "order_profiles" },
+    { collection: "tests" },
+    { collection: "profiles" },
   ]);
 
   const currentPatient: IPatient = useSelector(
@@ -29,16 +37,33 @@ const PatientDetailPage: React.FunctionComponent = () => {
   const orders: IOrder[] = useSelector(
     (state: any) => state.firestore.ordered.orders
   );
+  const orderTests: IOrderTest[] = useSelector(
+    (state: any) => state.firestore.ordered.order_tests
+  );
+  const orderProfiles: IOrderProfile[] = useSelector(
+    (state: any) => state.firestore.ordered.order_profiles
+  );
+  const tests: ITest[] = useSelector(
+    (state: any) => state.firestore.ordered.tests
+  );
+  const profiles: IProfile[] = useSelector(
+    (state: any) => state.firestore.ordered.profiles
+  );
 
   const navigateToPatientManagement = () => {
     history.push("/user-panel");
   };
 
-  const onOrderStateChange = (id: string, state: boolean) => {};
+  const onOrderStateChange = (id: string, state: string) => {};
 
   return (
     <>
-      {!isLoaded(currentPatient) ? (
+      {!isLoaded(currentPatient) ||
+      !isLoaded(orders) ||
+      !isLoaded(orderTests) ||
+      !isLoaded(orderProfiles) ||
+      !isLoaded(tests) ||
+      !isLoaded(profiles) ? (
         <p className="m-2 text-center">Cargando paciente...</p>
       ) : isEmpty(currentPatient) ? (
         <div className="flex flex-col justify-center">
@@ -79,6 +104,10 @@ const PatientDetailPage: React.FunctionComponent = () => {
                     rol={ERol.Public}
                     patient={{ id, ...currentPatient }}
                     orders={orders}
+                    orderTests={orderTests}
+                    orderProfiles={orderProfiles}
+                    tests={tests}
+                    profiles={profiles}
                     onOrderStateChange={onOrderStateChange}
                   />
                 )}

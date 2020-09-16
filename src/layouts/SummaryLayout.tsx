@@ -35,7 +35,7 @@ const SummaryLayout: React.FunctionComponent<ISummaryLayoutProps> = ({
       {!!controls && (
         <>
           <hr className="mx-2" />
-          <div className="flex p-2 justify-evenly">{controls}</div>
+          <div className="flex p-2 justify-evenly flex-wrap">{controls}</div>
         </>
       )}
     </div>

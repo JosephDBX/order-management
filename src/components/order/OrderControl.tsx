@@ -45,7 +45,9 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
               onChange={onSubmit}
               ref={register}
             />
-            <span className="input-hint">Código de la orden</span>
+            <span className="input-hint">
+              Código de la orden o fecha y hora
+            </span>
           </div>
           <div className="p-2 mx-auto">
             <h3 className="text-right">Estado de la orden</h3>
