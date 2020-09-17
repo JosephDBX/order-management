@@ -1,38 +1,48 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
+  isEmpty,
+  isLoaded,
   useFirestore,
   useFirestoreConnect,
-  isLoaded,
-  isEmpty,
 } from "react-redux-firebase";
-import { IPatient } from "../../models/IPatient";
-import { useSelector } from "react-redux";
-import { IUser } from "../../models/IUser";
-import { IOrder } from "../../models/IOrder";
+import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ITest } from "../../models/ITest";
-import { IProfile } from "../../models/IProfile";
-import { IOrderTest } from "../../models/IOrderTest";
-import { IOrderProfile } from "../../models/IOrderProfile";
-import { IProfileTest } from "../../models/IProfileTest";
-import OrderCreate from "../../components/order/OrderCreate";
+import OrderEdit from "../../components/order/OrderEdit";
 import { ERol } from "../../models/ERol";
+import { IOrder } from "../../models/IOrder";
+import { IOrderProfile } from "../../models/IOrderProfile";
+import { IOrderTest } from "../../models/IOrderTest";
+import { IPatient } from "../../models/IPatient";
+import { IProfile } from "../../models/IProfile";
+import { IProfileTest } from "../../models/IProfileTest";
+import { ITest } from "../../models/ITest";
+import { IUser } from "../../models/IUser";
 
-const PatientOrderCreatePage: React.FunctionComponent = () => {
-  const { id } = useParams<{ id: string }>();
+const PatientOrderEditPage: React.FunctionComponent = () => {
+  const { idPatient, idOrder } = useParams<{
+    idPatient: string;
+    idOrder: string;
+  }>();
   const history = useHistory();
   const firestore = useFirestore();
 
   useFirestoreConnect(() => [
-    { collection: "patients", doc: id },
+    { collection: "patients", doc: idPatient },
+    { collection: "orders", doc: idOrder },
     { collection: "tests", where: [["state", "==", true]] },
+    { collection: "order_tests", where: [["order", "==", idOrder]] },
     { collection: "profiles", where: [["state", "==", true]] },
+    { collection: "order_profiles", where: [["order", "==", idOrder]] },
     { collection: "profile_tests", where: [["state", "==", true]] },
   ]);
 
   const currentPatient: IPatient = useSelector(
-    ({ firestore: { data } }: any) => data.patients && data.patients[id]
+    ({ firestore: { data } }: any) => data.patients && data.patients[idPatient]
+  );
+
+  const currentOrder: IOrder = useSelector(
+    ({ firestore: { data } }: any) => data.orders && data.orders[idOrder]
   );
 
   const currentUser: IUser = useSelector(
@@ -43,8 +53,16 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
     (state: any) => state.firestore.ordered.tests
   );
 
+  const order_tests: IOrderTest[] = useSelector(
+    ({ firestore: { data } }: any) => data.order_tests
+  );
+
   const profiles: IProfile[] = useSelector(
     (state: any) => state.firestore.ordered.profiles
+  );
+
+  const order_profiles: IOrderProfile[] = useSelector(
+    ({ firestore: { data } }: any) => data.order_profiles
   );
 
   const profile_tests: IProfileTest[] = useSelector(
@@ -56,14 +74,10 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
   };
 
   const navigateToPatientOrderManagement = () => {
-    history.push(`/user-panel/patients/${id}`);
+    history.push(`/user-panel/patients/${idPatient}`);
   };
 
-  const onCreateOrder = (
-    order: IOrder,
-    tests: ITest[],
-    profiles: IProfile[]
-  ) => {
+  const onEditOrder = (order: IOrder, tests: ITest[], profiles: IProfile[]) => {
     if (tests.length + profiles.length > 0) {
       order.user = currentUser.uid;
       toast.info("Procesando... por favor espere...");
@@ -111,7 +125,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
                 )
               );
           }
-          history.push(`/user-panel/patients/${id}`);
+          history.push(`/user-panel/patients/${idPatient}`);
         })
         .catch((error) => {
           toast.error(error.message);
@@ -124,15 +138,21 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
   return (
     <>
       {!isLoaded(tests) ||
+      !isLoaded(order_tests) ||
       !isLoaded(profiles) ||
+      !isLoaded(order_profiles) ||
       !isLoaded(profile_tests) ||
       !isLoaded(currentUser) ||
+      !isLoaded(currentOrder) ||
       !isLoaded(currentPatient) ? (
         <p className="m-2 text-center">Cargando exámenes y perfiles...</p>
-      ) : (isEmpty(tests) && isEmpty(profiles)) || isEmpty(currentPatient) ? (
+      ) : (isEmpty(tests) && isEmpty(profiles)) ||
+        isEmpty(currentPatient) ||
+        isEmpty(currentOrder) ||
+        (isEmpty(order_tests) && isEmpty(order_profiles)) ? (
         <div className="flex flex-col justify-center">
           <p className="m-2 text-center font-code">
-            ¡No puede crear una orden porque aún no existen exámenes ni
+            ¡No puede editar una orden porque aún no existen exámenes ni
             perfiles!
           </p>
           <button
@@ -150,20 +170,23 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <OrderCreate
-          patient={{ id, ...currentPatient }}
+        <OrderEdit
+          patient={{ id: idPatient, ...currentPatient }}
+          order={{ id: idOrder, ...currentOrder }}
           tests={tests}
+          selected_tests={order_tests}
           profiles={profiles.filter(
             (profile) =>
               profile_tests.filter((pt) => pt.profile === profile.id).length > 0
           )}
+          selected_profiles={order_profiles}
           profile_tests={profile_tests}
           rol={ERol.Public}
-          onCreateOrder={onCreateOrder}
+          onEditOrder={onEditOrder}
         />
       )}
     </>
   );
 };
 
-export default PatientOrderCreatePage;
+export default PatientOrderEditPage;

@@ -5,17 +5,20 @@ import SummaryLayout from "../../layouts/SummaryLayout";
 import moment from "moment";
 import "moment/locale/es";
 import { useHistory } from "react-router-dom";
+import { IOrder } from "../../models/IOrder";
 
 interface IPatientDetailProps {
   patient: IPatient;
   rol: ERol;
   isMain?: boolean;
+  orders?: IOrder[];
 }
 
 const PatientDetail: React.FunctionComponent<IPatientDetailProps> = ({
   patient,
   rol,
   isMain,
+  orders,
 }) => {
   const history = useHistory();
   const navigateToDetail = () => {
@@ -79,16 +82,23 @@ const PatientDetail: React.FunctionComponent<IPatientDetailProps> = ({
               <p className="text-center m-4 mt-1">{patient.contact.email}</p>
             </>
           )}
-          <hr />
-          <p className="m-1 mt-4 text-center font-semibold text-blue-700">
-            Órdenes: {0}
-          </p>
-          <p className="m-1 text-center font-semibold text-teal-700">
-            Pendientes: {0}
-          </p>
-          <p className="m-1 text-center font-semibold text-red-700">
-            En proceso: {0}
-          </p>
+          {orders && orders.length > 0 ? (
+            <>
+              <hr />
+              <p className="m-1 mt-4 text-center font-semibold text-gray-700">
+                Órdenes: {orders.length}
+              </p>
+              <p className="m-1 mt-4 text-center font-semibold text-blue-700">
+                Completas: {orders.filter((o) => o.state === "complete").length}
+              </p>
+              <p className="m-1 text-center font-semibold text-teal-700">
+                Pendientes: {orders.filter((o) => o.state === "pending").length}
+              </p>
+              <p className="m-1 text-center font-semibold text-red-700">
+                En proceso: {orders.filter((o) => o.state === "process").length}
+              </p>
+            </>
+          ) : null}
         </>
       }
       code={patient.id}

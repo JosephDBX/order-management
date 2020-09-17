@@ -93,6 +93,7 @@ const PatientDetailPage: React.FunctionComponent = () => {
                 patient={{ id, ...currentPatient }}
                 rol={ERol.Public}
                 isMain
+                orders={orders}
               />
             }
             detail={
