@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   useFirestore,
@@ -18,11 +18,14 @@ import { IOrderProfile } from "../../models/IOrderProfile";
 import { IProfileTest } from "../../models/IProfileTest";
 import OrderCreate from "../../components/order/OrderCreate";
 import { ERol } from "../../models/ERol";
+import Loading from "../../components/custom/Loading";
 
 const PatientOrderCreatePage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useFirestoreConnect(() => [
     { collection: "patients", doc: id },
@@ -66,6 +69,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
   ) => {
     if (tests.length + profiles.length > 0) {
       order.user = currentUser.uid;
+      setIsLoading(true);
       toast.info("Procesando... por favor espere...");
       firestore
         .collection("orders")
@@ -114,6 +118,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
           history.push(`/user-panel/patients/${id}`);
         })
         .catch((error) => {
+          setIsLoading(false);
           toast.error(error.message);
         });
     } else {
@@ -162,6 +167,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
           onCreateOrder={onCreateOrder}
         />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

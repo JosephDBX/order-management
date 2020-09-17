@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IArea } from "../../models/IArea";
 import AreaEdit from "../../components/area/AreaEdit";
 import { useHistory, useParams } from "react-router-dom";
@@ -10,11 +10,15 @@ import {
 } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Loading from "../../components/custom/Loading";
 
 const AdminAreaEditPage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useFirestoreConnect(() => [{ collection: "areas", doc: id }]);
 
   const currentArea: IArea = useSelector(
@@ -26,6 +30,7 @@ const AdminAreaEditPage: React.FunctionComponent = () => {
   };
 
   const onEditArea = (area: IArea) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     firestore
       .collection("areas")
@@ -36,6 +41,7 @@ const AdminAreaEditPage: React.FunctionComponent = () => {
         history.push(`/admin-panel/areas/${id}`);
       })
       .catch((error) => {
+        setIsLoading(false);
         toast.error(error.message);
       });
   };
@@ -60,6 +66,7 @@ const AdminAreaEditPage: React.FunctionComponent = () => {
       ) : (
         <AreaEdit currentArea={currentArea} onEditArea={onEditArea} />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

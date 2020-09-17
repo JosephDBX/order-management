@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TestCreate from "../../components/test/TestCreate";
 import { useParams, useHistory } from "react-router-dom";
 import {
@@ -11,11 +11,14 @@ import { IArea } from "../../models/IArea";
 import { useSelector } from "react-redux";
 import { ITest } from "../../models/ITest";
 import { toast } from "react-toastify";
+import Loading from "../../components/custom/Loading";
 
 const AdminTestCreatePage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useFirestoreConnect(() => [{ collection: "areas", doc: id }]);
 
@@ -28,6 +31,7 @@ const AdminTestCreatePage: React.FunctionComponent = () => {
   };
 
   const onCreateTest = (test: ITest) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     firestore
       .collection("tests")
@@ -37,6 +41,7 @@ const AdminTestCreatePage: React.FunctionComponent = () => {
         history.push(`/admin-panel/areas/${id}`);
       })
       .catch((error) => {
+        setIsLoading(false);
         toast.error(error.message);
       });
   };
@@ -61,6 +66,7 @@ const AdminTestCreatePage: React.FunctionComponent = () => {
       ) : (
         <TestCreate onCreateTest={onCreateTest} area={{ id, ...currentArea }} />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

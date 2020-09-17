@@ -104,16 +104,8 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
   };
 
   // Test
-  const [selectedTests, setSelectedTests] = useState<ITest[]>(
-    tests.filter(
-      (t) => selected_tests.filter((st) => st.test === t.id).length > 0
-    )
-  );
-  const [listTest, setListTest] = useState<ITest[]>(
-    tests.filter(
-      (t) => selected_tests.filter((st) => st.test !== t.id).length > 0
-    )
-  );
+  const [selectedTests, setSelectedTests] = useState<ITest[]>([]);
+  const [listTest, setListTest] = useState<ITest[]>([]);
   const [filterTextTest, setFilterTextTest] = useState("");
 
   const onFilterTextTest = (filter: string) => {
@@ -141,16 +133,8 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
   };
 
   // profile
-  const [selectedProfiles, setSelectedProfiles] = useState<IProfile[]>(
-    profiles.filter(
-      (p) => selected_profiles.filter((sp) => sp.profile === p.id).length > 0
-    )
-  );
-  const [listProfile, setListProfile] = useState<IProfile[]>(
-    profiles.filter(
-      (p) => selected_profiles.filter((sp) => sp.profile !== p.id).length > 0
-    )
-  );
+  const [selectedProfiles, setSelectedProfiles] = useState<IProfile[]>([]);
+  const [listProfile, setListProfile] = useState<IProfile[]>([]);
   const [filterTextProfile, setFilterTextProfile] = useState("");
 
   const onFilterTextProfile = (filter: string) => {
@@ -196,8 +180,33 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
     onFilterTextTest(filterTextTest);
   }, [tests]);
   useEffect(() => {
+    setSelectedTests(
+      tests.filter(
+        (t) => selected_tests.filter((st) => st.test === t.id).length > 0
+      )
+    );
+    setListTest(
+      tests.filter(
+        (t) => selected_tests.filter((st) => st.test !== t.id).length > 0
+      )
+    );
+  }, [selected_tests]);
+
+  useEffect(() => {
     onFilterTextProfile(filterTextProfile);
   }, [profiles]);
+  useEffect(() => {
+    setSelectedProfiles(
+      profiles.filter(
+        (p) => selected_profiles.filter((sp) => sp.profile === p.id).length > 0
+      )
+    );
+    setListProfile(
+      profiles.filter(
+        (p) => selected_profiles.filter((sp) => sp.profile !== p.id).length > 0
+      )
+    );
+  }, [selected_profiles]);
 
   return (
     <>

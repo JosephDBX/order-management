@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   useFirestore,
@@ -10,11 +10,15 @@ import { IPatient } from "../../models/IPatient";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import PatientEdit from "../../components/patient/PatientEdit";
+import Loading from "../../components/custom/Loading";
 
 const PatientEditPage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useFirestoreConnect(() => [{ collection: "patients", doc: id }]);
 
   const currentPatient: IPatient = useSelector(
@@ -26,6 +30,7 @@ const PatientEditPage: React.FunctionComponent = () => {
   };
 
   const onEditPatient = (patient: IPatient) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     firestore
       .collection("patients")
@@ -36,6 +41,7 @@ const PatientEditPage: React.FunctionComponent = () => {
         history.push(`/user-panel/patients/${id}`);
       })
       .catch((error) => {
+        setIsLoading(false);
         toast.error(error.message);
       });
   };
@@ -63,6 +69,7 @@ const PatientEditPage: React.FunctionComponent = () => {
           onEditPatient={onEditPatient}
         />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

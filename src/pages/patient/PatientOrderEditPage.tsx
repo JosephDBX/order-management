@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   isEmpty,
@@ -8,6 +8,7 @@ import {
 } from "react-redux-firebase";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Loading from "../../components/custom/Loading";
 import OrderEdit from "../../components/order/OrderEdit";
 import { ERol } from "../../models/ERol";
 import { IOrder } from "../../models/IOrder";
@@ -26,6 +27,8 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
   }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useFirestoreConnect(() => [
     { collection: "patients", doc: idPatient },
@@ -54,7 +57,7 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
   );
 
   const order_tests: IOrderTest[] = useSelector(
-    ({ firestore: { data } }: any) => data.order_tests
+    (state: any) => state.firestore.ordered.order_tests
   );
 
   const profiles: IProfile[] = useSelector(
@@ -62,7 +65,7 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
   );
 
   const order_profiles: IOrderProfile[] = useSelector(
-    ({ firestore: { data } }: any) => data.order_profiles
+    (state: any) => state.firestore.ordered.order_profiles
   );
 
   const profile_tests: IProfileTest[] = useSelector(
@@ -80,30 +83,44 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
   const onEditOrder = (order: IOrder, tests: ITest[], profiles: IProfile[]) => {
     if (tests.length + profiles.length > 0) {
       order.user = currentUser.uid;
+      setIsLoading(true);
       toast.info("Procesando... por favor espere...");
       firestore
         .collection("orders")
-        .add(order)
-        .then(async (result) => {
-          toast.success(`Nueva orden creada con id:${result.id}`);
+        .doc(idOrder)
+        .set(order, { merge: true })
+        .then(async () => {
+          toast.success(`Orden con id:${idOrder}, actualizada exitosamente`);
+          for (let i = 0; i < order_tests.length; i++) {
+            await firestore
+              .collection("order_tests")
+              .doc(order_tests[i].id)
+              .delete();
+          }
           for (let i = 0; i < tests.length; i++) {
             const order_test: IOrderTest = {
-              order: result.id,
+              order: idOrder,
               test: tests[i].id as string,
               state: tests[i].state,
               cost: Number.parseFloat(tests[i].cost.toString()),
             };
             await firestore
               .collection("order_tests")
-              .doc(`${result.id}_${tests[i].id}`)
+              .doc(`${idOrder}_${tests[i].id}`)
               .set(order_test)
               .then(() =>
                 toast.success(`Examen "${tests[i].name}" agregado a la orden`)
               );
           }
+          for (let i = 0; i < order_profiles.length; i++) {
+            await firestore
+              .collection("order_profiles")
+              .doc(order_profiles[i].id)
+              .delete();
+          }
           for (let i = 0; i < profiles.length; i++) {
             const order_profile: IOrderProfile = {
-              order: result.id,
+              order: idOrder,
               profile: profiles[i].id as string,
               state: profiles[i].state,
               cost: profile_tests
@@ -117,7 +134,7 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
             };
             await firestore
               .collection("order_profiles")
-              .doc(`${result.id}_${profiles[i].id}`)
+              .doc(`${idOrder}_${profiles[i].id}`)
               .set(order_profile)
               .then(() =>
                 toast.success(
@@ -128,6 +145,7 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
           history.push(`/user-panel/patients/${idPatient}`);
         })
         .catch((error) => {
+          setIsLoading(false);
           toast.error(error.message);
         });
     } else {
@@ -185,6 +203,7 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
           onEditOrder={onEditOrder}
         />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

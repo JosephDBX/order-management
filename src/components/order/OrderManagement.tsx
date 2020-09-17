@@ -35,21 +35,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   onOrderStateChange,
 }) => {
   // Selected List
-  const [list, setList] = useState<any[]>(
-    orders.map((order) => (
-      <OrderDetail
-        order={order}
-        orderTests={orderTests.filter((ot) => ot.order === order.id)}
-        orderProfiles={orderProfiles.filter((op) => op.order === order.id)}
-        tests={tests}
-        profiles={profiles}
-        rol={rol}
-        idPatient={patient?.id as string}
-        onOrderStateChange={onOrderStateChange}
-        key={order.id}
-      />
-    ))
-  );
+  const [list, setList] = useState<any[]>([]);
   const [filterText, setFilterText] = useState({ filter: "", state: "" });
 
   const onFilterText = (filter: string, state: string) => {
@@ -82,7 +68,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
 
   useEffect(() => {
     onFilterText(filterText.filter, filterText.state);
-  }, [orders]);
+  }, [orders, orderTests, orderProfiles]);
 
   return (
     <ManageLayout

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   useFirestore,
@@ -11,11 +11,14 @@ import { useSelector } from "react-redux";
 import { ITest } from "../../models/ITest";
 import { toast } from "react-toastify";
 import TestEdit from "../../components/test/TestEdit";
+import Loading from "../../components/custom/Loading";
 
 const AdminTestEditPage: React.FunctionComponent = () => {
-  const { idArea, idTest } = useParams();
+  const { idArea, idTest } = useParams<{ idArea: string; idTest: string }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useFirestoreConnect(() => [
     { collection: "areas", doc: idArea },
@@ -37,6 +40,7 @@ const AdminTestEditPage: React.FunctionComponent = () => {
   };
 
   const onEditTest = (test: ITest) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     firestore
       .collection("tests")
@@ -47,6 +51,7 @@ const AdminTestEditPage: React.FunctionComponent = () => {
         navigateToCurrentArea();
       })
       .catch((error) => {
+        setIsLoading(false);
         toast.error(error.message);
       });
   };
@@ -85,6 +90,7 @@ const AdminTestEditPage: React.FunctionComponent = () => {
           currentTest={{ id: idTest, ...currentTest }}
         />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

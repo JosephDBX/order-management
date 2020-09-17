@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFirestore } from "react-redux-firebase";
 import { useHistory } from "react-router-dom";
 import { IPatient } from "../../models/IPatient";
@@ -7,15 +7,20 @@ import PatientCreate from "../../components/patient/PatientCreate";
 import { IUser } from "../../models/IUser";
 import { useSelector } from "react-redux";
 import { IUserPatient } from "../../models/IUserPatient";
+import Loading from "../../components/custom/Loading";
 
 const PatientCreatePage: React.FunctionComponent = () => {
   const firestore = useFirestore();
   const history = useHistory();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const currentUser: IUser = useSelector(
     (state: any) => state.firebase.profile
   );
 
   const onCreatePatient = (patient: IPatient) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     let aux = "";
     firestore
@@ -37,11 +42,17 @@ const PatientCreatePage: React.FunctionComponent = () => {
         if (aux) history.push(`/user-panel/patients/${aux}`);
       })
       .catch((error) => {
+        setIsLoading(false);
         toast.error(error.message);
       });
   };
 
-  return <PatientCreate onCreatePatient={onCreatePatient} />;
+  return (
+    <>
+      <PatientCreate onCreatePatient={onCreatePatient} />
+      <Loading isLoading={isLoading} />
+    </>
+  );
 };
 
 export default PatientCreatePage;

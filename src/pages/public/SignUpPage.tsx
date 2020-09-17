@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import UserCreate from "../../components/user/UserCreate";
 import { useFirebase, useFirestore } from "react-redux-firebase";
 import { IUser } from "../../models/IUser";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+import Loading from "../../components/custom/Loading";
 
 const SignUpPage: React.FunctionComponent = () => {
   const firebase = useFirebase();
   const firestore = useFirestore();
   const history = useHistory();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const onCreateUser = (email: string, password: string) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     const user: IUser = { email: email };
 
@@ -37,6 +41,7 @@ const SignUpPage: React.FunctionComponent = () => {
         history.push("/sign-in");
       })
       .catch((error) => {
+        setIsLoading(false);
         if (
           error.message ===
           "The email address is already in use by another account."
@@ -53,6 +58,7 @@ const SignUpPage: React.FunctionComponent = () => {
   return (
     <>
       <UserCreate onCreateUser={onCreateUser} />
+      <Loading isLoading={isLoading} />
     </>
   );
 };

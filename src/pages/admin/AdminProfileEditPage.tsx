@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   useFirestore,
@@ -10,11 +10,15 @@ import { IProfile } from "../../models/IProfile";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import ProfileEdit from "../../components/profile/ProfileEdit";
+import Loading from "../../components/custom/Loading";
 
 const AdminProfileEditPage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useFirestoreConnect(() => [{ collection: "profiles", doc: id }]);
 
   const currentProfile: IProfile = useSelector(
@@ -26,6 +30,7 @@ const AdminProfileEditPage: React.FunctionComponent = () => {
   };
 
   const onEditProfile = (profile: IProfile) => {
+    setIsLoading(true);
     toast.info("Procesando... por favor espere...");
     firestore
       .collection("profiles")
@@ -36,6 +41,7 @@ const AdminProfileEditPage: React.FunctionComponent = () => {
         history.push(`/admin-panel/profiles/${id}`);
       })
       .catch((error) => {
+        setIsLoading(false);
         toast.error(error.message);
       });
   };
@@ -62,6 +68,7 @@ const AdminProfileEditPage: React.FunctionComponent = () => {
           onEditProfile={onEditProfile}
         />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };

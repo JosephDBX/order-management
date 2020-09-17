@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useFirestore,
   useFirestoreConnect,
@@ -12,8 +12,11 @@ import ProfileCreate from "../../components/profile/ProfileCreate";
 import { ITest } from "../../models/ITest";
 import { useSelector } from "react-redux";
 import { IProfileTest } from "../../models/IProfileTest";
+import Loading from "../../components/custom/Loading";
 
 const AdminProfileCreatePage: React.FunctionComponent = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   useFirestoreConnect([{ collection: "tests" }]);
   const tests: ITest[] = useSelector(
     (state: any) => state.firestore.ordered.tests
@@ -27,6 +30,7 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
   const firestore = useFirestore();
   const onCreateProfile = (profile: IProfile, tests: ITest[]) => {
     if (tests.length > 0) {
+      setIsLoading(true);
       toast.info("Procesando... por favor espere...");
       firestore
         .collection("profiles")
@@ -51,6 +55,7 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
           history.push(`/admin-panel/profiles/${result.id}`);
         })
         .catch((error) => {
+          setIsLoading(false);
           toast.error(error.message);
         });
     } else {
@@ -78,6 +83,7 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
       ) : (
         <ProfileCreate tests={tests} onCreateProfile={onCreateProfile} />
       )}
+      <Loading isLoading={isLoading} />
     </>
   );
 };
