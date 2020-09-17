@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { IPatient } from "../../models/IPatient";
 import { useForm } from "react-hook-form";
-import moment from "moment";
 import DateInput from "../custom/DateInput";
 import CenterLayout from "../../layouts/CenterLayout";
 

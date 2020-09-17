@@ -234,7 +234,7 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
                     onAdd={() => onAddTest(test)}
                     onRemove={() => onRemoveTest(test)}
                     removable
-                    navigateTo={`/search/?area=${test.area}&test=${test.id}`}
+                    navigateTo={`/search/?test=${test.id}`}
                     key={test.id}
                   />
                 ))}
@@ -378,7 +378,7 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
                   subTitle={`USD $${test.cost}`}
                   onAdd={() => onAddTest(test)}
                   onRemove={() => onRemoveTest(test)}
-                  navigateTo={`/search/?area=${test.area}&test=${test.id}`}
+                  navigateTo={`/search/?test=${test.id}`}
                   key={test.id}
                 />
               ))}

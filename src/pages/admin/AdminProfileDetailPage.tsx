@@ -17,7 +17,7 @@ import TestManagement from "../../components/test/TestManagement";
 import { toast } from "react-toastify";
 
 const AdminProfileDetailPage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
   useFirestoreConnect(() => [

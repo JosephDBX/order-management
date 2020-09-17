@@ -262,7 +262,7 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
                     onAdd={() => onAddTest(test)}
                     onRemove={() => onRemoveTest(test)}
                     removable
-                    navigateTo={`/search/?area=${test.area}&test=${test.id}`}
+                    navigateTo={`/search/?test=${test.id}`}
                     key={test.id}
                   />
                 ))}
@@ -422,7 +422,7 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
                   subTitle={`USD $${test.cost}`}
                   onAdd={() => onAddTest(test)}
                   onRemove={() => onRemoveTest(test)}
-                  navigateTo={`/search/?area=${test.area}&test=${test.id}`}
+                  navigateTo={`/search/?test=${test.id}`}
                   key={test.id}
                 />
               ))}

@@ -43,6 +43,7 @@ import PatientDetailPage from "./pages/patient/PatientDetailPage";
 import PatientEditPage from "./pages/patient/PatientEditPage";
 import PatientOrderCreatePage from "./pages/patient/PatientOrderCreatePage";
 import PatientOrderEditPage from "./pages/patient/PatientOrderEditPage";
+import SearchPage from "./pages/public/SearchPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -145,6 +146,7 @@ function App() {
             <Route exact path="/sign-in">
               {!isEmpty(currentUser) ? <Redirect to="/home" /> : <SignInPage />}
             </Route>
+            <Route exact path="/search" component={SearchPage} />
             {/** user routes */}
             <Route exact path="/user-panel">
               {isEmpty(currentUser) ? (

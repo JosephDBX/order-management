@@ -27,7 +27,7 @@ const TestDetail: React.FunctionComponent<ITestDetailProps> = ({
   const navigateToArea = () => {
     if (rol === ERol.Admin)
       history.push(`/admin-panel/areas/${test.area}?test=${test.id}`);
-    else history.push(`/search/?area=${test.area}&test=${test.id}`);
+    else history.push(`/search/?test=${test.id}`);
   };
   const navigateToEdit = () => {
     history.push(`/admin-panel/areas/${test.area}/tests/${test.id}/edit`);
