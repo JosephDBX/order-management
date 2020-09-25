@@ -19,6 +19,7 @@ import { IProfileTest } from "../../models/IProfileTest";
 import OrderCreate from "../../components/order/OrderCreate";
 import { ERol } from "../../models/ERol";
 import Loading from "../../components/custom/Loading";
+import { IUserPatient } from "../../models/IUserPatient";
 
 const PatientOrderCreatePage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,8 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
     { collection: "tests", where: [["state", "==", true]] },
     { collection: "profiles", where: [["state", "==", true]] },
     { collection: "profile_tests", where: [["state", "==", true]] },
+    { collection: "users", where: [["roles.isDoctor", "==", true]] },
+    { collection: "user_patients", where: [["patient", "==", id]] },
   ]);
 
   const currentPatient: IPatient = useSelector(
@@ -52,6 +55,14 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
 
   const profile_tests: IProfileTest[] = useSelector(
     (state: any) => state.firestore.ordered.profile_tests
+  );
+
+  const users: IUser[] = useSelector(
+    (state: any) => state.firestore.ordered.users
+  );
+
+  const user_patients: IUserPatient[] = useSelector(
+    (state: any) => state.firestore.ordered.user_patients
   );
 
   const navigateToPatientManagement = () => {
@@ -132,7 +143,9 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
       !isLoaded(profiles) ||
       !isLoaded(profile_tests) ||
       !isLoaded(currentUser) ||
-      !isLoaded(currentPatient) ? (
+      !isLoaded(currentPatient) ||
+      !isLoaded(users) ||
+      !isLoaded(user_patients) ? (
         <p className="m-2 text-center">Cargando exámenes y perfiles...</p>
       ) : (isEmpty(tests) && isEmpty(profiles)) || isEmpty(currentPatient) ? (
         <div className="flex flex-col justify-center">
@@ -164,6 +177,12 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
           )}
           profile_tests={profile_tests}
           rol={ERol.Public}
+          doctors={users.filter(
+            (u) =>
+              user_patients.filter(
+                (up) => up.patient === id && up.user === u.id
+              ).length > 0
+          )}
           onCreateOrder={onCreateOrder}
         />
       )}

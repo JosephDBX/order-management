@@ -7,7 +7,7 @@ interface ISelectItemLayoutProps {
   removable?: boolean;
   onAdd: Function;
   onRemove: Function;
-  navigateTo: string;
+  navigateTo?: string;
 }
 
 const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
@@ -24,13 +24,15 @@ const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
         <h4 className="mx-2">{title}</h4>
         <hr className="mx-1" />
         <div className="flex items-center mx-2">
-          <Link
-            to={navigateTo}
-            target="_blank"
-            className="material-icons btn-icon btn-icon-secondary p-0 border-0"
-          >
-            pageview
-          </Link>
+          {navigateTo ? (
+            <Link
+              to={navigateTo}
+              target="_blank"
+              className="material-icons btn-icon btn-icon-secondary p-0 border-0"
+            >
+              pageview
+            </Link>
+          ) : null}
           <span className="input-hint">{subTitle}</span>
         </div>
       </div>

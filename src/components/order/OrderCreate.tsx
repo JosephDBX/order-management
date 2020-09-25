@@ -14,6 +14,8 @@ import ModalLayout from "../../layouts/ModalLayout";
 import TestControl from "../test/TestControl";
 import ProfileControl from "../profile/ProfileControl";
 import DateInput from "../custom/DateInput";
+import { IUser } from "../../models/IUser";
+import UserControl from "../user/UserControl";
 
 interface IOrderCreateProps {
   patient: IPatient;
@@ -21,6 +23,7 @@ interface IOrderCreateProps {
   profiles: IProfile[];
   profile_tests: IProfileTest[];
   rol: ERol;
+  doctors: IUser[];
   onCreateOrder(order: IOrder, tests: ITest[], profiles: IProfile[]): void;
 }
 
@@ -36,6 +39,7 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
   tests,
   profiles,
   profile_tests = [],
+  doctors,
   rol,
   onCreateOrder,
 }) => {
@@ -47,6 +51,16 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
       .add({ days: 1 })
       .toDate()
   );
+
+  const [modalDoctor, setModalDoctor] = useState(false);
+  const onOpenModalDoctor = () => {
+    setModalDoctor(true);
+    onFilterTextDoctor(filterTextDoctor);
+  };
+  const onCloseModalDoctor = () => {
+    setModalDoctor(false);
+    setFilterTextDoctor("");
+  };
 
   const [modalTest, setModalTest] = useState(false);
   const onOpenModalTest = () => {
@@ -89,6 +103,36 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
       sum += 5;
     }
     return sum.toFixed(2);
+  };
+
+  // Doctor
+  const [selectedDoctor, setSelectedDoctor] = useState<IUser>();
+  const [listDoctor, setListDoctor] = useState<IUser[]>(doctors);
+  const [filterTextDoctor, setFilterTextDoctor] = useState("");
+
+  const onFilterTextDoctor = (filter: string) => {
+    let aux = doctors.filter(
+      (doctor) =>
+        doctor.uid?.includes(filter) ||
+        doctor.email?.toLowerCase().includes(filter.toLocaleLowerCase())
+    );
+    if (selectedDoctor) {
+      aux = aux.filter((d) => d.id !== selectedDoctor.id);
+    }
+    setListDoctor(aux);
+    setFilterTextDoctor(filter);
+  };
+
+  const onAddDoctor = (doctor: IUser) => {
+    setSelectedDoctor(doctor);
+    if (selectedDoctor) {
+      setListDoctor(listDoctor.filter((d) => d.id !== selectedDoctor.id));
+    }
+    onCloseModalDoctor();
+  };
+  const onRemoveDoctor = (doctor: IUser) => {
+    setListDoctor([...listDoctor, doctor]);
+    setSelectedDoctor(undefined);
   };
 
   // Test
@@ -154,6 +198,7 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
   const onSubmit = (data: Inputs) => {
     const order: IOrder = {
       patient: patient.id as string,
+      attendingDoctor: selectedDoctor?.uid,
       orderedTo: orderedTo.toISOString(),
       delivery: rol === ERol.Receptionist ? data.delivery : 5,
       subTotal: Number.parseFloat(getSubTotal()),
@@ -170,6 +215,9 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
   useEffect(() => {
     onFilterTextProfile(filterTextProfile);
   }, [profiles]);
+  useEffect(() => {
+    onFilterTextDoctor(filterTextDoctor);
+  }, [doctors]);
 
   const profileCost = (profile: IProfile) => {
     let sum: number = 0.0;
@@ -187,6 +235,25 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
         subTitle="Asegúrese de que los contactos del paciente estén actualizados. El paciente será contactado un día antes de la visita."
         component={
           <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="my-4">
+              <SelectListLayout
+                title="Médico ordenando el examen"
+                onAdd={onOpenModalDoctor}
+                selected={
+                  selectedDoctor &&
+                  [selectedDoctor].map((d) => (
+                    <SelectItemLayout
+                      title={d?.email as string}
+                      subTitle={d?.uid as string}
+                      onAdd={() => onAddDoctor(d as IUser)}
+                      onRemove={() => onRemoveDoctor(d as IUser)}
+                      removable
+                      key={d?.id}
+                    />
+                  ))
+                }
+              />
+            </div>
             <div className="input-group">
               <label htmlFor="orderedTo" className="input-label">
                 Fecha de la visita
@@ -364,6 +431,27 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
             </div>
           </form>
         }
+      />
+      <ModalLayout
+        title="Médico ordenando el examen"
+        open={modalDoctor}
+        component={
+          <>
+            <UserControl rol={ERol.Public} onFilter={onFilterTextDoctor} />
+            <div className="frame" style={{ maxHeight: "16rem" }}>
+              {listDoctor.map((d) => (
+                <SelectItemLayout
+                  title={d?.email as string}
+                  subTitle={d?.uid as string}
+                  onAdd={() => onAddDoctor(d as IUser)}
+                  onRemove={() => onRemoveDoctor(d as IUser)}
+                  key={d?.id}
+                />
+              ))}
+            </div>
+          </>
+        }
+        onClose={onCloseModalDoctor}
       />
       <ModalLayout
         title="Agregar exámenes a la orden"

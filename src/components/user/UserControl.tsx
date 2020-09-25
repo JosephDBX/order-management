@@ -47,94 +47,91 @@ const UserControl: React.FunctionComponent<IUserControlProps> = ({
             onChange={onSubmit}
             ref={register}
           />
-          <span className="input-hint">
-            Código o email
-            </span>
+          <span className="input-hint">Código o email</span>
         </div>
-        <div className="p-2">
-          <h3 className="text-right">Filtrar por Acceso de Usuario</h3>
-          <hr className="ml-2 my-2" />
-          <div className="input-group flex-row items-center justify-center">
-            <input
-              className="w-8"
-              type="checkbox"
-              name="isDeliveryWorker"
-              id="isDeliveryWorker"
-              ref={register}
-              onChange={onSubmit}
-            />
-            <label
-              className="btn cursor-pointer flex-grow"
-              htmlFor="isDeliveryWorker"
-            >
-              Panel de Delivery
-            </label>
+        {rol !== ERol.Public ? (
+          <div className="p-2">
+            <h3 className="text-right">Filtrar por Acceso de Usuario</h3>
+            <hr className="ml-2 my-2" />
+            <div className="input-group flex-row items-center justify-center">
+              <input
+                className="w-8"
+                type="checkbox"
+                name="isDeliveryWorker"
+                id="isDeliveryWorker"
+                ref={register}
+                onChange={onSubmit}
+              />
+              <label
+                className="btn cursor-pointer flex-grow"
+                htmlFor="isDeliveryWorker"
+              >
+                Panel de Delivery
+              </label>
+            </div>
+            <div className="input-group flex-row items-center justify-center">
+              <input
+                className="w-8"
+                type="checkbox"
+                name="isDoctor"
+                id="isDoctor"
+                ref={register}
+                onChange={onSubmit}
+              />
+              <label
+                className="btn cursor-pointer flex-grow"
+                htmlFor="isDoctor"
+              >
+                Permisos de Médico
+              </label>
+            </div>
+            <div className="input-group flex-row items-center justify-center">
+              <input
+                className="w-8"
+                type="checkbox"
+                name="isReceptionist"
+                id="isReceptionist"
+                ref={register}
+                onChange={onSubmit}
+              />
+              <label
+                className="btn cursor-pointer flex-grow"
+                htmlFor="isReceptionist"
+              >
+                Panel de Recepcionista
+              </label>
+            </div>
+            <div className="input-group flex-row items-center justify-center">
+              <input
+                className="w-8"
+                type="checkbox"
+                name="isLaboratorist"
+                id="isLaboratorist"
+                ref={register}
+                onChange={onSubmit}
+              />
+              <label
+                className="btn cursor-pointer flex-grow"
+                htmlFor="isLaboratorist"
+              >
+                Panel de Laboratorista
+              </label>
+            </div>
+            <div className="input-group flex-row items-center justify-center">
+              <input
+                className="w-8"
+                type="checkbox"
+                name="isAdmin"
+                id="isAdmin"
+                ref={register}
+                onChange={onSubmit}
+              />
+              <label className="btn cursor-pointer flex-grow" htmlFor="isAdmin">
+                Panel de Administrador
+              </label>
+            </div>
           </div>
-          <div className="input-group flex-row items-center justify-center">
-            <input
-              className="w-8"
-              type="checkbox"
-              name="isDoctor"
-              id="isDoctor"
-              ref={register}
-              onChange={onSubmit}
-            />
-            <label
-              className="btn cursor-pointer flex-grow"
-              htmlFor="isDoctor"
-            >
-              Permisos de Médico
-            </label>
-          </div>
-          <div className="input-group flex-row items-center justify-center">
-            <input
-              className="w-8"
-              type="checkbox"
-              name="isReceptionist"
-              id="isReceptionist"
-              ref={register}
-              onChange={onSubmit}
-            />
-            <label
-              className="btn cursor-pointer flex-grow"
-              htmlFor="isReceptionist"
-            >
-              Panel de Recepcionista
-            </label>
-          </div>
-          <div className="input-group flex-row items-center justify-center">
-            <input
-              className="w-8"
-              type="checkbox"
-              name="isLaboratorist"
-              id="isLaboratorist"
-              ref={register}
-              onChange={onSubmit}
-            />
-            <label
-              className="btn cursor-pointer flex-grow"
-              htmlFor="isLaboratorist"
-            >
-              Panel de Laboratorista
-            </label>
-          </div>
-          <div className="input-group flex-row items-center justify-center">
-            <input
-              className="w-8"
-              type="checkbox"
-              name="isAdmin"
-              id="isAdmin"
-              ref={register}
-              onChange={onSubmit}
-            />
-            <label
-              className="btn cursor-pointer flex-grow"
-              htmlFor="isAdmin"
-            >
-              Panel de Administrador
-            </label>
-          </div>
-        </div>
+        ) : null}
       </form>
     </div>
   );
