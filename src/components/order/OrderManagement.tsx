@@ -12,26 +12,29 @@ import moment from "moment";
 import "moment/locale/es";
 import { ITest } from "../../models/ITest";
 import { IProfile } from "../../models/IProfile";
+import { IUser } from "../../models/IUser";
 
 interface IOrderManagementProps {
-  patient?: IPatient;
+  patients: IPatient[];
   orders: IOrder[];
   orderTests: IOrderTest[];
   orderProfiles: IOrderProfile[];
   tests: ITest[];
   profiles: IProfile[];
   rol: ERol;
+  doctors: IUser[];
   onOrderStateChange?(id: string, state: string): void;
 }
 
 const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
-  patient,
+  patients,
   orders,
   orderTests,
   orderProfiles,
   tests,
   profiles,
   rol,
+  doctors,
   onOrderStateChange,
 }) => {
   // Selected List
@@ -46,7 +49,18 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
             order.id?.includes(filter) ||
             moment(order.orderedTo)
               .format("dddd D/MMMM/YYYY hh:mm a")
-              .includes(filter.toLowerCase())
+              .includes(filter.toLowerCase()) ||
+            (order.attendingDoctor &&
+              order.attendingDoctor ===
+                doctors.find((d) =>
+                  d.userName?.toLowerCase().includes(filter.toLowerCase())
+                )?.uid) ||
+            order.patient ===
+              patients.find((p) =>
+                `${p.name} ${p.surname}`
+                  .toLowerCase()
+                  .includes(filter.toLowerCase())
+              )?.id
         )
         .filter((order) => order.state === state || state === "")
         .map((order) => (
@@ -57,7 +71,8 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
             tests={tests}
             profiles={profiles}
             rol={rol}
-            idPatient={patient?.id as string}
+            doctor={doctors.find((d) => order.attendingDoctor === d.uid)}
+            patient={patients?.find((p) => p.id === order.patient) as IPatient}
             onOrderStateChange={onOrderStateChange}
             key={order.id}
           />
@@ -78,7 +93,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
         <OrderControl
           rol={rol}
           onFilterText={onFilterText}
-          idPatient={patient?.id as string}
+          patient={patients[0]}
         />
       }
       list={<GridLayout list={list} type={1} defaultText="No hay órdenes!!!" />}

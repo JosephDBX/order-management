@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import CenterLayout from "../../layouts/CenterLayout";
 
 interface IUserCreateProps {
-  onCreateUser(email: string, password: string): void;
+  onCreateUser(userName: string, email: string, password: string): void;
 }
 
 type Inputs = {
+  userName: string;
   email: string;
   password: string;
   passwordRequired: string;
@@ -18,7 +19,7 @@ const UserCreate: React.FunctionComponent<IUserCreateProps> = ({
   const { register, handleSubmit, watch, errors } = useForm<Inputs>();
 
   const onSubmit = (data: Inputs) => {
-    onCreateUser(data.email, data.password);
+    onCreateUser(data.userName, data.email, data.password);
   };
 
   return (
@@ -27,6 +28,32 @@ const UserCreate: React.FunctionComponent<IUserCreateProps> = ({
       subTitle="¡Únete a LCBM! ¡No tomará tiempo!"
       component={
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div
+            className={`input-group my-2 ${
+              !!errors.userName && "input-group-danger"
+            }`}
+          >
+            <label htmlFor="userName" className="input-label">
+              Tu nombre o el nombre de tu organización
+            </label>
+            <input
+              className="input input-primary"
+              type="text"
+              name="userName"
+              placeholder="Nombre"
+              ref={register({
+                required: {
+                  value: true,
+                  message: "El nombre es requerido",
+                },
+              })}
+            />
+            <span className="input-hint">
+              {!!errors.userName
+                ? errors.userName.message
+                : "Por favor ingrese su nombre"}
+            </span>
+          </div>
           <div
             className={`input-group my-2 ${
               !!errors.email && "input-group-danger"

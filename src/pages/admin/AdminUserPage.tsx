@@ -54,6 +54,21 @@ const AdminUserPage: React.FunctionComponent = () => {
       });
   };
 
+  const onUserNameChange = (id: string, userName: string) => {
+    toast.info("Procesando... por favor espere...");
+    firestore
+      .doc(id)
+      .set({ userName: userName }, { merge: true })
+      .then(() => {
+        toast.success(
+          `¡el nombre del usuario con email: ${
+            users.find((value) => value.id === id)?.email
+          }, ha cambiado!`
+        );
+      })
+      .catch((error) => toast.error(error.message));
+  };
+
   return (
     <>
       {!isLoaded(currentUser) || !isLoaded(users) ? (
@@ -66,6 +81,7 @@ const AdminUserPage: React.FunctionComponent = () => {
               user={currentUser}
               rol={ERol.Admin}
               isMain
+              onUserNameChange={onUserNameChange}
               onUserStateChange={onUserStateChange}
               onRestorePassword={onRestorePassword}
             />
@@ -76,6 +92,7 @@ const AdminUserPage: React.FunctionComponent = () => {
               users={users.filter((u) => {
                 return currentUser.uid !== u.id;
               })}
+              onUserNameChange={onUserNameChange}
               onUserStateChange={onUserStateChange}
               onRestorePassword={onRestorePassword}
             />

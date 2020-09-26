@@ -2,6 +2,7 @@ import { IBase } from "./IBase";
 
 export interface IUser extends IBase {
   uid?: string;
+  userName?: string;
   email: string;
   roles?: IRole;
 }

@@ -9,6 +9,7 @@ import GridLayout from "../../layouts/GridLayout";
 interface IUserManagementProps {
   rol: ERol;
   users: IUser[];
+  onUserNameChange(id: string, userName: string): void;
   onUserStateChange?(id: string, roles: IRole): void;
   onRestorePassword(email: string): void;
 }
@@ -16,6 +17,7 @@ interface IUserManagementProps {
 const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
   rol,
   users,
+  onUserNameChange,
   onUserStateChange,
   onRestorePassword,
 }) => {
@@ -24,6 +26,7 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
       <UserDetail
         user={user}
         rol={rol}
+        onUserNameChange={onUserNameChange}
         onUserStateChange={onUserStateChange}
         onRestorePassword={onRestorePassword}
         key={user.id}
@@ -68,6 +71,7 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
           <UserDetail
             user={user}
             rol={rol}
+            onUserNameChange={onUserNameChange}
             onUserStateChange={onUserStateChange}
             onRestorePassword={onRestorePassword}
             key={user.id}

@@ -19,6 +19,7 @@ import { IProfile } from "../../models/IProfile";
 import { IProfileTest } from "../../models/IProfileTest";
 import { ITest } from "../../models/ITest";
 import { IUser } from "../../models/IUser";
+import { IUserPatient } from "../../models/IUserPatient";
 
 const PatientOrderEditPage: React.FunctionComponent = () => {
   const { idPatient, idOrder } = useParams<{
@@ -38,6 +39,8 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
     { collection: "profiles", where: [["state", "==", true]] },
     { collection: "order_profiles", where: [["order", "==", idOrder]] },
     { collection: "profile_tests", where: [["state", "==", true]] },
+    { collection: "users", where: [["roles.isDoctor", "==", true]] },
+    { collection: "user_patients", where: [["patient", "==", idPatient]] },
   ]);
 
   const currentPatient: IPatient = useSelector(
@@ -70,6 +73,14 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
 
   const profile_tests: IProfileTest[] = useSelector(
     (state: any) => state.firestore.ordered.profile_tests
+  );
+
+  const users: IUser[] = useSelector(
+    (state: any) => state.firestore.ordered.users
+  );
+
+  const user_patients: IUserPatient[] = useSelector(
+    (state: any) => state.firestore.ordered.user_patients
   );
 
   const navigateToPatientManagement = () => {
@@ -162,7 +173,9 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
       !isLoaded(profile_tests) ||
       !isLoaded(currentUser) ||
       !isLoaded(currentOrder) ||
-      !isLoaded(currentPatient) ? (
+      !isLoaded(currentPatient) ||
+      !isLoaded(users) ||
+      !isLoaded(user_patients) ? (
         <p className="m-2 text-center">Cargando exámenes y perfiles...</p>
       ) : (isEmpty(tests) && isEmpty(profiles)) ||
         isEmpty(currentPatient) ||
@@ -200,6 +213,15 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
           selected_profiles={order_profiles}
           profile_tests={profile_tests}
           rol={ERol.Public}
+          doctors={users.filter(
+            (u) =>
+              user_patients.filter(
+                (up) => up.patient === idPatient && up.user === u.id
+              ).length > 0
+          )}
+          selected_doctor={users.find(
+            (u) => u.uid === currentOrder.attendingDoctor
+          )}
           onEditOrder={onEditOrder}
         />
       )}

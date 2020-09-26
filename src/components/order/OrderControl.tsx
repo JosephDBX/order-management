@@ -2,9 +2,10 @@ import React from "react";
 import { ERol } from "../../models/ERol";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { IPatient } from "../../models/IPatient";
 
 interface IOrderControlProps {
-  idPatient: string;
+  patient: IPatient;
   rol: ERol;
   onFilterText(filterText: string, state: string): void;
 }
@@ -15,7 +16,7 @@ type Inputs = {
 };
 
 const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
-  idPatient,
+  patient,
   rol,
   onFilterText,
 }) => {
@@ -23,7 +24,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
 
   const history = useHistory();
   const navigateToCreate = () => {
-    history.push(`/user-panel/patients/${idPatient}/orders/create`);
+    history.push(`/user-panel/patients/${patient.id}/orders/create`);
   };
 
   const onSubmit = () => {
@@ -46,7 +47,8 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
               ref={register}
             />
             <span className="input-hint">
-              Código de la orden o fecha y hora
+              Código de la orden, nombre del paciente, fecha y hora o médico
+              ordenando
             </span>
           </div>
           <div className="p-2 mx-auto">
@@ -78,11 +80,13 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
             </div>
           </div>
         </form>
-        <div className="flex flex-col justify-end p-2">
-          <button className="btn btn-primary" onClick={navigateToCreate}>
-            <span className="material-icons">add_circle</span>Crear Órden
-          </button>
-        </div>
+        {rol !== ERol.Laboratorist ? (
+          <div className="flex flex-col justify-end p-2">
+            <button className="btn btn-primary" onClick={navigateToCreate}>
+              <span className="material-icons">add_circle</span>Crear Órden
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

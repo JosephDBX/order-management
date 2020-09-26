@@ -13,10 +13,10 @@ const SignUpPage: React.FunctionComponent = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const onCreateUser = (email: string, password: string) => {
+  const onCreateUser = (userName: string, email: string, password: string) => {
     setIsLoading(true);
     toast.info("Procesando... por favor espere...");
-    const user: IUser = { email: email };
+    const user: IUser = { userName: userName, email: email };
 
     firebase
       .auth()

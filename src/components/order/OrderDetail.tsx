@@ -10,6 +10,8 @@ import moment from "moment";
 import "moment/locale/es";
 import { ITest } from "../../models/ITest";
 import { IProfile } from "../../models/IProfile";
+import { IUser } from "../../models/IUser";
+import { IPatient } from "../../models/IPatient";
 
 interface IOrderDetailProps {
   order: IOrder;
@@ -18,8 +20,9 @@ interface IOrderDetailProps {
   tests: ITest[];
   profiles: IProfile[];
   rol: ERol;
-  idPatient: string;
+  patient: IPatient;
   isMain?: boolean;
+  doctor?: IUser;
   onOrderStateChange?(id: string, state: string): void;
 }
 
@@ -30,8 +33,9 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
   tests,
   profiles,
   rol,
-  idPatient,
+  patient,
   isMain,
+  doctor,
   onOrderStateChange,
 }) => {
   const history = useHistory();
@@ -39,19 +43,19 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
     switch (rol) {
       case ERol.Laboratorist: {
         history.push(
-          `/laboratorist-panel/patients/${idPatient}/orders/${order.id}/edit`
+          `/laboratorist-panel/patients/${patient.id}/orders/${order.id}/edit`
         );
         break;
       }
       case ERol.Receptionist: {
         history.push(
-          `/receptionist-panel/patients/${idPatient}/orders/${order.id}/edit`
+          `/receptionist-panel/patients/${patient.id}/orders/${order.id}/edit`
         );
         break;
       }
       default: {
         history.push(
-          `/user-panel/patients/${idPatient}/orders/${order.id}/edit`
+          `/user-panel/patients/${patient.id}/orders/${order.id}/edit`
         );
         break;
       }
@@ -60,15 +64,15 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
   const navigateToOrderManagement = () => {
     switch (rol) {
       case ERol.Laboratorist: {
-        history.push(`/laboratorist-panel/patients/${idPatient}`);
+        history.push(`/laboratorist-panel/patients/${patient.id}`);
         break;
       }
       case ERol.Receptionist: {
-        history.push(`/receptionist-panel/patients/${idPatient}`);
+        history.push(`/receptionist-panel/patients/${patient.id}`);
         break;
       }
       default: {
-        history.push(`/user-panel/patients/${idPatient}`);
+        history.push(`/user-panel/patients/${patient.id}`);
         break;
       }
     }
@@ -112,6 +116,23 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
         }
         component={
           <>
+            {rol === ERol.Laboratorist ? (
+              <div
+                className={`rounded-full m-2 mt-0 ${
+                  order.state === "complete"
+                    ? "bg-blue-600"
+                    : order.state === "pending"
+                    ? "bg-teal-600"
+                    : order.state === "process"
+                    ? "bg-red-600"
+                    : ""
+                }`}
+              >
+                <p className="text-white text-center font-semibold p-2 text-lg">
+                  Paciente: {patient.name} {patient.surname}
+                </p>
+              </div>
+            ) : null}
             <div
               className={`rounded-full m-2 mt-0 ${
                 order.state === "complete"
@@ -217,6 +238,14 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 <span className="m-4 mb-1 font-semibold">Descuento: </span>$
                 {order.discount.toFixed(2)}
               </h4>
+            ) : null}
+            {doctor ? (
+              <>
+                <p className="m-4 mb-1 font-semibold text-center">
+                  Médico ordenando el examen:
+                </p>
+                <p className="text-center m-4 mt-1">{doctor.userName}</p>
+              </>
             ) : null}
             <p className="m-4 mb-1 font-semibold text-center">
               Método de pago y otros datos:

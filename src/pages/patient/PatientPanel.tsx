@@ -3,6 +3,7 @@ import {
   useFirestoreConnect,
   isLoaded,
   useFirebase,
+  useFirestore,
 } from "react-redux-firebase";
 import { IPatient } from "../../models/IPatient";
 import { useSelector } from "react-redux";
@@ -45,6 +46,20 @@ const PatientPanel: React.FunctionComponent = () => {
       });
   };
 
+  const firestore = useFirestore().collection("users");
+  const onUserNameChange = (id: string, userName: string) => {
+    toast.info("Procesando... por favor espere...");
+    firestore
+      .doc(id)
+      .set({ userName: userName }, { merge: true })
+      .then(() => {
+        toast.success(
+          `¡el nombre del usuario con email: ${currentUser.email}, ha cambiado!`
+        );
+      })
+      .catch((error) => toast.error(error.message));
+  };
+
   return (
     <>
       {!isLoaded(currentUser) ||
@@ -59,6 +74,7 @@ const PatientPanel: React.FunctionComponent = () => {
               user={currentUser}
               rol={currentUser.roles?.isDoctor ? ERol.Doctor : ERol.Public}
               isMain
+              onUserNameChange={onUserNameChange}
               onRestorePassword={onRestorePassword}
             />
           }

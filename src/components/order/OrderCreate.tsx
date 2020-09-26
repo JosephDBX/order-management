@@ -198,7 +198,7 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
   const onSubmit = (data: Inputs) => {
     const order: IOrder = {
       patient: patient.id as string,
-      attendingDoctor: selectedDoctor?.uid,
+      attendingDoctor: selectedDoctor ? selectedDoctor.uid : "",
       orderedTo: orderedTo.toISOString(),
       delivery: rol === ERol.Receptionist ? data.delivery : 5,
       subTotal: Number.parseFloat(getSubTotal()),
@@ -243,8 +243,8 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
                   selectedDoctor &&
                   [selectedDoctor].map((d) => (
                     <SelectItemLayout
-                      title={d?.email as string}
-                      subTitle={d?.uid as string}
+                      title={d?.userName as string}
+                      subTitle={d?.email as string}
                       onAdd={() => onAddDoctor(d as IUser)}
                       onRemove={() => onRemoveDoctor(d as IUser)}
                       removable
@@ -441,8 +441,8 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
             <div className="frame" style={{ maxHeight: "16rem" }}>
               {listDoctor.map((d) => (
                 <SelectItemLayout
-                  title={d?.email as string}
-                  subTitle={d?.uid as string}
+                  title={d?.userName as string}
+                  subTitle={d?.email as string}
                   onAdd={() => onAddDoctor(d as IUser)}
                   onRemove={() => onRemoveDoctor(d as IUser)}
                   key={d?.id}
