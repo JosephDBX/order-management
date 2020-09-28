@@ -60,7 +60,7 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
   });
 
   const onOpenModal = () => {
-    setModal({ isOpen: true, userName: "" });
+    setModal({ isOpen: true, userName: user.userName });
   };
 
   const onCloseModal = () => {

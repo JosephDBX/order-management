@@ -71,7 +71,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
             tests={tests}
             profiles={profiles}
             rol={rol}
-            doctor={doctors.find((d) => order.attendingDoctor === d.uid)}
+            doctor={doctors.find((d) => d.uid === order.attendingDoctor)}
             patient={patients?.find((p) => p.id === order.patient) as IPatient}
             onOrderStateChange={onOrderStateChange}
             key={order.id}
@@ -83,7 +83,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
 
   useEffect(() => {
     onFilterText(filterText.filter, filterText.state);
-  }, [orders, orderTests, orderProfiles]);
+  }, [orders, orderTests, orderProfiles, doctors]);
 
   return (
     <ManageLayout

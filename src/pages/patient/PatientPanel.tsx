@@ -46,18 +46,44 @@ const PatientPanel: React.FunctionComponent = () => {
       });
   };
 
-  const firestore = useFirestore().collection("users");
+  const firestore = useFirestore();
   const onUserNameChange = (id: string, userName: string) => {
     toast.info("Procesando... por favor espere...");
     firestore
+      .collection("users")
       .doc(id)
       .set({ userName: userName }, { merge: true })
       .then(() => {
         toast.success(
-          `¡el nombre del usuario con email: ${currentUser.email}, ha cambiado!`
+          `¡El nombre del usuario con email: ${currentUser.email}, ha cambiado!`
         );
       })
       .catch((error) => toast.error(error.message));
+  };
+
+  const onAddPatientByCode = (id: string) => {
+    toast.info("Procesando... por favor espere...");
+    const aux = patients.find((p) => p.id === id);
+    if (aux) {
+      const user_patient: IUserPatient = {
+        user: currentUser.uid as string,
+        patient: aux.id as string,
+      };
+      firestore
+        .collection("user_patients")
+        .doc(`${currentUser.uid}_${aux.id}`)
+        .set(user_patient)
+        .then(() => {
+          toast.success(
+            `¡Paciente: ${aux.name} ${aux.surname}, se ha agregado a la cuenta de: ${currentUser.userName}!`
+          );
+        })
+        .catch((error) => {
+          toast.error(error);
+        });
+    } else {
+      toast.error(`¡El paciente con id: ${id}, no existe!`);
+    }
   };
 
   return (
@@ -87,6 +113,7 @@ const PatientPanel: React.FunctionComponent = () => {
                     .filter((up) => up.user === currentUser.uid)
                     .filter((up) => up.patient === patient.id).length > 0
               )}
+              onAddPatientByCode={onAddPatientByCode}
             />
           }
         />

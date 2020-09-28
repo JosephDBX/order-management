@@ -55,6 +55,9 @@ const PatientDetail: React.FunctionComponent<IPatientDetailProps> = ({
           <p className="text-center m-4 mt-1">
             {moment(patient.birthDate).format("dddd D [de] MMMM [de] YYYY")}
           </p>
+          <p className="text-center m-4 mt-1">
+            {moment(patient.birthDate, "YYYYMMDDHH").fromNow()}
+          </p>
           {patient.ind && (
             <>
               <p className="m-4 mb-1 font-semibold">Número de cédula:</p>
