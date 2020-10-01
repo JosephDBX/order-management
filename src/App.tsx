@@ -44,6 +44,9 @@ import PatientEditPage from "./pages/patient/PatientEditPage";
 import PatientOrderCreatePage from "./pages/patient/PatientOrderCreatePage";
 import PatientOrderEditPage from "./pages/patient/PatientOrderEditPage";
 import SearchPage from "./pages/public/SearchPage";
+import ReceptionistPanel from "./pages/receptionist/ReceptionistPanel";
+import ReceptionistUserPage from "./pages/receptionist/ReceptionistUserPage";
+import ReceptionistPatientPage from "./pages/receptionist/ReceptionistPatientPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -196,7 +199,18 @@ function App() {
             {/** delivery worker routes */}
             <Route exact path="/delivery-panel" component={Error404Page} />
             {/** receptionist routes */}
-            <Route exact path="/receptionist-panel" component={Error404Page} />
+            <Route exact path="/receptionist-panel">
+              {RedirectAdmin(<ReceptionistPanel />, ERol.Receptionist)}
+            </Route>
+            <Route exact path="/receptionist-panel/users">
+              {RedirectAdmin(<ReceptionistUserPage />, ERol.Receptionist)}
+            </Route>
+            <Route exact path="/receptionist-panel/users/:id">
+              {RedirectAdmin(<ReceptionistPatientPage />, ERol.Receptionist)}
+            </Route>
+            <Route exact path="/receptionist-panel/patients">
+              {RedirectAdmin(<ReceptionistPatientPage />, ERol.Receptionist)}
+            </Route>
             {/** laboratorist routes */}
             <Route exact path="/laboratorist-panel" component={Error404Page} />
             {/** admin routes */}

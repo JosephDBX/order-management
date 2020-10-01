@@ -47,9 +47,9 @@ const UserControl: React.FunctionComponent<IUserControlProps> = ({
             onChange={onSubmit}
             ref={register}
           />
-          <span className="input-hint">Código o email</span>
+          <span className="input-hint">Código, nombre o email</span>
         </div>
-        {rol !== ERol.Public ? (
+        {rol !== ERol.Public && rol !== ERol.Receptionist ? (
           <div className="p-2">
             <h3 className="text-right">Filtrar por Acceso de Usuario</h3>
             <hr className="ml-2 my-2" />

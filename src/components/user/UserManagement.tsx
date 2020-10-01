@@ -9,6 +9,7 @@ import GridLayout from "../../layouts/GridLayout";
 interface IUserManagementProps {
   rol: ERol;
   users: IUser[];
+  isFull?: boolean;
   onUserNameChange(id: string, userName: string): void;
   onUserStateChange?(id: string, roles: IRole): void;
   onRestorePassword(email: string): void;
@@ -17,6 +18,7 @@ interface IUserManagementProps {
 const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
   rol,
   users,
+  isFull,
   onUserNameChange,
   onUserStateChange,
   onRestorePassword,
@@ -65,7 +67,8 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
         .filter(
           (user) =>
             user.id?.includes(ft) ||
-            user.email.toLowerCase().includes(ft.toLowerCase())
+            user.email.toLowerCase().includes(ft.toLowerCase()) ||
+            user.userName?.toLowerCase().includes(ft.toLowerCase())
         )
         .map((user) => (
           <UserDetail
@@ -88,11 +91,17 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
 
   return (
     <ManageLayout
-      title={`${rol === ERol.Admin ? "Gestionar u" : "U"}suarios`}
+      title={`${
+        rol === ERol.Admin || rol === ERol.Receptionist ? "Gestionar u" : "U"
+      }suarios`}
       subTitle="¡Todos nuestros usuarios!"
       controls={<UserControl rol={rol} onFilter={onFilter} />}
       list={
-        <GridLayout list={list} type={1} defaultText="No hay usuarios!!!" />
+        <GridLayout
+          list={list}
+          type={isFull ? 0 : 1}
+          defaultText="No hay usuarios!!!"
+        />
       }
     />
   );

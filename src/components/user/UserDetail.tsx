@@ -48,6 +48,10 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
     history.push("/admin-panel");
   };
 
+  const navigateToDetail = () => {
+    history.push(`/receptionist-panel/users/${user.uid}`);
+  };
+
   const { register, watch } = useForm<Inputs>();
 
   const onSubmit = (event: ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +83,7 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
   return (
     <>
       <SummaryLayout
-        title={isMain ? "Tu usuario" : "Usuario"}
+        title={isMain && rol !== ERol.Receptionist ? "Tu usuario" : "Usuario"}
         styleTitle={
           rol === ERol.Admin && isMain
             ? "bg-blue-600 text-white"
@@ -98,10 +102,14 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
               <h4 className="text-center p-2 text-white frame">{user.email}</h4>
             </div>
             <div className="mt-4">
-              <h4 className="text-center">
-                {isMain ? "Tus accesos" : "Accesos de usuario"}
-              </h4>
-              <hr />
+              {rol !== ERol.Receptionist ? (
+                <>
+                  <h4 className="text-center">
+                    {isMain ? "Tus accesos" : "Accesos de usuario"}
+                  </h4>
+                  <hr />
+                </>
+              ) : null}
               <div className="flex flex-col">
                 {rol === ERol.Admin ? (
                   <form>
@@ -207,7 +215,7 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
                       </div>
                     )}
                   </form>
-                ) : (
+                ) : rol === ERol.Receptionist ? null : (
                   <>
                     <button
                       className="btn w-full p-2 my-2"
@@ -262,6 +270,14 @@ const UserDetail: React.FunctionComponent<IUserDetailProps> = ({
             <button className="btn btn-warning m-2" onClick={onRestore}>
               Restablecer contraseña
             </button>
+            {rol === ERol.Receptionist && !isMain ? (
+              <button
+                className="btn btn-secondary m-2"
+                onClick={navigateToDetail}
+              >
+                Detalles
+              </button>
+            ) : null}
           </>
         }
       />

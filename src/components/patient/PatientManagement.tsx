@@ -9,12 +9,16 @@ import GridLayout from "../../layouts/GridLayout";
 interface IPatientManagementProps {
   rol: ERol;
   patients: IPatient[];
+  isFull?: boolean;
+  idUser?: string;
   onAddPatientByCode?(id: string): void;
 }
 
 const PatientManagement: React.FunctionComponent<IPatientManagementProps> = ({
   rol,
   patients,
+  isFull,
+  idUser,
   onAddPatientByCode,
 }) => {
   const [list, setList] = useState<any[]>(
@@ -55,22 +59,27 @@ const PatientManagement: React.FunctionComponent<IPatientManagementProps> = ({
     <ManageLayout
       title="Gestionar pacientes"
       subTitle={
-        rol === ERol.Receptionist
-          ? "¡Todos nuestros pacientes!"
-          : rol === ERol.Doctor
-          ? "¡Todos los pacientes asociados a su cuenta!"
-          : "Aquí puede gestionar los pacientes asociados a su cuenta, ¡hasta un máximo de 10 pacientes!"
+        rol === ERol.Doctor || rol === ERol.Receptionist
+          ? isFull
+            ? "¡Todos nuestros pacientes!"
+            : "¡Todos los pacientes asociados a la cuenta!"
+          : "Aquí puede gestionar los pacientes asociados a la cuenta, ¡hasta un máximo de 10 pacientes!"
       }
       controls={
         <PatientControl
           rol={rol}
           disableCreate={rol === ERol.Public && list.length > 9}
+          idUser={idUser}
           onFilterText={onFilter}
           onAddPatientByCode={onAddPatientByCode}
         />
       }
       list={
-        <GridLayout list={list} type={1} defaultText="No hay pacientes!!!" />
+        <GridLayout
+          list={list}
+          type={isFull ? 0 : 1}
+          defaultText="No hay pacientes!!!"
+        />
       }
     />
   );

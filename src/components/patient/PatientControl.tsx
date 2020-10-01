@@ -6,6 +6,8 @@ import ModalLayout from "../../layouts/ModalLayout";
 interface IPatientControlProps {
   rol: ERol;
   disableCreate?: boolean;
+  noCreate?: boolean;
+  idUser?: string;
   onFilterText(filterText: string): void;
   onAddPatientByCode?(id: string): void;
 }
@@ -13,6 +15,8 @@ interface IPatientControlProps {
 const PatientControl: React.FunctionComponent<IPatientControlProps> = ({
   rol,
   disableCreate,
+  noCreate,
+  idUser,
   onFilterText,
   onAddPatientByCode,
 }) => {
@@ -24,7 +28,21 @@ const PatientControl: React.FunctionComponent<IPatientControlProps> = ({
 
   const history = useHistory();
   const navigateToCreate = () => {
-    history.push("/user-panel/patients/create");
+    switch (rol) {
+      case ERol.Doctor:
+      case ERol.Public: {
+        history.push("/user-panel/patients/create");
+        break;
+      }
+      case ERol.Receptionist: {
+        if (idUser) {
+          history.push(`/receptionist-panel/users/${idUser}/patients/create`);
+        } else {
+          history.push("/receptionist-panel/patients/create");
+        }
+        break;
+      }
+    }
   };
 
   const [modal, setModal] = useState({ isOpen: false, id: "" });
@@ -60,7 +78,9 @@ const PatientControl: React.FunctionComponent<IPatientControlProps> = ({
           <div className="flex-grow p-4"></div>
           <div className="flex flex-row md:flex-col justify-center">
             {disableCreate ? (
-              <p>Máximo de pacientes alcanzado</p>
+              noCreate ? null : (
+                <p>Máximo de pacientes alcanzado</p>
+              )
             ) : (
               <button
                 className="btn btn-primary m-2"
@@ -70,7 +90,7 @@ const PatientControl: React.FunctionComponent<IPatientControlProps> = ({
                 <span className="material-icons">add_circle</span>Crear Paciente
               </button>
             )}
-            {rol !== ERol.Public && (
+            {rol !== ERol.Public && onAddPatientByCode && (
               <button className="btn btn-secondary m-2" onClick={onOpenModal}>
                 <span className="material-icons">add</span>Agregar por código
               </button>
