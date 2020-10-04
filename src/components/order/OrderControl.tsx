@@ -24,7 +24,18 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
 
   const history = useHistory();
   const navigateToCreate = () => {
-    history.push(`/user-panel/patients/${patient.id}/orders/create`);
+    switch (rol) {
+      case ERol.Public: {
+        history.push(`/user-panel/patients/${patient.id}/orders/create`);
+        break;
+      }
+      case ERol.Receptionist: {
+        history.push(
+          `/receptionist-panel/patients/${patient.id}/orders/create`
+        );
+        break;
+      }
+    }
   };
 
   const onSubmit = () => {

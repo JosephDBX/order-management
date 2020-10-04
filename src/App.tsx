@@ -47,6 +47,9 @@ import SearchPage from "./pages/public/SearchPage";
 import ReceptionistPanel from "./pages/receptionist/ReceptionistPanel";
 import ReceptionistUserPage from "./pages/receptionist/ReceptionistUserPage";
 import ReceptionistPatientPage from "./pages/receptionist/ReceptionistPatientPage";
+import ReceptionistPatientCreatePage from "./pages/receptionist/ReceptionistPatientCreatePage";
+import ReceptionistPatientDetailPage from "./pages/receptionist/ReceptionistPatientDetailPage";
+import ReceptionistPatientEditPage from "./pages/receptionist/ReceptionistPatientEditPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -208,8 +211,32 @@ function App() {
             <Route exact path="/receptionist-panel/users/:id">
               {RedirectAdmin(<ReceptionistPatientPage />, ERol.Receptionist)}
             </Route>
+            <Route exact path="/receptionist-panel/users/:id/patients/create">
+              {RedirectAdmin(
+                <ReceptionistPatientCreatePage />,
+                ERol.Receptionist
+              )}
+            </Route>
             <Route exact path="/receptionist-panel/patients">
               {RedirectAdmin(<ReceptionistPatientPage />, ERol.Receptionist)}
+            </Route>
+            <Route exact path="/receptionist-panel/patients/create">
+              {RedirectAdmin(
+                <ReceptionistPatientCreatePage />,
+                ERol.Receptionist
+              )}
+            </Route>
+            <Route exact path="/receptionist-panel/patients/:id">
+              {RedirectAdmin(
+                <ReceptionistPatientDetailPage />,
+                ERol.Receptionist
+              )}
+            </Route>
+            <Route exact path="/receptionist-panel/patients/:id/edit">
+              {RedirectAdmin(
+                <ReceptionistPatientEditPage />,
+                ERol.Receptionist
+              )}
             </Route>
             {/** laboratorist routes */}
             <Route exact path="/laboratorist-panel" component={Error404Page} />
