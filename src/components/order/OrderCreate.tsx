@@ -97,8 +97,8 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
     let sum: number = 0.0;
     sum += Number.parseFloat(getSubTotal());
     if (rol === ERol.Receptionist) {
-      sum += Number.parseFloat(watch().delivery?.toString() as string);
-      sum -= Number.parseFloat(watch().discount?.toString() as string);
+      sum += Number.parseFloat(watch("delivery")?.toString() as string);
+      sum -= Number.parseFloat(watch("discount")?.toString() as string);
     } else {
       sum += 5;
     }
@@ -200,9 +200,15 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
       patient: patient.id as string,
       attendingDoctor: selectedDoctor ? selectedDoctor.uid : "",
       orderedTo: orderedTo.toISOString(),
-      delivery: rol === ERol.Receptionist ? data.delivery : 5,
+      delivery:
+        rol === ERol.Receptionist
+          ? Number.parseFloat(data.delivery?.toString() as string)
+          : 5,
       subTotal: Number.parseFloat(getSubTotal()),
-      discount: rol === ERol.Receptionist ? data.discount : 0,
+      discount:
+        rol === ERol.Receptionist
+          ? Number.parseFloat(data.discount?.toString() as string)
+          : 0,
       description: data.description,
       state: "pending",
     };
@@ -384,6 +390,7 @@ const OrderCreate: React.FunctionComponent<IOrderCreateProps> = ({
                     defaultValue={0}
                     min={0}
                     step={0.01}
+                    ref={register}
                   />
                   <span className="input-hint">Hacer un descuento</span>
                 </div>

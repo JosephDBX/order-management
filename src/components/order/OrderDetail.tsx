@@ -108,11 +108,11 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
       <SummaryLayout
         title="Orden de examen"
         styleTitle={
-          order.state === "pending"
+          order.state === "complete"
             ? "bg-blue-600 text-white"
             : order.state === "process"
-            ? "bg-teal-600 text-white"
-            : "bg-red-600 text-white"
+            ? "bg-red-600 text-white"
+            : "bg-teal-600 text-white"
         }
         component={
           <>
@@ -257,7 +257,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
         controls={
           <>
             {((order.state === "pending" && rol === ERol.Public) ||
-              rol === ERol.Receptionist) && (
+              (rol === ERol.Receptionist && order.state !== "complete")) && (
               <button className="btn btn-warning m-2" onClick={navigateToEdit}>
                 {isMain ? "Editar Orden" : "Editar"}
               </button>

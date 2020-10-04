@@ -217,11 +217,17 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
       patient: patient.id as string,
       attendingDoctor: selectedDoctor ? selectedDoctor.uid : "",
       orderedTo: orderedTo.toISOString(),
-      delivery: rol === ERol.Receptionist ? data.delivery : order.delivery,
+      delivery:
+        rol === ERol.Receptionist
+          ? Number.parseFloat(data.delivery?.toString() as string)
+          : order.delivery,
       subTotal: Number.parseFloat(getSubTotal()),
-      discount: rol === ERol.Receptionist ? data.discount : order.discount,
+      discount:
+        rol === ERol.Receptionist
+          ? Number.parseFloat(data.discount?.toString() as string)
+          : order.discount,
       description: data.description,
-      state: rol === ERol.Receptionist ? order.state : "pending",
+      state: "pending",
     };
     onEditOrder(editedOrder, selectedTests, selectedProfiles);
   };
@@ -422,6 +428,7 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
                     defaultValue={order.discount}
                     min={0}
                     step={0.01}
+                    ref={register}
                   />
                   <span className="input-hint">Hacer un descuento</span>
                 </div>

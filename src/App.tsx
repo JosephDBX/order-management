@@ -50,6 +50,8 @@ import ReceptionistPatientPage from "./pages/receptionist/ReceptionistPatientPag
 import ReceptionistPatientCreatePage from "./pages/receptionist/ReceptionistPatientCreatePage";
 import ReceptionistPatientDetailPage from "./pages/receptionist/ReceptionistPatientDetailPage";
 import ReceptionistPatientEditPage from "./pages/receptionist/ReceptionistPatientEditPage";
+import ReceptionistOrderCreatePage from "./pages/receptionist/ReceptionistOrderCreatePage";
+import ReceptionistOrderEditPage from "./pages/receptionist/ReceptionistOrderEditPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -237,6 +239,18 @@ function App() {
                 <ReceptionistPatientEditPage />,
                 ERol.Receptionist
               )}
+            </Route>
+            <Route exact path="/receptionist-panel/patients/:id/orders/create">
+              {RedirectAdmin(
+                <ReceptionistOrderCreatePage />,
+                ERol.Receptionist
+              )}
+            </Route>
+            <Route
+              exact
+              path="/receptionist-panel/patients/:idPatient/orders/:idOrder/edit"
+            >
+              {RedirectAdmin(<ReceptionistOrderEditPage />, ERol.Receptionist)}
             </Route>
             {/** laboratorist routes */}
             <Route exact path="/laboratorist-panel" component={Error404Page} />
