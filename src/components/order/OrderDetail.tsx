@@ -41,12 +41,6 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
   const history = useHistory();
   const navigateToEdit = () => {
     switch (rol) {
-      case ERol.Laboratorist: {
-        history.push(
-          `/laboratorist-panel/patients/${patient.id}/orders/${order.id}/edit`
-        );
-        break;
-      }
       case ERol.Receptionist: {
         history.push(
           `/receptionist-panel/patients/${patient.id}/orders/${order.id}/edit`
@@ -63,10 +57,6 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
   };
   const navigateToOrderManagement = () => {
     switch (rol) {
-      case ERol.Laboratorist: {
-        history.push(`/laboratorist-panel/patients/${patient.id}`);
-        break;
-      }
       case ERol.Receptionist: {
         history.push(`/receptionist-panel/patients/${patient.id}`);
         break;
@@ -116,7 +106,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
         }
         component={
           <>
-            {rol === ERol.Laboratorist ? (
+            {rol === ERol.Laboratorist || rol === ERol.DeliveryWorker ? (
               <div
                 className={`rounded-full m-2 mt-0 ${
                   order.state === "complete"

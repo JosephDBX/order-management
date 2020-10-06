@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 const Copyright: React.FunctionComponent = () => {
   return (
@@ -20,23 +19,20 @@ const Copyright: React.FunctionComponent = () => {
 };
 
 const Footer: React.FunctionComponent = () => {
-  const history = useHistory();
-  const navigateToAboutUs = () => {
-    history.push("/about-us");
-  };
-
   return (
     <footer className="footer rounded-t shadow-md mt-2">
       <div className="footer-about-us">
         <h3 className="text-white">
           ¿Quieres saber más sobre nuestra familia?
         </h3>
-        <button
+        <a
           className="btn btn-secondary mx-auto my-2"
-          onClick={navigateToAboutUs}
+          href="https://www.laboratoriomoncada.com/quienes-somos/"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           Acerca de nosotros
-        </button>
+        </a>
       </div>
       <div className="footer-contacts">
         <div className="footer-contacts__text">

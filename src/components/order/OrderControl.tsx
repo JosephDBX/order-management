@@ -62,34 +62,42 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
               ordenando
             </span>
           </div>
-          <div className="p-2 mx-auto">
-            <h3 className="text-right">Estado de la orden</h3>
-            <hr className="ml-2 my-2" />
-            <div className="input-group flex-row items-center justify-center">
-              <select
-                className="input input-secondary"
-                name="state"
-                ref={register}
-                onChange={onSubmit}
-              >
-                <option className="text-gray-700 font-semibold" value="">
-                  Seleccionar...
-                </option>
-                <option className="text-gray-700 font-semibold" value="pending">
-                  Pendiente
-                </option>
-                <option className="text-gray-700 font-semibold" value="process">
-                  En Proceso
-                </option>
-                <option
-                  className="text-gray-700 font-semibold"
-                  value="complete"
+          {rol !== ERol.Laboratorist && rol !== ERol.DeliveryWorker ? (
+            <div className="p-2 mx-auto">
+              <h3 className="text-right">Estado de la orden</h3>
+              <hr className="ml-2 my-2" />
+              <div className="input-group flex-row items-center justify-center">
+                <select
+                  className="input input-secondary"
+                  name="state"
+                  ref={register}
+                  onChange={onSubmit}
                 >
-                  Completa
-                </option>
-              </select>
+                  <option className="text-gray-700 font-semibold" value="">
+                    Seleccionar...
+                  </option>
+                  <option
+                    className="text-gray-700 font-semibold"
+                    value="pending"
+                  >
+                    Pendiente
+                  </option>
+                  <option
+                    className="text-gray-700 font-semibold"
+                    value="process"
+                  >
+                    En Proceso
+                  </option>
+                  <option
+                    className="text-gray-700 font-semibold"
+                    value="complete"
+                  >
+                    Completa
+                  </option>
+                </select>
+              </div>
             </div>
-          </div>
+          ) : null}
         </form>
         {rol !== ERol.Laboratorist ? (
           <div className="flex flex-col justify-end p-2">

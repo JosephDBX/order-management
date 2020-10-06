@@ -88,7 +88,13 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   return (
     <ManageLayout
       title="Gestionar órdenes de examen"
-      subTitle="¡Todas las órdenes de examen del paciente!"
+      subTitle={`¡Todas las órdenes de examen${
+        rol !== ERol.Laboratorist
+          ? rol === ERol.DeliveryWorker
+            ? " pendientes"
+            : " del paciente"
+          : " en proceso"
+      }!`}
       controls={
         <OrderControl
           rol={rol}
