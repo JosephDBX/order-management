@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { isLoaded, useFirestoreConnect } from "react-redux-firebase";
 import { useLocation } from "react-router-dom";
 import AreaDetail from "../../components/area/AreaDetail";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import ProfileDetail from "../../components/profile/ProfileDetail";
 import TestDetail from "../../components/test/TestDetail";
 import GridLayout from "../../layouts/GridLayout";
@@ -176,6 +177,10 @@ const SearchPage: React.FunctionComponent = () => {
         <p className="m-2 text-center">Cargando exámenes...</p>
       ) : (
         <>
+          <Breadcrumbs
+            navigations={[{ uri: "/home", text: "Home" }]}
+            last="Buscar"
+          />
           <ManageLayout
             title="Buscar examen, area de examen o perfil"
             controls={

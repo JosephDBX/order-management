@@ -131,7 +131,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
             </div>
             {rol === ERol.Laboratorist || rol === ERol.DeliveryWorker ? (
               <div
-                className={`rounded-full m-2 mt-0 ${
+                className={`rounded m-2 mt-0 ${
                   order.state === "complete"
                     ? "bg-blue-600"
                     : order.state === "pending"
@@ -238,14 +238,14 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 </div>
               </>
             )}
-            {order.delivery && order.delivery > 0 && (
+            {order.delivery && order.delivery > 0 ? (
               <h4 className="text-center m-2">
                 <span className="m-4 mb-1 font-semibold">
                   Costo del servicio a domicilio:{" "}
                 </span>
                 ${order.delivery.toFixed(2)}
               </h4>
-            )}
+            ) : null}
             {order.discount && order.discount > 0 ? (
               <h4 className="text-center m-2">
                 <span className="m-4 mb-1 font-semibold">Descuento: </span>$

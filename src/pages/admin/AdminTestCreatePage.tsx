@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { ITest } from "../../models/ITest";
 import { toast } from "react-toastify";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminTestCreatePage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +39,7 @@ const AdminTestCreatePage: React.FunctionComponent = () => {
       .add(test)
       .then((result) => {
         toast.success(`Nuevo examen creada con id:${result.id}`);
-        history.push(`/admin-panel/areas/${id}`);
+        history.push(`/admin-panel/areas/${id}?test=${result.id}`);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -64,7 +65,21 @@ const AdminTestCreatePage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <TestCreate onCreateTest={onCreateTest} area={{ id, ...currentArea }} />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/admin-panel", text: "Panel de administrador" },
+              { uri: "/admin-panel/areas", text: "Áreas" },
+              { uri: `/admin-panel/areas/${id}`, text: `${currentArea.name}` },
+            ]}
+            last="Crear examen"
+          />
+          <TestCreate
+            onCreateTest={onCreateTest}
+            area={{ id, ...currentArea }}
+          />
+        </>
       )}
       <Loading isLoading={isLoading} />
     </>

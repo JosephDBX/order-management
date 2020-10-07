@@ -14,6 +14,7 @@ import { ERol } from "../../models/ERol";
 import { toast } from "react-toastify";
 import PatientManagement from "../../components/patient/PatientManagement";
 import { IUserPatient } from "../../models/IUserPatient";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const PatientPanel: React.FunctionComponent = () => {
   useFirestoreConnect([
@@ -88,6 +89,13 @@ const PatientPanel: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/user-panel", text: "Panel de usuario" },
+        ]}
+        last="Pacientes"
+      />
       {!isLoaded(currentUser) ||
       !isLoaded(patients) ||
       !isLoaded(user_patients) ? (

@@ -7,6 +7,7 @@ import { IPatient } from "../../models/IPatient";
 interface IOrderControlProps {
   patient: IPatient;
   rol: ERol;
+  defaultText?: string;
   onFilterText(filterText: string, state: string): void;
 }
 
@@ -18,6 +19,7 @@ type Inputs = {
 const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
   patient,
   rol,
+  defaultText,
   onFilterText,
 }) => {
   const { register, watch } = useForm<Inputs>();
@@ -54,6 +56,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
               type="text"
               name="filterText"
               placeholder="Código"
+              defaultValue={defaultText}
               onChange={onSubmit}
               ref={register}
             />

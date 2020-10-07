@@ -8,6 +8,7 @@ import {
 } from "react-redux-firebase";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import Loading from "../../components/custom/Loading";
 import OrderEdit from "../../components/order/OrderEdit";
 import { ERol } from "../../models/ERol";
@@ -153,7 +154,7 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
                 )
               );
           }
-          history.push(`/user-panel/patients/${idPatient}`);
+          history.push(`/user-panel/patients/${idPatient}?order=${idOrder}`);
         })
         .catch((error) => {
           setIsLoading(false);
@@ -201,29 +202,44 @@ const PatientOrderEditPage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <OrderEdit
-          patient={{ id: idPatient, ...currentPatient }}
-          order={{ id: idOrder, ...currentOrder }}
-          tests={tests}
-          selected_tests={order_tests}
-          profiles={profiles.filter(
-            (profile) =>
-              profile_tests.filter((pt) => pt.profile === profile.id).length > 0
-          )}
-          selected_profiles={order_profiles}
-          profile_tests={profile_tests}
-          rol={ERol.Public}
-          doctors={users.filter(
-            (u) =>
-              user_patients.filter(
-                (up) => up.patient === idPatient && up.user === u.id
-              ).length > 0
-          )}
-          selected_doctor={users.find(
-            (u) => u.uid === currentOrder.attendingDoctor
-          )}
-          onEditOrder={onEditOrder}
-        />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/user-panel", text: "Panel de usuario" },
+              { uri: "/user-panel", text: "Pacientes" },
+              {
+                uri: `/user-panel/patients/${idPatient}`,
+                text: `${currentPatient.name} ${currentPatient.surname}`,
+              },
+            ]}
+            last="Editar orden"
+          />
+          <OrderEdit
+            patient={{ id: idPatient, ...currentPatient }}
+            order={{ id: idOrder, ...currentOrder }}
+            tests={tests}
+            selected_tests={order_tests}
+            profiles={profiles.filter(
+              (profile) =>
+                profile_tests.filter((pt) => pt.profile === profile.id).length >
+                0
+            )}
+            selected_profiles={order_profiles}
+            profile_tests={profile_tests}
+            rol={ERol.Public}
+            doctors={users.filter(
+              (u) =>
+                user_patients.filter(
+                  (up) => up.patient === idPatient && up.user === u.id
+                ).length > 0
+            )}
+            selected_doctor={users.find(
+              (u) => u.uid === currentOrder.attendingDoctor
+            )}
+            onEditOrder={onEditOrder}
+          />
+        </>
       )}
       <Loading isLoading={isLoading} />
     </>

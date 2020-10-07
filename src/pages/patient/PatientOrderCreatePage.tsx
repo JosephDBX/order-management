@@ -20,6 +20,7 @@ import OrderCreate from "../../components/order/OrderCreate";
 import { ERol } from "../../models/ERol";
 import Loading from "../../components/custom/Loading";
 import { IUserPatient } from "../../models/IUserPatient";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const PatientOrderCreatePage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -126,7 +127,7 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
                 )
               );
           }
-          history.push(`/user-panel/patients/${id}`);
+          history.push(`/user-panel/patients/${id}?order=${result.id}`);
         })
         .catch((error) => {
           setIsLoading(false);
@@ -168,23 +169,38 @@ const PatientOrderCreatePage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <OrderCreate
-          patient={{ id, ...currentPatient }}
-          tests={tests}
-          profiles={profiles.filter(
-            (profile) =>
-              profile_tests.filter((pt) => pt.profile === profile.id).length > 0
-          )}
-          profile_tests={profile_tests}
-          rol={ERol.Public}
-          doctors={users.filter(
-            (u) =>
-              user_patients.filter(
-                (up) => up.patient === id && up.user === u.id
-              ).length > 0
-          )}
-          onCreateOrder={onCreateOrder}
-        />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/user-panel", text: "Panel de usuario" },
+              { uri: "/user-panel", text: "Pacientes" },
+              {
+                uri: `/user-panel/patients/${id}`,
+                text: `${currentPatient.name} ${currentPatient.surname}`,
+              },
+            ]}
+            last="Crear orden"
+          />
+          <OrderCreate
+            patient={{ id, ...currentPatient }}
+            tests={tests}
+            profiles={profiles.filter(
+              (profile) =>
+                profile_tests.filter((pt) => pt.profile === profile.id).length >
+                0
+            )}
+            profile_tests={profile_tests}
+            rol={ERol.Public}
+            doctors={users.filter(
+              (u) =>
+                user_patients.filter(
+                  (up) => up.patient === id && up.user === u.id
+                ).length > 0
+            )}
+            onCreateOrder={onCreateOrder}
+          />
+        </>
       )}
       <Loading isLoading={isLoading} />
     </>

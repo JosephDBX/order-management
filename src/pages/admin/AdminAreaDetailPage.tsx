@@ -14,9 +14,10 @@ import { ERol } from "../../models/ERol";
 import TestManagement from "../../components/test/TestManagement";
 import { ITest } from "../../models/ITest";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminAreaDetailPage: React.FunctionComponent = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const firestore = useFirestore();
   useFirestoreConnect(() => [
@@ -74,12 +75,14 @@ const AdminAreaDetailPage: React.FunctionComponent = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-start">
-            <button className="btn m-2" onClick={navigateToAreaManagement}>
-              <span className="material-icons">arrow_back</span>Regresar a la
-              gestión de áreas
-            </button>
-          </div>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/admin-panel", text: "Panel de administrador" },
+              { uri: "/admin-panel/areas", text: "Áreas" },
+            ]}
+            last={currentArea.name}
+          />
           <MainDetailLayout
             title={`Gestionar exámenes del área: ${currentArea.name}`}
             main={

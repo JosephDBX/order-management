@@ -13,6 +13,7 @@ import { ITest } from "../../models/ITest";
 import { useSelector } from "react-redux";
 import { IProfileTest } from "../../models/IProfileTest";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminProfileCreatePage: React.FunctionComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,6 +66,14 @@ const AdminProfileCreatePage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+          { uri: "/admin-panel/profiles", text: "Perfiles" },
+        ]}
+        last="Crear perfil"
+      />
       {!isLoaded(tests) ? (
         <p className="m-2 text-center">Cargando exámenes...</p>
       ) : isEmpty(tests) ? (

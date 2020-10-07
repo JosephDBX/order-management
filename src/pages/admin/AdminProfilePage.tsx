@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import ProfileManagement from "../../components/profile/ProfileManagement";
 import { ERol } from "../../models/ERol";
 import { IProfileTest } from "../../models/IProfileTest";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminProfilePage: React.FunctionComponent = () => {
   useFirestoreConnect([
@@ -41,6 +42,13 @@ const AdminProfilePage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+        ]}
+        last="Perfiles"
+      />
       {!isLoaded(profiles) || !isLoaded(profile_tests) ? (
         <p className="m-2 text-center">Cargando perfiles...</p>
       ) : (

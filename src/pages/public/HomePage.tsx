@@ -8,6 +8,7 @@ import { ERol } from "../../models/ERol";
 import { IProfile } from "../../models/IProfile";
 import ProfileManagement from "../../components/profile/ProfileManagement";
 import { IProfileTest } from "../../models/IProfileTest";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const HomePage: React.FunctionComponent = () => {
   useFirestoreConnect([
@@ -43,6 +44,7 @@ const HomePage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs last="Home" />
       <div
         className="h-48 shadow-md rounded-sm bg-auto flex flex-col justify-center md:justify-end p-2 md:p-4"
         style={{

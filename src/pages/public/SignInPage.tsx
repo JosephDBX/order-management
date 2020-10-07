@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useFirebase } from "react-redux-firebase";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 type Inputs = {
   email: string;
@@ -88,100 +89,109 @@ const SignInPage: React.FunctionComponent = () => {
   };
 
   return (
-    <CenterLayout
-      title="Iniciar sesión"
-      subTitle="¿Ya tienes una cuenta? Inicia sesión a continuación."
-      component={
-        <>
-          <p className="mb-4">
-            O{" "}
-            <Link
-              to="/sign-up"
-              className="text-teal-500 underline hover:text-teal-300"
-            >
-              crea una nueva cuenta.
-            </Link>
-          </p>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div
-              className={`input-group my-2 ${
-                !!errors.email && "input-group-danger"
-              }`}
-            >
-              <label htmlFor="email" className="input-label">
-                Correo electrónico
-              </label>
-              <input
-                className="input input-secondary"
-                type="email"
-                name="email"
-                placeholder="Correo electrónico"
-                ref={register({
-                  required: {
-                    value: true,
-                    message: "La dirección de correo electrónico es requerida",
-                  },
-                  pattern: {
-                    value: /\S+@\S+\.\S+/i,
-                    message:
-                      "Por favor ingrese un formato de correo electrónico válido",
-                  },
-                })}
-              />
-              <span className="input-hint">
-                {!!errors.email
-                  ? errors.email.message
-                  : "Por favor ingrese su correo electrónico"}
-              </span>
-            </div>
-            <div
-              className={`input-group my-2 ${
-                !!errors.password && "input-group-danger"
-              }`}
-            >
-              <label htmlFor="password" className="input-label">
-                Contraseña
-              </label>
-              <input
-                className="input input-secondary"
-                type="password"
-                name="password"
-                placeholder="Contraseña"
-                ref={register({
-                  required: {
-                    value: true,
-                    message: "La contraseña es requerida",
-                  },
-                  minLength: {
-                    value: 6,
-                    message: "La contraseña debe tener al menos seis dígitos",
-                  },
-                })}
-              />
-              <span className="input-hint">
-                {!!errors.password
-                  ? errors.password.message
-                  : "Por favor ingrese su contraseña"}
-              </span>
-            </div>
-            <div className="mx-1 my-4">
-              <button className="btn btn-secondary m-auto" type="submit">
-                <span className="material-icons">lock_open</span>Iniciar sesión
-              </button>
-            </div>
-          </form>
-          <p className="text-justify leading-8 pt-10 p-2">
-            <b>¿Olvidaste tu contraseña?</b> Ingrese su correo electrónico
-            arriba y presione{" "}
-            <button className="btn inline-flex" onClick={onRestorePassword}>
-              <span className="material-icons">restore</span>Restablecer
-              contraseña
-            </button>{" "}
-            para enviar un correo electrónico de restablecimiento de contraseña.
-          </p>
-        </>
-      }
-    />
+    <>
+      <Breadcrumbs
+        navigations={[{ uri: "/home", text: "Home" }]}
+        last="Iniciar sesión"
+      />
+      <CenterLayout
+        title="Iniciar sesión"
+        subTitle="¿Ya tienes una cuenta? Inicia sesión a continuación."
+        component={
+          <>
+            <p className="mb-4">
+              O{" "}
+              <Link
+                to="/sign-up"
+                className="text-teal-500 underline hover:text-teal-300"
+              >
+                crea una nueva cuenta.
+              </Link>
+            </p>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div
+                className={`input-group my-2 ${
+                  !!errors.email && "input-group-danger"
+                }`}
+              >
+                <label htmlFor="email" className="input-label">
+                  Correo electrónico
+                </label>
+                <input
+                  className="input input-secondary"
+                  type="email"
+                  name="email"
+                  placeholder="Correo electrónico"
+                  ref={register({
+                    required: {
+                      value: true,
+                      message:
+                        "La dirección de correo electrónico es requerida",
+                    },
+                    pattern: {
+                      value: /\S+@\S+\.\S+/i,
+                      message:
+                        "Por favor ingrese un formato de correo electrónico válido",
+                    },
+                  })}
+                />
+                <span className="input-hint">
+                  {!!errors.email
+                    ? errors.email.message
+                    : "Por favor ingrese su correo electrónico"}
+                </span>
+              </div>
+              <div
+                className={`input-group my-2 ${
+                  !!errors.password && "input-group-danger"
+                }`}
+              >
+                <label htmlFor="password" className="input-label">
+                  Contraseña
+                </label>
+                <input
+                  className="input input-secondary"
+                  type="password"
+                  name="password"
+                  placeholder="Contraseña"
+                  ref={register({
+                    required: {
+                      value: true,
+                      message: "La contraseña es requerida",
+                    },
+                    minLength: {
+                      value: 6,
+                      message: "La contraseña debe tener al menos seis dígitos",
+                    },
+                  })}
+                />
+                <span className="input-hint">
+                  {!!errors.password
+                    ? errors.password.message
+                    : "Por favor ingrese su contraseña"}
+                </span>
+              </div>
+              <div className="mx-1 my-4">
+                <button className="btn btn-secondary m-auto" type="submit">
+                  <span className="material-icons">lock_open</span>Iniciar
+                  sesión
+                </button>
+              </div>
+            </form>
+            <p className="text-justify leading-8 pt-10 p-2">
+              <b>¿Olvidaste tu contraseña?</b> Ingrese su correo electrónico
+              arriba y presione{" "}
+              <button className="btn inline-flex" onClick={onRestorePassword}>
+                <span className="material-icons">restore</span>Restablecer
+                contraseña
+              </button>{" "}
+              para enviar un correo electrónico de restablecimiento de
+              contraseña.
+            </p>
+          </>
+        }
+      />
+    </>
   );
 };
 

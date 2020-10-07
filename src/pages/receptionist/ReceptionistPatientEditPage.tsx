@@ -8,6 +8,7 @@ import {
 } from "react-redux-firebase";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import Loading from "../../components/custom/Loading";
 import PatientEdit from "../../components/patient/PatientEdit";
 import { IPatient } from "../../models/IPatient";
@@ -64,10 +65,24 @@ const ReceptionistPatientEditPage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <PatientEdit
-          currentPatient={currentPatient}
-          onEditPatient={onEditPatient}
-        />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+              { uri: "/receptionist-panel/patients", text: "Pacientes" },
+              {
+                uri: `/receptionist-panel/patients/${id}`,
+                text: `${currentPatient.name} ${currentPatient.surname}`,
+              },
+            ]}
+            last="Editar paciente"
+          />
+          <PatientEdit
+            currentPatient={currentPatient}
+            onEditPatient={onEditPatient}
+          />
+        </>
       )}
       <Loading isLoading={isLoading} />
     </>

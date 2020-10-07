@@ -12,6 +12,7 @@ import { ITest } from "../../models/ITest";
 import { toast } from "react-toastify";
 import TestEdit from "../../components/test/TestEdit";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminTestEditPage: React.FunctionComponent = () => {
   const { idArea, idTest } = useParams<{ idArea: string; idTest: string }>();
@@ -48,7 +49,7 @@ const AdminTestEditPage: React.FunctionComponent = () => {
       .set(test, { merge: true })
       .then(() => {
         toast.success(`Examen con id:${idTest}, actualizado exitosamente`);
-        navigateToCurrentArea();
+        history.push(`/admin-panel/areas/${idArea}?test=${idTest}`);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -84,11 +85,25 @@ const AdminTestEditPage: React.FunctionComponent = () => {
           )}
         </div>
       ) : (
-        <TestEdit
-          onEditTest={onEditTest}
-          currentArea={{ id: idArea, ...currentArea }}
-          currentTest={{ id: idTest, ...currentTest }}
-        />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/admin-panel", text: "Panel de administrador" },
+              { uri: "/admin-panel/areas", text: "Áreas" },
+              {
+                uri: `/admin-panel/areas/${idArea}`,
+                text: `${currentArea.name}`,
+              },
+            ]}
+            last="Editar examen"
+          />
+          <TestEdit
+            onEditTest={onEditTest}
+            currentArea={{ id: idArea, ...currentArea }}
+            currentTest={{ id: idTest, ...currentTest }}
+          />
+        </>
       )}
       <Loading isLoading={isLoading} />
     </>

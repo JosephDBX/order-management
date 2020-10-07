@@ -428,9 +428,18 @@ const OrderEdit: React.FunctionComponent<IOrderEditProps> = ({
                     defaultValue={order.discount}
                     min={0}
                     step={0.01}
-                    ref={register}
+                    ref={register({
+                      required: {
+                        value: true,
+                        message: "El descuento es requerido",
+                      },
+                    })}
                   />
-                  <span className="input-hint">Hacer un descuento</span>
+                  <span className="input-hint">
+                    {!!errors.discount
+                      ? errors.discount.message
+                      : "Hacer un descuento"}
+                  </span>
                 </div>
               ) : order.discount ? (
                 <div className="flex flex-row justify-between text-gray-700">

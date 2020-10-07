@@ -11,6 +11,7 @@ interface ITestControlProps {
   rol: ERol;
   selectables?: ITest[];
   profile?: IProfile;
+  defaultText?: string;
   onFilterText?(filterText: string): void;
   onSelectableFilterText?(filterText: string): void;
   onAddTestToProfile?(profile: IProfile, test: ITest): void;
@@ -21,11 +22,12 @@ const TestControl: React.FunctionComponent<ITestControlProps> = ({
   rol,
   selectables,
   profile,
+  defaultText,
   onFilterText,
   onSelectableFilterText,
   onAddTestToProfile,
 }) => {
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState(defaultText);
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFilterText(event.target.value);
     if (onFilterText) onFilterText(event.target.value);

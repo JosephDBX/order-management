@@ -5,6 +5,7 @@ import { IUser } from "../../models/IUser";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const SignUpPage: React.FunctionComponent = () => {
   const firebase = useFirebase();
@@ -57,6 +58,10 @@ const SignUpPage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[{ uri: "/home", text: "Home" }]}
+        last="Crear una cuenta"
+      />
       <UserCreate onCreateUser={onCreateUser} />
       <Loading isLoading={isLoading} />
     </>

@@ -8,6 +8,7 @@ import {
 } from "react-redux-firebase";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import Loading from "../../components/custom/Loading";
 import OrderCreate from "../../components/order/OrderCreate";
 import { ERol } from "../../models/ERol";
@@ -126,7 +127,7 @@ const ReceptionistOrderCreatePage: React.FunctionComponent = () => {
                 )
               );
           }
-          history.push(`/receptionist-panel/patients/${id}`);
+          history.push(`/receptionist-panel/patients/${id}?order=${result.id}`);
         })
         .catch((error) => {
           setIsLoading(false);
@@ -168,23 +169,38 @@ const ReceptionistOrderCreatePage: React.FunctionComponent = () => {
           </button>
         </div>
       ) : (
-        <OrderCreate
-          patient={{ id, ...currentPatient }}
-          tests={tests}
-          profiles={profiles.filter(
-            (profile) =>
-              profile_tests.filter((pt) => pt.profile === profile.id).length > 0
-          )}
-          profile_tests={profile_tests}
-          rol={ERol.Receptionist}
-          doctors={users.filter(
-            (u) =>
-              user_patients.filter(
-                (up) => up.patient === id && up.user === u.id
-              ).length > 0
-          )}
-          onCreateOrder={onCreateOrder}
-        />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+              { uri: "/receptionist-panel/patients", text: "Pacientes" },
+              {
+                uri: `/receptionist-panel/patients/${id}`,
+                text: `${currentPatient.name} ${currentPatient.surname}`,
+              },
+            ]}
+            last="Crear orden"
+          />
+          <OrderCreate
+            patient={{ id, ...currentPatient }}
+            tests={tests}
+            profiles={profiles.filter(
+              (profile) =>
+                profile_tests.filter((pt) => pt.profile === profile.id).length >
+                0
+            )}
+            profile_tests={profile_tests}
+            rol={ERol.Receptionist}
+            doctors={users.filter(
+              (u) =>
+                user_patients.filter(
+                  (up) => up.patient === id && up.user === u.id
+                ).length > 0
+            )}
+            onCreateOrder={onCreateOrder}
+          />
+        </>
       )}
       <Loading isLoading={isLoading} />
     </>

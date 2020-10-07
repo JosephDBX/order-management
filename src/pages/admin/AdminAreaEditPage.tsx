@@ -11,6 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminAreaEditPage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,6 +49,14 @@ const AdminAreaEditPage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+          { uri: "/admin-panel/areas", text: "Áreas" },
+        ]}
+        last="Editar área"
+      />
       {!isLoaded(currentArea) ? (
         <p className="m-2 text-center">Cargando área...</p>
       ) : isEmpty(currentArea) ? (

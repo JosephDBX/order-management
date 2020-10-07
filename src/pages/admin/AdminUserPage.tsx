@@ -12,6 +12,7 @@ import MainDetailLayout from "../../layouts/MainDetailLayout";
 import { ERol } from "../../models/ERol";
 import UserDetail from "../../components/user/UserDetail";
 import UserManagement from "../../components/user/UserManagement";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminUserPage: React.FunctionComponent = () => {
   useFirestoreConnect([{ collection: "users" }]);
@@ -71,6 +72,13 @@ const AdminUserPage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+        ]}
+        last="Usuarios"
+      />
       {!isLoaded(currentUser) || !isLoaded(users) ? (
         <p className="m-2 text-center">Cargando Usuarios...</p>
       ) : (

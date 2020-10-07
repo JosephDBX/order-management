@@ -7,6 +7,7 @@ import GridLayout from "../../layouts/GridLayout";
 import { IArea } from "../../models/IArea";
 import TestDetail from "./TestDetail";
 import { IProfile } from "../../models/IProfile";
+import { useLocation } from "react-router-dom";
 
 interface ITestManagementProps {
   area?: IArea;
@@ -31,6 +32,15 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
   onAddTestToProfile,
   onRemoveTestToProfile,
 }) => {
+  const location = useLocation();
+  const getQueryParams = () => {
+    const params: string[] = location.search.substr(1).split("&");
+    const type: string[] = params[0].split("=") as string[];
+    return {
+      type: type[0] ? type[0] : "",
+      id: type[1] ? type[1] : "",
+    };
+  };
   // Selected List
   const [list, setList] = useState<any[]>(
     tests.map((test) => (
@@ -99,6 +109,9 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
     onFilterText(filterText);
     onSelectableFilterText(selectableFilterText);
   }, [tests, selectables]);
+  useEffect(() => {
+    onFilterText(getQueryParams().id);
+  }, [location]);
 
   return (
     <ManageLayout
@@ -117,6 +130,7 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
           onSelectableFilterText={onSelectableFilterText}
           profile={profile}
           idArea={area?.id}
+          defaultText={getQueryParams().id}
           onAddTestToProfile={onAddTestToProfile}
           selectables={selectableList}
         />

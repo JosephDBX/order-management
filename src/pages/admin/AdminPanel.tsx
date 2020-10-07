@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminPanel: React.FunctionComponent = () => {
   const history = useHistory();
@@ -13,27 +14,33 @@ const AdminPanel: React.FunctionComponent = () => {
     history.push("/admin-panel/profiles");
   };
   return (
-    <div className="flex flex-col justify-center items-center md:flex-row">
-      <button
-        className="btn btn-primary w-56 h-56 m-4"
-        onClick={navigateToUserManagement}
-      >
-        <span className="material-icons">group</span>Gestionar Usuarios
-      </button>
-      <button
-        className="btn btn-secondary w-56 h-56 m-4"
-        onClick={navigateToAreaManagement}
-      >
-        <span className="material-icons">folder</span>Gestionar Areas
-      </button>
-      <button
-        className="btn btn-warning w-56 h-56 m-4"
-        onClick={navigateToProfileManagement}
-      >
-        <span className="material-icons">collections_bookmark</span>Gestionar
-        Perfiles
-      </button>
-    </div>
+    <>
+      <Breadcrumbs
+        navigations={[{ uri: "/home", text: "Home" }]}
+        last="Panel de administrador"
+      />
+      <div className="flex flex-col justify-center items-center md:flex-row">
+        <button
+          className="btn btn-primary w-56 h-56 m-4"
+          onClick={navigateToUserManagement}
+        >
+          <span className="material-icons">group</span>Gestionar Usuarios
+        </button>
+        <button
+          className="btn btn-secondary w-56 h-56 m-4"
+          onClick={navigateToAreaManagement}
+        >
+          <span className="material-icons">folder</span>Gestionar Areas
+        </button>
+        <button
+          className="btn btn-warning w-56 h-56 m-4"
+          onClick={navigateToProfileManagement}
+        >
+          <span className="material-icons">collections_bookmark</span>Gestionar
+          Perfiles
+        </button>
+      </div>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import { useFirestore } from "react-redux-firebase";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminAreaCreatePage: React.FunctionComponent = () => {
   const firestore = useFirestore();
@@ -30,6 +31,14 @@ const AdminAreaCreatePage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+          { uri: "/admin-panel/areas", text: "Áreas" },
+        ]}
+        last="Crear área"
+      />
       <AreaCreate onCreateArea={onCreateArea} />
       <Loading isLoading={isLoading} />
     </>

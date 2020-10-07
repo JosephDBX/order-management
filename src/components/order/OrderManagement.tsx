@@ -13,6 +13,7 @@ import "moment/locale/es";
 import { ITest } from "../../models/ITest";
 import { IProfile } from "../../models/IProfile";
 import { IUser } from "../../models/IUser";
+import { useLocation } from "react-router-dom";
 
 interface IOrderManagementProps {
   patients: IPatient[];
@@ -39,6 +40,15 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   isFull,
   onOrderStateChange,
 }) => {
+  const location = useLocation();
+  const getQueryParams = () => {
+    const params: string[] = location.search.substr(1).split("&");
+    const type: string[] = params[0].split("=") as string[];
+    return {
+      type: type[0] ? type[0] : "",
+      id: type[1] ? type[1] : "",
+    };
+  };
   // Selected List
   const [list, setList] = useState<any[]>([]);
   const [filterText, setFilterText] = useState({ filter: "", state: "" });
@@ -67,6 +77,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
         .filter((order) =>
           state ? order.state === state || state === "" : true
         )
+        .sort((first, second) => (first.orderedTo > second.orderedTo ? 1 : -1))
         .map((order) => (
           <OrderDetail
             order={order}
@@ -88,6 +99,9 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   useEffect(() => {
     onFilterText(filterText.filter, filterText.state);
   }, [orders, orderTests, orderProfiles, doctors]);
+  useEffect(() => {
+    onFilterText(getQueryParams().id, filterText.state);
+  }, [location]);
 
   return (
     <ManageLayout
@@ -103,10 +117,17 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
         <OrderControl
           rol={rol}
           onFilterText={onFilterText}
+          defaultText={getQueryParams().id}
           patient={patients[0]}
         />
       }
-      list={<GridLayout list={list} type={isFull ? 0 : 1} defaultText="No hay órdenes!!!" />}
+      list={
+        <GridLayout
+          list={list}
+          type={isFull ? 0 : 1}
+          defaultText="No hay órdenes!!!"
+        />
+      }
     />
   );
 };

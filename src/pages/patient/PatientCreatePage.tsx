@@ -8,6 +8,7 @@ import { IUser } from "../../models/IUser";
 import { useSelector } from "react-redux";
 import { IUserPatient } from "../../models/IUserPatient";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const PatientCreatePage: React.FunctionComponent = () => {
   const firestore = useFirestore();
@@ -49,6 +50,14 @@ const PatientCreatePage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/user-panel", text: "Panel de usuario" },
+          { uri: "/user-panel", text: "Pacientes" },
+        ]}
+        last="Crear paciente"
+      />
       <PatientCreate onCreatePatient={onCreatePatient} />
       <Loading isLoading={isLoading} />
     </>

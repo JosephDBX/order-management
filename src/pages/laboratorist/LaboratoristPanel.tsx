@@ -6,6 +6,7 @@ import {
   useFirestoreConnect,
 } from "react-redux-firebase";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import OrderManagement from "../../components/order/OrderManagement";
 import { ERol } from "../../models/ERol";
 import { IOrder } from "../../models/IOrder";
@@ -96,6 +97,13 @@ const LaboratoristPanel: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/laboratorist-panel", text: "Panel de laboratorista" },
+        ]}
+        last="Órdenes"
+      />
       {!isLoaded(patients) ||
       !isLoaded(orders) ||
       !isLoaded(orderTests) ||

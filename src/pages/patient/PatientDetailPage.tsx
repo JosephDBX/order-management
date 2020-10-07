@@ -19,6 +19,7 @@ import { ITest } from "../../models/ITest";
 import { IProfile } from "../../models/IProfile";
 import { IUser } from "../../models/IUser";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const PatientDetailPage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -129,12 +130,14 @@ const PatientDetailPage: React.FunctionComponent = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-start">
-            <button className="btn m-2" onClick={navigateToPatientManagement}>
-              <span className="material-icons">arrow_back</span>Regresar a la
-              gestión de pacientes
-            </button>
-          </div>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/user-panel", text: "Panel de usuario" },
+              { uri: "/user-panel", text: "Pacientes" },
+            ]}
+            last={`${currentPatient.name} ${currentPatient.surname}`}
+          />
           <MainDetailLayout
             title={`Gestionar órdenes del paciente: ${currentPatient.name} ${currentPatient.surname}`}
             main={

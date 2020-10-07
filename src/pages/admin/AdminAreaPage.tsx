@@ -9,6 +9,7 @@ import {
 import { IArea } from "../../models/IArea";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminAreaPage: React.FunctionComponent = () => {
   useFirestoreConnect([{ collection: "areas" }]);
@@ -34,6 +35,13 @@ const AdminAreaPage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+        ]}
+        last="Áreas"
+      />
       {!isLoaded(areas) ? (
         <p className="m-2 text-center">Cargando áreas...</p>
       ) : (

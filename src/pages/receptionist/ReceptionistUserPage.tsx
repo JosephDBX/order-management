@@ -7,6 +7,7 @@ import {
   useFirestoreConnect,
 } from "react-redux-firebase";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import UserManagement from "../../components/user/UserManagement";
 import { ERol } from "../../models/ERol";
 import { IUser } from "../../models/IUser";
@@ -54,6 +55,13 @@ const ReceptionistUserPage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+        ]}
+        last="Usuarios"
+      />
       {!isLoaded(currentUser) || !isLoaded(users) ? (
         <p className="m-2 text-center">Cargando Usuarios...</p>
       ) : (

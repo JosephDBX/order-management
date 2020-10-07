@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import PatientEdit from "../../components/patient/PatientEdit";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const PatientEditPage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,6 +49,14 @@ const PatientEditPage: React.FunctionComponent = () => {
 
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/user-panel", text: "Panel de usuario" },
+          { uri: "/user-panel", text: "Pacientes" },
+        ]}
+        last="Editar paciente"
+      />
       {!isLoaded(currentPatient) ? (
         <p className="m-2 text-center">Cargando paciente...</p>
       ) : isEmpty(currentPatient) ? (

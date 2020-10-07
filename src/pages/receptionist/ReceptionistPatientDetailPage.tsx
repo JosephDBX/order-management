@@ -8,6 +8,7 @@ import {
 } from "react-redux-firebase";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import OrderManagement from "../../components/order/OrderManagement";
 import PatientDetail from "../../components/patient/PatientDetail";
 import MainDetailLayout from "../../layouts/MainDetailLayout";
@@ -129,12 +130,14 @@ const ReceptionistPatientDetailPage: React.FunctionComponent = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-start">
-            <button className="btn m-2" onClick={navigateToPatientManagement}>
-              <span className="material-icons">arrow_back</span>Regresar a la
-              gestión de pacientes
-            </button>
-          </div>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+              { uri: "/receptionist-panel/patients", text: "Pacientes" },
+            ]}
+            last={`${currentPatient.name} ${currentPatient.surname}`}
+          />
           <MainDetailLayout
             title={`Gestionar órdenes del paciente: ${currentPatient.name} ${currentPatient.surname}`}
             main={

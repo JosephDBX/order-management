@@ -72,6 +72,14 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
     setFilterText(filter);
   };
 
+  const getTotal = () => {
+    let sum: number = 0.0;
+    selected.forEach((s) => {
+      sum += Number.parseFloat(s.cost.toString());
+    });
+    return sum.toFixed(2);
+  };
+
   useEffect(() => {
     onFilterText(filterText);
   }, [tests]);
@@ -163,6 +171,11 @@ const ProfileCreate: React.FunctionComponent<IProfileCreateProps> = ({
                 ))}
               />
             </div>
+            <div className="flex flex-row justify-between text-blue-700 font-bold">
+              <div>Total</div>
+              <div>USD ${getTotal()}</div>
+            </div>
+            <hr />
             <div className="mx-1 my-4">
               <button className="btn btn-primary m-auto" type="submit">
                 <span className="material-icons">add_circle</span>Crear Perfil

@@ -8,6 +8,7 @@ import {
 } from "react-redux-firebase";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import PatientManagement from "../../components/patient/PatientManagement";
 import UserDetail from "../../components/user/UserDetail";
 import MainDetailLayout from "../../layouts/MainDetailLayout";
@@ -96,37 +97,60 @@ const ReceptionistPatientPage: React.FunctionComponent = () => {
       !isLoaded(user_patients) ? (
         <p className="m-2 text-center">Cargando Pacientes...</p>
       ) : id ? (
-        <MainDetailLayout
-          title={
-            id
-              ? `Gestionar pacientes asociados a la cuenta: ${user.email}`
-              : "Gestionar pacientes"
-          }
-          main={
-            <UserDetail
-              user={{ id: id, ...user }}
-              rol={ERol.Receptionist}
-              isMain
-              onUserNameChange={onUserNameChange}
-              onRestorePassword={onRestorePassword}
-            />
-          }
-          detail={
-            <PatientManagement
-              rol={ERol.Receptionist}
-              patients={patients.filter(
-                (patient) =>
-                  user_patients
-                    .filter((up) => up.user === user.uid)
-                    .filter((up) => up.patient === patient.id).length > 0
-              )}
-              idUser={id}
-              onAddPatientByCode={onAddPatientByCode}
-            />
-          }
-        />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+              { uri: "/receptionist-panel/users", text: "Usuarios" },
+            ]}
+            last={user.email}
+          />
+          <MainDetailLayout
+            title={
+              id
+                ? `Gestionar pacientes asociados a la cuenta: ${user.email}`
+                : "Gestionar pacientes"
+            }
+            main={
+              <UserDetail
+                user={{ id: id, ...user }}
+                rol={ERol.Receptionist}
+                isMain
+                onUserNameChange={onUserNameChange}
+                onRestorePassword={onRestorePassword}
+              />
+            }
+            detail={
+              <PatientManagement
+                rol={ERol.Receptionist}
+                patients={patients.filter(
+                  (patient) =>
+                    user_patients
+                      .filter((up) => up.user === user.uid)
+                      .filter((up) => up.patient === patient.id).length > 0
+                )}
+                idUser={id}
+                onAddPatientByCode={onAddPatientByCode}
+              />
+            }
+          />
+        </>
       ) : (
-        <PatientManagement rol={ERol.Receptionist} patients={patients} isFull />
+        <>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+            ]}
+            last="Pacientes"
+          />
+          <PatientManagement
+            rol={ERol.Receptionist}
+            patients={patients}
+            isFull
+          />
+        </>
       )}
     </>
   );

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import ProfileEdit from "../../components/profile/ProfileEdit";
 import Loading from "../../components/custom/Loading";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminProfileEditPage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,6 +48,14 @@ const AdminProfileEditPage: React.FunctionComponent = () => {
   };
   return (
     <>
+      <Breadcrumbs
+        navigations={[
+          { uri: "/home", text: "Home" },
+          { uri: "/admin-panel", text: "Panel de administrador" },
+          { uri: "/admin-panel/profiles", text: "Perfiles" },
+        ]}
+        last="Editar perfil"
+      />
       {!isLoaded(currentProfile) ? (
         <p className="m-2 text-center">Cargando perfil...</p>
       ) : isEmpty(currentProfile) ? (

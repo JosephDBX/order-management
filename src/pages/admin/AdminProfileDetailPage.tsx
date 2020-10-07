@@ -15,6 +15,7 @@ import ProfileDetail from "../../components/profile/ProfileDetail";
 import { ERol } from "../../models/ERol";
 import TestManagement from "../../components/test/TestManagement";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 
 const AdminProfileDetailPage: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,12 +85,14 @@ const AdminProfileDetailPage: React.FunctionComponent = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-start">
-            <button className="btn m-2" onClick={navigateToProfileManagement}>
-              <span className="material-icons">arrow_back</span>Regresar a la
-              gestión de perfiles
-            </button>
-          </div>
+          <Breadcrumbs
+            navigations={[
+              { uri: "/home", text: "Home" },
+              { uri: "/admin-panel", text: "Panel de administrador" },
+              { uri: "/admin-panel/profiles", text: "Perfiles" },
+            ]}
+            last={currentProfile.name}
+          />
           <MainDetailLayout
             title={`Gestionar exámenes del perfil: ${currentProfile.name}`}
             main={

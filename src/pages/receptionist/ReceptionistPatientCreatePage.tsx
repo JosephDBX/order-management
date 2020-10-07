@@ -7,6 +7,7 @@ import {
 } from "react-redux-firebase";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Breadcrumbs from "../../components/custom/Breadcrumbs";
 import Loading from "../../components/custom/Loading";
 import PatientCreate from "../../components/patient/PatientCreate";
 import { IPatient } from "../../models/IPatient";
@@ -70,6 +71,26 @@ const ReceptionistPatientCreatePage: React.FunctionComponent = () => {
         <p className="m-2 text-center">Cargando Pacientes...</p>
       ) : (
         <>
+          {id ? (
+            <Breadcrumbs
+              navigations={[
+                { uri: "/home", text: "Home" },
+                { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+                { uri: "/receptionist-panel/users", text: "Usuarios" },
+                { uri: `/receptionist-panel/users/${id}`, text: user.email },
+              ]}
+              last="Crear paciente"
+            />
+          ) : (
+            <Breadcrumbs
+              navigations={[
+                { uri: "/home", text: "Home" },
+                { uri: "/receptionist-panel", text: "Panel de recepcionista" },
+                { uri: "/receptionist-panel/patients", text: "Pacientes" },
+              ]}
+              last="Crear paciente"
+            />
+          )}
           <PatientCreate onCreatePatient={onCreatePatient} />
           <Loading isLoading={isLoading} />
         </>
