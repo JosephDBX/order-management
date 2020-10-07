@@ -3,7 +3,7 @@ import { IOrder } from "../../models/IOrder";
 import { ERol } from "../../models/ERol";
 import { IOrderTest } from "../../models/IOrderTest";
 import { IOrderProfile } from "../../models/IOrderProfile";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import SummaryLayout from "../../layouts/SummaryLayout";
 import ModalLayout from "../../layouts/ModalLayout";
 import moment from "moment";
@@ -25,6 +25,8 @@ interface IOrderDetailProps {
   doctor?: IUser;
   onOrderStateChange?(id: string, state: string): void;
 }
+
+moment.relativeTimeRounding(Math.floor);
 
 const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
   order,
@@ -106,23 +108,6 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
         }
         component={
           <>
-            {rol === ERol.Laboratorist || rol === ERol.DeliveryWorker ? (
-              <div
-                className={`rounded-full m-2 mt-0 ${
-                  order.state === "complete"
-                    ? "bg-blue-600"
-                    : order.state === "pending"
-                    ? "bg-teal-600"
-                    : order.state === "process"
-                    ? "bg-red-600"
-                    : ""
-                }`}
-              >
-                <p className="text-white text-center font-semibold p-2 text-lg">
-                  Paciente: {patient.name} {patient.surname}
-                </p>
-              </div>
-            ) : null}
             <div
               className={`rounded-full m-2 mt-0 ${
                 order.state === "complete"
@@ -144,6 +129,32 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                   : ""}
               </p>
             </div>
+            {rol === ERol.Laboratorist || rol === ERol.DeliveryWorker ? (
+              <div
+                className={`rounded-full m-2 mt-0 ${
+                  order.state === "complete"
+                    ? "bg-blue-600"
+                    : order.state === "pending"
+                    ? "bg-teal-600"
+                    : order.state === "process"
+                    ? "bg-red-600"
+                    : ""
+                }`}
+              >
+                <p className="text-white text-center font-semibold p-2 text-lg">
+                  Paciente: {patient.name} {patient.surname}
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  Fecha de nacimiento:
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  {moment(patient.birthDate).format("dddd D/MMMM/YYYY")}
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  {moment(patient.birthDate).fromNow(true)}
+                </p>
+              </div>
+            ) : null}
             <div
               className="h-32 p-8 relative rounded-full mx-auto shadow-md flex items-center justify-center"
               style={{
@@ -175,7 +186,13 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                     {orderTests.map((ot) => (
                       <div className="rounded-sm m-1 shadow-md p-2" key={ot.id}>
                         <h4 className="flex items-center">
-                          <span className="material-icons">bookmark</span>
+                          <Link
+                            to={`/search?test=${ot.test}`}
+                            target="_blank"
+                            className="material-icons btn-icon btn-icon-secondary p-0 border-0"
+                          >
+                            pageview
+                          </Link>
                           <span className="flex-grow">
                             {tests.find((t) => t.id === ot.test)?.name}
                           </span>
@@ -201,7 +218,13 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                     {orderProfiles.map((op) => (
                       <div className="rounded-sm m-1 shadow-md p-2" key={op.id}>
                         <h4 className="flex items-center">
-                          <span className="material-icons">bookmark</span>
+                          <Link
+                            to={`/search?profile=${op.profile}`}
+                            target="_blank"
+                            className="material-icons btn-icon btn-icon-secondary p-0 border-0"
+                          >
+                            pageview
+                          </Link>
                           <span className="flex-grow">
                             {profiles.find((p) => p.id === op.profile)?.name}
                           </span>

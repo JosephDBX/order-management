@@ -14,6 +14,8 @@ interface IPatientDetailProps {
   orders?: IOrder[];
 }
 
+moment.relativeTimeRounding(Math.floor);
+
 const PatientDetail: React.FunctionComponent<IPatientDetailProps> = ({
   patient,
   rol,
@@ -56,7 +58,7 @@ const PatientDetail: React.FunctionComponent<IPatientDetailProps> = ({
             {moment(patient.birthDate).format("dddd D [de] MMMM [de] YYYY")}
           </p>
           <p className="text-center m-4 mt-1">
-            {moment(patient.birthDate, "YYYYMMDDHH").fromNow()}
+            {moment(patient.birthDate).fromNow(true)}
           </p>
           {patient.ind && (
             <>

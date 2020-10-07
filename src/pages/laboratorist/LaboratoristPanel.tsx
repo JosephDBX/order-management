@@ -115,6 +115,7 @@ const LaboratoristPanel: React.FunctionComponent = () => {
             tests={tests}
             profiles={profiles}
             doctors={users}
+            isFull={true}
             onOrderStateChange={onOrderStateChange}
           />
         </>

@@ -23,6 +23,7 @@ interface IOrderManagementProps {
   profiles: IProfile[];
   rol: ERol;
   doctors: IUser[];
+  isFull?: boolean;
   onOrderStateChange?(id: string, state: string): void;
 }
 
@@ -35,6 +36,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   profiles,
   rol,
   doctors,
+  isFull,
   onOrderStateChange,
 }) => {
   // Selected List
@@ -62,7 +64,9 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
                   .includes(filter.toLowerCase())
               )?.id
         )
-        .filter((order) => order.state === state || state === "")
+        .filter((order) =>
+          state ? order.state === state || state === "" : true
+        )
         .map((order) => (
           <OrderDetail
             order={order}
@@ -102,7 +106,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
           patient={patients[0]}
         />
       }
-      list={<GridLayout list={list} type={1} defaultText="No hay órdenes!!!" />}
+      list={<GridLayout list={list} type={isFull ? 0 : 1} defaultText="No hay órdenes!!!" />}
     />
   );
 };
