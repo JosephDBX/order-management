@@ -5,6 +5,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useFirebase } from "react-redux-firebase";
 import Breadcrumbs from "../../components/custom/Breadcrumbs";
+import firebaseMessaging from "../../configs/FirebaseConfig";
+import { IUser } from "../../models/IUser";
+import { useSelector } from "react-redux";
 
 type Inputs = {
   email: string;
@@ -15,6 +18,53 @@ const SignInPage: React.FunctionComponent = () => {
   const firebase = useFirebase();
   const history = useHistory();
   const { register, handleSubmit, watch, errors } = useForm<Inputs>();
+
+  const saveMessagingDeviceToken = (uid: string) => {
+    firebase
+      .firestore()
+      .doc(`/users/${uid}`)
+      .get()
+      .then((snapshot) => {
+        const currentUser: IUser = snapshot.data() as IUser;
+        if (
+          currentUser.roles?.isReceptionist ||
+          currentUser.roles?.isDeliveryWorker
+        ) {
+          firebaseMessaging
+            .messaging()
+            .getToken()
+            .then((currentToken) => {
+              if (currentToken) {
+                firebase
+                  .firestore()
+                  .collection("fcmTokens")
+                  .doc(currentToken)
+                  .set({ uid: uid });
+              } else {
+                requestNotificationsPermissions(uid);
+              }
+            })
+            .catch((error) => {
+              console.error("Unable to get messaging token. ", error);
+            });
+        } else {
+          console.log("No roles");
+        }
+      });
+  };
+
+  const requestNotificationsPermissions = (uid: string) => {
+    firebaseMessaging
+      .messaging()
+      .requestPermission()
+      .then(() => {
+        // Notification permission granted.
+        saveMessagingDeviceToken(uid);
+      })
+      .catch((error) => {
+        console.error("Unable to get permission to notify.", error);
+      });
+  };
 
   const onSubmit = (data: Inputs) => {
     let aux = false;
@@ -31,6 +81,7 @@ const SignInPage: React.FunctionComponent = () => {
               autoClose: 15000,
             }
           );
+          saveMessagingDeviceToken(result.user.uid);
           history.push("/");
         } else {
           aux = true;

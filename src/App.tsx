@@ -17,6 +17,7 @@ import Toolbar from "./components/public/Toolbar";
 import Footer from "./components/public/Footer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { messaging } from "./configs/FirebaseConfig";
 
 // *************** Pages ***************
 // Public Pages
@@ -65,6 +66,13 @@ function App() {
 
     return null;
   };
+
+  useEffect(() => {
+    console.warn("Here!!!");
+    messaging.onMessage((message) => {
+      console.warn(message);
+    });
+  }, []);
 
   const firebase = useFirebase();
 

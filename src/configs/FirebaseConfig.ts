@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7z4ymEA6fsGaPNMUsDuW0ChSXdnSi1r4",
@@ -15,5 +16,12 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 firebase.firestore();
+
+const messaging = firebase.messaging();
+messaging.usePublicVapidKey(
+  "BFlaYpn1hgU8MwJ_woAPVuj885lu4rIonX4V795LMD-iFvkJhbLs_j2ecM2cTZGO92OItDlSOtOgB3z8ooSfqts"
+);
+
+export { messaging };
 
 export default firebase;
