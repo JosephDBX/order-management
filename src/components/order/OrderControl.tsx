@@ -102,7 +102,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
             </div>
           ) : null}
         </form>
-        {rol !== ERol.Laboratorist ? (
+        {rol !== ERol.Laboratorist && rol != ERol.DeliveryWorker ? (
           <div className="flex flex-col justify-end p-2">
             <button className="btn btn-primary" onClick={navigateToCreate}>
               <span className="material-icons">add_circle</span>Crear Órden

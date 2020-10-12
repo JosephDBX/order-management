@@ -47,6 +47,7 @@ const ProfileManagement: React.FunctionComponent<IProfileManagementProps> = ({
             profile.alternative?.toLowerCase().includes(filter.toLowerCase()) ||
             profile.description.toLowerCase().includes(filter.toLowerCase())
         )
+        .sort((first, second) => (first.name > second.name ? 1 : -1))
         .map((profile) => (
           <ProfileDetail
             profile={profile}

@@ -69,6 +69,7 @@ const TestManagement: React.FunctionComponent<ITestManagementProps> = ({
               .includes(filter.toLocaleLowerCase()) ||
             test.description.toLowerCase().includes(filter.toLowerCase())
         )
+        .sort((first, second) => (first.name > second.name ? 1 : -1))
         .map((test) => (
           <TestDetail
             test={test}

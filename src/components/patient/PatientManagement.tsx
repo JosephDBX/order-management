@@ -44,6 +44,9 @@ const PatientManagement: React.FunctionComponent<IPatientManagementProps> = ({
             patient.contact.address?.toLowerCase().includes(ft.toLowerCase()) ||
             patient.contact.email?.toLowerCase().includes(ft.toLowerCase())
         )
+        .sort((first, second) =>
+          first.name > second.name ? 1 : first.surname > second.surname ? 1 : -1
+        )
         .map((patient) => (
           <PatientDetail patient={patient} rol={rol} key={patient.id} />
         ))

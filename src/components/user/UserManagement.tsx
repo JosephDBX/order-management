@@ -70,6 +70,7 @@ const UserManagement: React.FunctionComponent<IUserManagementProps> = ({
             user.email.toLowerCase().includes(ft.toLowerCase()) ||
             user.userName?.toLowerCase().includes(ft.toLowerCase())
         )
+        .sort((first, second) => (first.email > second.email ? 1 : -1))
         .map((user) => (
           <UserDetail
             user={user}

@@ -11,6 +11,6 @@ export interface IPatient extends IBase {
 
 export interface IContact {
   phoneNumber: string;
-  address?: string;
+  address: string;
   email?: string;
 }

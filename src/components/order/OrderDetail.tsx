@@ -144,15 +144,6 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 <p className="text-white text-center font-semibold p-2 text-lg">
                   Paciente: {patient.name} {patient.surname}
                 </p>
-                <p className="text-white text-center font-semibold text-lg">
-                  Fecha de nacimiento:
-                </p>
-                <p className="text-white text-center font-semibold text-lg">
-                  {moment(patient.birthDate).format("dddd D/MMMM/YYYY")}
-                </p>
-                <p className="text-white text-center font-semibold text-lg">
-                  {moment(patient.birthDate).fromNow(true)}
-                </p>
               </div>
             ) : null}
             <div
@@ -173,6 +164,52 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 </p>
               </div>
             </div>
+            {rol === ERol.Laboratorist || rol === ERol.DeliveryWorker ? (
+              <div
+                className={`rounded m-2 ${
+                  order.state === "complete"
+                    ? "bg-blue-600"
+                    : order.state === "pending"
+                    ? "bg-teal-600"
+                    : order.state === "process"
+                    ? "bg-red-600"
+                    : ""
+                }`}
+              >
+                <p className="text-white text-center font-semibold text-lg">
+                  Fecha de nacimiento:
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  {moment(patient.birthDate).format("dddd D/MMMM/YYYY")}
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  {moment(patient.birthDate).fromNow(true)}
+                </p>
+              </div>
+            ) : null}
+            {rol === ERol.DeliveryWorker ? (
+              <div
+                className={`rounded m-2 ${
+                  order.state === "complete"
+                    ? "bg-blue-600"
+                    : order.state === "pending"
+                    ? "bg-teal-600"
+                    : order.state === "process"
+                    ? "bg-red-600"
+                    : ""
+                }`}
+              >
+                <p className="text-white text-center font-semibold text-lg">
+                  Teléfono: {patient.contact.phoneNumber}
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  Dirección:
+                </p>
+                <p className="text-white text-center font-semibold text-lg">
+                  {patient.contact.address}
+                </p>
+              </div>
+            ) : null}
             <hr className="m-2" />
             {orderTests.length > 0 && (
               <>

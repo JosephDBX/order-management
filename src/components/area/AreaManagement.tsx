@@ -38,6 +38,7 @@ const AreaManagement: React.FunctionComponent<IAreaManagementProps> = ({
             area.name.toLowerCase().includes(filter.toLowerCase()) ||
             area.description.toLowerCase().includes(filter.toLowerCase())
         )
+        .sort((first, second) => (first.name > second.name ? 1 : -1))
         .map((area) => (
           <AreaDetail
             area={area}
