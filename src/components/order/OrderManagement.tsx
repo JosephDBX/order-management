@@ -51,31 +51,51 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   };
   // Selected List
   const [list, setList] = useState<any[]>([]);
-  const [filterText, setFilterText] = useState({ filter: "", state: "" });
+  const [filterText, setFilterText] = useState<{
+    filter: string;
+    state: string;
+    doctorId: string;
+    selectedPatients: IPatient[];
+    startAt?: Date;
+    endAt?: Date;
+  }>({
+    filter: "",
+    state: "",
+    doctorId: "",
+    selectedPatients: [],
+    startAt: undefined,
+    endAt: undefined,
+  });
 
-  const onFilterText = (filter: string, state: string) => {
+  const onFilterText = (
+    filter: string,
+    state: string,
+    doctorId: string,
+    selectedPatients: IPatient[],
+    startAt?: Date,
+    endAt?: Date
+  ) => {
     setList(
       orders
-        .filter(
-          (order) =>
-            order.id?.includes(filter) ||
-            moment(order.orderedTo)
-              .format("dddd D/MMMM/YYYY hh:mm a")
-              .includes(filter.toLowerCase()) ||
-            (order.attendingDoctor &&
-              order.attendingDoctor ===
-                doctors.find((d) =>
-                  d.userName?.toLowerCase().includes(filter.toLowerCase())
-                )?.uid) ||
-            order.patient ===
-              patients.find((p) =>
-                `${p.name} ${p.surname}`
-                  .toLowerCase()
-                  .includes(filter.toLowerCase())
-              )?.id
-        )
+        .filter((order) => order.id?.includes(filter))
         .filter((order) =>
           state ? order.state === state || state === "" : true
+        )
+        .filter((order) =>
+          doctorId
+            ? order.attendingDoctor && order.attendingDoctor === doctorId
+            : true
+        )
+        .filter((order) =>
+          selectedPatients.length > 0
+            ? selectedPatients.find((sp) => sp.id === order.patient)
+            : true
+        )
+        .filter((order) =>
+          startAt && endAt
+            ? moment(order.orderedTo).isSameOrAfter(startAt) &&
+              moment(order.orderedTo).isSameOrBefore(endAt)
+            : true
         )
         .sort((first, second) => (first.orderedTo > second.orderedTo ? 1 : -1))
         .map((order) => (
@@ -93,14 +113,35 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
           />
         ))
     );
-    setFilterText({ filter, state });
+    setFilterText({
+      filter,
+      state,
+      doctorId: doctorId,
+      selectedPatients: selectedPatients,
+      startAt: startAt,
+      endAt: endAt,
+    });
   };
 
   useEffect(() => {
-    onFilterText(filterText.filter, filterText.state);
+    onFilterText(
+      filterText.filter,
+      filterText.state,
+      filterText.doctorId,
+      filterText.selectedPatients,
+      filterText.startAt as Date,
+      filterText.endAt as Date
+    );
   }, [orders, orderTests, orderProfiles, doctors]);
   useEffect(() => {
-    onFilterText(getQueryParams().id, filterText.state);
+    onFilterText(
+      getQueryParams().id,
+      filterText.state,
+      filterText.doctorId,
+      filterText.selectedPatients,
+      filterText.startAt as Date,
+      filterText.endAt as Date
+    );
   }, [location]);
 
   return (
@@ -118,7 +159,11 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
           rol={rol}
           onFilterText={onFilterText}
           defaultText={getQueryParams().id}
+          doctors={doctors.filter((doctor) =>
+            orders.find((o) => o.attendingDoctor === doctor.id)
+          )}
           patient={patients[0]}
+          patients={patients}
         />
       }
       list={
