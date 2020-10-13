@@ -52,11 +52,7 @@ const ReceptionistPatientCreatePage: React.FunctionComponent = () => {
       })
       .then(() => {
         if (aux) {
-          if (id) {
-            history.push(`/receptionist-panel/users/${id}/patients/${aux}`);
-          } else {
-            history.push(`/receptionist-panel/patients/${aux}`);
-          }
+          history.push(`/receptionist-panel/patients/${aux}`);
         }
       })
       .catch((error) => {
