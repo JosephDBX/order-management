@@ -14,6 +14,7 @@ import { ITest } from "../../models/ITest";
 import { IProfile } from "../../models/IProfile";
 import { IUser } from "../../models/IUser";
 import { useLocation } from "react-router-dom";
+import jsPDF from "jspdf";
 
 interface IOrderManagementProps {
   patients: IPatient[];
@@ -123,6 +124,50 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
     });
   };
 
+  const onPrintFilterResult = () => {
+    const doc = new jsPDF();
+    /* const blobURL = URL.createObjectURL(doc.output("blob"));
+    const frame: HTMLFrameElement = document.getElementById(
+      "pdfFrame"
+    ) as HTMLFrameElement;
+    frame.src = blobURL; */
+
+    var headers = createHeaders([
+      "id",
+      "coin",
+      "game_group",
+      "game_name",
+      "game_version",
+      "machine",
+      "vlt"
+    ]);
+    doc.table(20, 20, generateData(), headers, { autoSize: true });
+    doc.save(`Ordenes_${new Date().toISOString()}.pdf`);
+  };
+
+  const createHeaders = (keys: any): any => {
+    var result = [];
+    for (var i = 0; i < keys.length; i += 1) {
+      result.push({
+        id: keys[i],
+        name: keys[i],
+        prompt: keys[i],
+        width: 65,
+        align: "center",
+        padding: 0
+      });
+    }
+    return result;
+  }
+
+  const generateData = () => {
+    const result = [];
+    for (var i = 0; i < doctors.length; i += 1) {
+      result.push(Object.assign({}, doctors[i]));
+    }
+    return result;
+  };
+
   useEffect(() => {
     onFilterText(
       filterText.filter,
@@ -145,35 +190,38 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
   }, [location]);
 
   return (
-    <ManageLayout
-      title="Gestionar órdenes de examen"
-      subTitle={`¡Todas las órdenes de examen${
-        rol !== ERol.Laboratorist
-          ? rol === ERol.DeliveryWorker
-            ? " pendientes"
-            : " del paciente"
-          : " en proceso"
-      }!`}
-      controls={
-        <OrderControl
-          rol={rol}
-          onFilterText={onFilterText}
-          defaultText={getQueryParams().id}
-          doctors={doctors.filter((doctor) =>
-            orders.find((o) => o.attendingDoctor === doctor.id)
-          )}
-          patient={patients[0]}
-          patients={patients}
-        />
-      }
-      list={
-        <GridLayout
-          list={list}
-          type={isFull ? 0 : 1}
-          defaultText="No hay órdenes!!!"
-        />
-      }
-    />
+    <>
+      <ManageLayout
+        title="Gestionar órdenes de examen"
+        subTitle={`¡Todas las órdenes de examen${
+          rol !== ERol.Laboratorist
+            ? rol === ERol.DeliveryWorker
+              ? " pendientes"
+              : " del paciente"
+            : " en proceso"
+        }!`}
+        controls={
+          <OrderControl
+            rol={rol}
+            onFilterText={onFilterText}
+            defaultText={getQueryParams().id}
+            doctors={doctors.filter((doctor) =>
+              orders.find((o) => o.attendingDoctor === doctor.id)
+            )}
+            patient={patients[0]}
+            patients={patients}
+            onPrintFilterResult={onPrintFilterResult}
+          />
+        }
+        list={
+          <GridLayout
+            list={list}
+            type={isFull ? 0 : 1}
+            defaultText="No hay órdenes!!!"
+          />
+        }
+      />
+    </>
   );
 };
 

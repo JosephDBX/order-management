@@ -26,6 +26,7 @@ interface IOrderControlProps {
     startAt?: Date,
     endAt?: Date
   ): void;
+  onPrintFilterResult(): void;
 }
 
 type Inputs = {
@@ -40,6 +41,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
   defaultText,
   doctors,
   onFilterText,
+  onPrintFilterResult,
 }) => {
   const { register, watch } = useForm<Inputs>();
 
@@ -57,6 +59,10 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
         break;
       }
     }
+  };
+
+  const printFilterResult = () => {
+    onPrintFilterResult();
   };
 
   const onSubmit = () => {
@@ -358,11 +364,14 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
           <hr className="w-full my-2" />
 
           <div className="flex flex-row justify-center p-2">
-            <button className="btn btn-secondary m-2">
-              <span className="material-icons">local_printshop</span>Imprimir
-              Resultado
+            <button
+              className="btn btn-secondary m-2"
+              onClick={printFilterResult}
+            >
+              <span className="material-icons">local_printshop</span>
+              Imprimir Resultado
             </button>{" "}
-            {rol !== ERol.Laboratorist && rol != ERol.DeliveryWorker ? (
+            {rol !== ERol.Laboratorist && rol !== ERol.DeliveryWorker ? (
               <button
                 className="btn btn-primary m-2"
                 onClick={navigateToCreate}
