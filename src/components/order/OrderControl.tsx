@@ -312,6 +312,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
                     setCurrentDate={setStartAt}
                     name="startAt"
                     placeholder="Fecha de inicio"
+                    maxDate={endAt}
                     showTime
                     includeTimes={[
                       moment().set({ hours: 5, minutes: 0 }).toDate(),
@@ -336,6 +337,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
                     setCurrentDate={setEndAt}
                     name="endAt"
                     placeholder="Fecha de fin"
+                    minDate={startAt}
                     showTime
                     includeTimes={[
                       moment().set({ hours: 5, minutes: 0 }).toDate(),

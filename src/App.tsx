@@ -68,11 +68,10 @@ function App() {
   };
 
   useEffect(() => {
-    console.warn("Here!!!");
     messaging.onMessage((message) => {
-      console.warn(message);
+      toast.info(message);
     });
-  }, []);
+  });
 
   const firebase = useFirebase();
 
