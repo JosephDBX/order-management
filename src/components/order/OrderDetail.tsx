@@ -147,6 +147,9 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 <p className="text-white text-center font-semibold p-2 text-lg">
                   {patient.id}
                 </p>
+                <p className="text-white text-center font-semibold p-2 text-lg">
+                  DNI: {patient.ind}
+                </p>
               </div>
             ) : null}
             <div

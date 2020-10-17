@@ -43,9 +43,8 @@ const Footer: React.FunctionComponent = () => {
             <li>
               <span>Teléfonos</span>
             </li>
-            <li>Convencional. 505-2222-1111</li>
-            <li>Movistar. 505-8888-7777</li>
-            <li>Claro. 505-6666-5555</li>
+            <li>Convencional. 505-2250-6218</li>
+            <li>WhatsApp. 505-8701-4957</li>
             <li>E-mail: laboratoriomoncada@gmail.com</li>
           </ul>
           <ul className="footer-contacts__text-address">
