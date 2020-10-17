@@ -100,7 +100,7 @@ service cloud.firestore {
     
     match /user_patients/{upId} {
     	allow read: if isLogIn();// && (request.auth.uid == resource.data.user || isReceptionist());
-      allow create: if isLogIn() && ((request.auth.uid == request.resource.data.user && isDoctor()) || isReceptionist());
+      allow create: if isLogIn();
       allow delete: if isLogIn() && ((request.auth.uid == resource.data.user && isDoctor()) || isReceptionist());
     }
     
@@ -119,3 +119,7 @@ service cloud.firestore {
     }
   }
 }
+
+
+// return get(/databases/$(database)/documents/users/$(request.auth.uid)).roles.isAdmin == true;
+
