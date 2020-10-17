@@ -90,6 +90,22 @@ const ReceptionistPatientPage: React.FunctionComponent = () => {
     }
   };
 
+  const onRemovePatient = (patient: IPatient) => {
+    toast.info("Procesando... por favor espere...");
+    firestore
+      .collection("user_patients")
+      .doc(`${user.uid}_${patient.id}`)
+      .delete()
+      .then(() => {
+        toast.success(
+          `¡Paciente: ${patient.name} ${patient.surname}, ha sido removido de la cuenta de: ${user.userName}!`
+        );
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  };
+
   return (
     <>
       {(!isLoaded(user) && id) ||
@@ -132,6 +148,7 @@ const ReceptionistPatientPage: React.FunctionComponent = () => {
                 )}
                 idUser={id}
                 onAddPatientByCode={onAddPatientByCode}
+                onRemove={onRemovePatient}
               />
             }
           />

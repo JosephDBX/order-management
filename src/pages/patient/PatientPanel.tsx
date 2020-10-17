@@ -87,6 +87,22 @@ const PatientPanel: React.FunctionComponent = () => {
     }
   };
 
+  const onRemovePatient = (patient: IPatient) => {
+    toast.info("Procesando... por favor espere...");
+    firestore
+      .collection("user_patients")
+      .doc(`${currentUser.uid}_${patient.id}`)
+      .delete()
+      .then(() => {
+        toast.success(
+          `¡Paciente: ${patient.name} ${patient.surname}, ha sido removido de la cuenta de: ${currentUser.userName}!`
+        );
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  };
+
   return (
     <>
       <Breadcrumbs
@@ -122,6 +138,9 @@ const PatientPanel: React.FunctionComponent = () => {
                     .filter((up) => up.patient === patient.id).length > 0
               )}
               onAddPatientByCode={onAddPatientByCode}
+              onRemove={
+                currentUser.roles?.isDoctor ? onRemovePatient : undefined
+              }
             />
           }
         />

@@ -12,6 +12,7 @@ interface IPatientManagementProps {
   isFull?: boolean;
   idUser?: string;
   onAddPatientByCode?(id: string): void;
+  onRemove?(patient: IPatient): void;
 }
 
 const PatientManagement: React.FunctionComponent<IPatientManagementProps> = ({
@@ -20,10 +21,16 @@ const PatientManagement: React.FunctionComponent<IPatientManagementProps> = ({
   isFull,
   idUser,
   onAddPatientByCode,
+  onRemove,
 }) => {
   const [list, setList] = useState<any[]>(
     patients.map((patient) => (
-      <PatientDetail patient={patient} rol={rol} key={patient.id} />
+      <PatientDetail
+        patient={patient}
+        rol={rol}
+        key={patient.id}
+        onRemove={onRemove}
+      />
     ))
   );
 
@@ -48,7 +55,12 @@ const PatientManagement: React.FunctionComponent<IPatientManagementProps> = ({
           first.name > second.name ? 1 : first.surname > second.surname ? 1 : -1
         )
         .map((patient) => (
-          <PatientDetail patient={patient} rol={rol} key={patient.id} />
+          <PatientDetail
+            patient={patient}
+            rol={rol}
+            key={patient.id}
+            onRemove={onRemove}
+          />
         ))
     );
     setFilterText(ft);
