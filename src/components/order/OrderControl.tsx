@@ -265,12 +265,15 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
                       onRemove={() => onRemoveDoctor(d as IUser)}
                       removable
                       key={d?.id}
+                      isDanger={!d.roles?.isDoctor}
                     />
                   ))
                 }
               />
             </div>
-            {rol === ERol.DeliveryWorker || rol === ERol.Laboratorist ? (
+            {rol === ERol.DeliveryWorker ||
+            rol === ERol.Laboratorist ||
+            (rol === ERol.Receptionist && isFull) ? (
               <div className="my-4">
                 <SelectListLayout
                   title="Pacientes"
@@ -400,6 +403,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
                   onAdd={() => onAddDoctor(d as IUser)}
                   onRemove={() => onRemoveDoctor(d as IUser)}
                   key={d?.id}
+                  isDanger={!d.roles?.isDoctor}
                 />
               ))}
             </div>

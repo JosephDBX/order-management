@@ -8,6 +8,7 @@ interface ISelectItemLayoutProps {
   onAdd: Function;
   onRemove: Function;
   navigateTo?: string;
+  isDanger?: boolean;
 }
 
 const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
@@ -17,9 +18,14 @@ const SelectItemLayout: React.FunctionComponent<ISelectItemLayoutProps> = ({
   onAdd,
   onRemove,
   navigateTo,
+  isDanger,
 }) => {
   return (
-    <div className="flex items-center rounded-sm shadow-md p-2">
+    <div
+      className={`flex items-center rounded-sm shadow-md p-2${
+        isDanger ? " border-red-600 border-2" : ""
+      }`}
+    >
       <div className="flex-grow">
         <h4 className="mx-2">{title}</h4>
         <hr className="mx-1" />

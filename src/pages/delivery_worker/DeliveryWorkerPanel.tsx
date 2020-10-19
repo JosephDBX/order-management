@@ -26,7 +26,7 @@ const DeliveryWorkerPanel: React.FunctionComponent = () => {
     { collection: "order_profiles" },
     { collection: "tests" },
     { collection: "profiles" },
-    { collection: "users", where: [["roles.isDoctor", "==", true]] },
+    { collection: "users" },
   ]);
 
   const patients: IPatient[] = useSelector(
