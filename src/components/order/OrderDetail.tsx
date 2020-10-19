@@ -189,7 +189,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                   {moment(patient.birthDate).format("dddd D/MMMM/YYYY")}
                 </p>
                 <p className="text-white text-center font-semibold text-lg">
-                  {moment(patient.birthDate).fromNow(true)}
+                  Edad: {moment(patient.birthDate).fromNow(true)}
                 </p>
               </div>
             ) : null}

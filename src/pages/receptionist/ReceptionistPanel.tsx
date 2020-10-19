@@ -10,6 +10,9 @@ const ReceptionistPanel: React.FunctionComponent = () => {
   const navigateToPatientManagement = () => {
     history.push("/receptionist-panel/patients");
   };
+  const navigateToOrderManagement = () => {
+    history.push("/receptionist-panel/orders");
+  };
   return (
     <>
       <Breadcrumbs
@@ -28,6 +31,12 @@ const ReceptionistPanel: React.FunctionComponent = () => {
           onClick={navigateToPatientManagement}
         >
           <span className="material-icons">accessible</span>Gestionar Pacientes
+        </button>
+        <button
+          className="btn btn-warning w-56 h-56 m-4"
+          onClick={navigateToOrderManagement}
+        >
+          <span className="material-icons">assignment</span>Gestionar Ordenes
         </button>
       </div>
     </>

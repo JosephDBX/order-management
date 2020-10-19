@@ -55,6 +55,7 @@ import ReceptionistOrderCreatePage from "./pages/receptionist/ReceptionistOrderC
 import ReceptionistOrderEditPage from "./pages/receptionist/ReceptionistOrderEditPage";
 import LaboratoristPanel from "./pages/laboratorist/LaboratoristPanel";
 import DeliveryWorkerPanel from "./pages/delivery_worker/DeliveryWorkerPanel";
+import ReceptionistOrderManagementPage from "./pages/receptionist/ReceptionistOrderManagementPage";
 
 function App() {
   const ScrollToTop = () => {
@@ -262,6 +263,12 @@ function App() {
               path="/receptionist-panel/patients/:idPatient/orders/:idOrder/edit"
             >
               {RedirectAdmin(<ReceptionistOrderEditPage />, ERol.Receptionist)}
+            </Route>
+            <Route exact path="/receptionist-panel/orders">
+              {RedirectAdmin(
+                <ReceptionistOrderManagementPage />,
+                ERol.Receptionist
+              )}
             </Route>
             {/** laboratorist routes */}
             <Route exact path="/laboratorist-panel">

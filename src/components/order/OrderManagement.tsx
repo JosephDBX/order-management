@@ -106,7 +106,9 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
             orderProfiles={orderProfiles.filter((op) => op.order === order.id)}
             tests={tests}
             profiles={profiles}
-            rol={rol}
+            rol={
+              rol === ERol.Receptionist && isFull ? ERol.DeliveryWorker : rol
+            }
             doctor={doctors.find((d) => d.uid === order.attendingDoctor)}
             patient={patients?.find((p) => p.id === order.patient) as IPatient}
             onOrderStateChange={onOrderStateChange}
@@ -184,6 +186,8 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
           rol !== ERol.Laboratorist
             ? rol === ERol.DeliveryWorker
               ? " pendientes"
+              : isFull
+              ? ""
               : " del paciente"
             : " en proceso"
         }!`}
@@ -198,6 +202,7 @@ const OrderManagement: React.FunctionComponent<IOrderManagementProps> = ({
             patient={patients[0]}
             patients={patients}
             onPrintFilterResult={onPrintFilterResult}
+            isFull={isFull}
           />
         }
         list={

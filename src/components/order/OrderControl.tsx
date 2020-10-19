@@ -18,6 +18,7 @@ interface IOrderControlProps {
   rol: ERol;
   defaultText?: string;
   doctors: IUser[];
+  isFull?: boolean;
   onFilterText(
     filterText: string,
     state: string,
@@ -40,6 +41,7 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
   rol,
   defaultText,
   doctors,
+  isFull,
   onFilterText,
   onPrintFilterResult,
 }) => {
@@ -371,7 +373,9 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
               <span className="material-icons">local_printshop</span>
               Imprimir Resultado
             </button>{" "}
-            {rol !== ERol.Laboratorist && rol !== ERol.DeliveryWorker ? (
+            {rol !== ERol.Laboratorist &&
+            rol !== ERol.DeliveryWorker &&
+            !isFull ? (
               <button
                 className="btn btn-primary m-2"
                 onClick={navigateToCreate}
