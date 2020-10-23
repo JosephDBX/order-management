@@ -369,13 +369,17 @@ const OrderControl: React.FunctionComponent<IOrderControlProps> = ({
           <hr className="w-full my-2" />
 
           <div className="flex flex-row justify-center p-2">
-            <button
-              className="btn btn-secondary m-2"
-              onClick={printFilterResult}
-            >
-              <span className="material-icons">local_printshop</span>
-              Imprimir Resultado
-            </button>{" "}
+            {rol === ERol.Laboratorist ||
+            rol === ERol.DeliveryWorker ||
+            rol === ERol.Receptionist ? (
+              <button
+                className="btn btn-secondary m-2"
+                onClick={printFilterResult}
+              >
+                <span className="material-icons">local_printshop</span>
+                Imprimir Resultado
+              </button>
+            ) : null}
             {rol !== ERol.Laboratorist &&
             rol !== ERol.DeliveryWorker &&
             !isFull ? (
