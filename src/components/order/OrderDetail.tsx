@@ -236,7 +236,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 </p>
               </div>
             ) : null}
-            <hr className="m-2" />
+            {isVisible ? <hr className="m-2" /> : null}
             {orderTests.length > 0 && isVisible && (
               <>
                 <div className="rounded-sm shadow my-4">

@@ -83,7 +83,6 @@ function registerValidSW(swUrl: string, config?: Config) {
                 'New content is available and will be used when all ' +
                   'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
               );
-              toast.info("Hay contenido nuevo disponible y se usará cuando todas las pestañas de esta página estén cerradas.");
 
               // Execute callback
               if (config && config.onUpdate) {
@@ -94,6 +93,7 @@ function registerValidSW(swUrl: string, config?: Config) {
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
               console.log('Content is cached for offline use.');
+              toast.info("Hay contenido nuevo disponible y se usará cuando todas las pestañas de esta página estén cerradas.");
 
               // Execute callback
               if (config && config.onSuccess) {
