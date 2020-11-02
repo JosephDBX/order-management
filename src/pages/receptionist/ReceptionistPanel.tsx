@@ -36,7 +36,7 @@ const ReceptionistPanel: React.FunctionComponent = () => {
           className="btn btn-warning w-56 h-56 m-4"
           onClick={navigateToOrderManagement}
         >
-          <span className="material-icons">assignment</span>Gestionar Ordenes
+          <span className="material-icons">assignment</span>Reporte Órdenes
         </button>
       </div>
     </>

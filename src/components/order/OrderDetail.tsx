@@ -40,6 +40,11 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
   doctor,
   onOrderStateChange,
 }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const switchIsVisible = () => {
+    setIsVisible(!isVisible);
+  };
+
   const history = useHistory();
   const navigateToEdit = () => {
     switch (rol) {
@@ -144,12 +149,18 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 <p className="text-white text-center font-semibold p-2 text-lg">
                   Paciente: {patient.name} {patient.surname}
                 </p>
-                <p className="text-white text-center font-semibold p-2 text-lg">
-                  {patient.id}
-                </p>
-                <p className="text-white text-center font-semibold p-2 text-lg">
-                  DNI: {patient.ind}
-                </p>
+                {isVisible ? (
+                  <>
+                    <p className="text-white text-center font-code font-semibold p-2 text-lg">
+                      {patient.id}
+                    </p>
+                    {patient.ind ? (
+                      <p className="text-white text-center font-semibold p-2 text-lg">
+                        DNI: {patient.ind}
+                      </p>
+                    ) : null}
+                  </>
+                ) : null}
               </div>
             ) : null}
             <div
@@ -169,8 +180,17 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                   USD ${getTotal()}
                 </p>
               </div>
+              <button
+                className={`material-icons rounded-full btn-icon${
+                  isVisible ? "-danger" : "-secondary"
+                }`}
+                onClick={switchIsVisible}
+              >
+                {isVisible ? "visibility_off" : "visibility"}
+              </button>
             </div>
-            {rol === ERol.Laboratorist || rol === ERol.DeliveryWorker ? (
+            {isVisible &&
+            (rol === ERol.Laboratorist || rol === ERol.DeliveryWorker) ? (
               <div
                 className={`rounded m-2 ${
                   order.state === "complete"
@@ -193,7 +213,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 </p>
               </div>
             ) : null}
-            {rol === ERol.DeliveryWorker ? (
+            {rol === ERol.DeliveryWorker && isVisible ? (
               <div
                 className={`rounded m-2 ${
                   order.state === "complete"
@@ -217,7 +237,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
               </div>
             ) : null}
             <hr className="m-2" />
-            {orderTests.length > 0 && (
+            {orderTests.length > 0 && isVisible && (
               <>
                 <div className="rounded-sm shadow my-4">
                   <h4 className="text-center m-2 text-lg">
@@ -249,7 +269,7 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 </div>
               </>
             )}
-            {orderProfiles.length > 0 && (
+            {orderProfiles.length > 0 && isVisible && (
               <>
                 <div className="rounded-sm shadow my-4">
                   <h4 className="text-center m-2 text-lg">
@@ -281,32 +301,36 @@ const OrderDetail: React.FunctionComponent<IOrderDetailProps> = ({
                 </div>
               </>
             )}
-            {order.delivery && order.delivery > 0 ? (
-              <h4 className="text-center m-2">
-                <span className="m-4 mb-1 font-semibold">
-                  Costo del servicio a domicilio:{" "}
-                </span>
-                ${order.delivery.toFixed(2)}
-              </h4>
-            ) : null}
-            {order.discount && order.discount > 0 ? (
-              <h4 className="text-center m-2">
-                <span className="m-4 mb-1 font-semibold">Descuento: </span>$
-                {order.discount.toFixed(2)}
-              </h4>
-            ) : null}
-            {doctor ? (
+            {isVisible ? (
               <>
+                {order.delivery && order.delivery > 0 ? (
+                  <h4 className="text-center m-2">
+                    <span className="m-4 mb-1 font-semibold">
+                      Costo del servicio a domicilio:{" "}
+                    </span>
+                    ${order.delivery.toFixed(2)}
+                  </h4>
+                ) : null}
+                {order.discount && order.discount > 0 ? (
+                  <h4 className="text-center m-2">
+                    <span className="m-4 mb-1 font-semibold">Descuento: </span>$
+                    {order.discount.toFixed(2)}
+                  </h4>
+                ) : null}
+                {doctor ? (
+                  <>
+                    <p className="m-4 mb-1 font-semibold text-center">
+                      Médico ordenando el examen:
+                    </p>
+                    <p className="text-center m-4 mt-1">{doctor.userName}</p>
+                  </>
+                ) : null}
                 <p className="m-4 mb-1 font-semibold text-center">
-                  Médico ordenando el examen:
+                  Método de pago y otros datos:
                 </p>
-                <p className="text-center m-4 mt-1">{doctor.userName}</p>
+                <p className="text-center m-4 mt-1">{order.description}</p>
               </>
             ) : null}
-            <p className="m-4 mb-1 font-semibold text-center">
-              Método de pago y otros datos:
-            </p>
-            <p className="text-center m-4 mt-1">{order.description}</p>
           </>
         }
         code={order.id}

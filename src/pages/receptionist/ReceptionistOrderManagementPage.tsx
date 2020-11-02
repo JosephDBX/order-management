@@ -102,7 +102,7 @@ const ReceptionistOrderManagementPage: React.FunctionComponent = () => {
           { uri: "/home", text: "Home" },
           { uri: "/receptionist-panel", text: "Panel de recepcionista" },
         ]}
-        last="Órdenes"
+        last="Reporte Órdenes"
       />
       {!isLoaded(patients) ||
       !isLoaded(orders) ||
